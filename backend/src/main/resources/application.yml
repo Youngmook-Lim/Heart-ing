@@ -1,0 +1,27 @@
+# JPA
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    # open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+  main:
+    allow-bean-definition-overriding: true
+
+  # import application-oauth.yml
+  profiles:
+    include: oauth
+
+# log level setting
+logging:
+  level:
+    root: info
+    com:
+      temp: debug
