@@ -17,10 +17,10 @@ public class Emoji implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
     private Long id;
 
-    @Column(length = 100, name= "name")
+    @Column(length = 100, name= "name", unique = true)
     private String name;
 
-    @Column(length = 200, name= "image_url")
+    @Column(length = 200, name= "image_url", unique = true)
     private String imageUrl;
 
     @Builder
