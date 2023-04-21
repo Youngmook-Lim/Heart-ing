@@ -1,15 +1,18 @@
 package com.chillin.hearting.db.domain;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
+@Slf4j
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access =  AccessLevel.PROTECTED)
 @ToString
-public class Heart {
+public class Heart implements Serializable {
 
     // PK
     @Id
