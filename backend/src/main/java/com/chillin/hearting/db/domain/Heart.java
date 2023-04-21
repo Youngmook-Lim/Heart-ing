@@ -31,8 +31,8 @@ public class Heart implements Serializable {
     @Column(name = "long_description", unique = true, nullable = false)
     String longDescription;
 
-    @Column(name = "category", unique = true, nullable = false)
-    String category;
+    @Column(name = "type", unique = true, nullable = false)
+    String type;
 
     @Column(name = "acq_condition", unique = true, nullable = true)
     String acqCondition;
