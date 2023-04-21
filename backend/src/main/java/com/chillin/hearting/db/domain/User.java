@@ -58,14 +58,6 @@ public class User {
     @Column(nullable = false, length = 15)
     private String role;
 
-    // 회원별 미니하트 total
-    @Column(name = "miniheart_total", nullable = false)
-    private Long miniheartTotal;
-
-    // 회원별 미니하트 today
-    @Column(name = "miniheart_today", nullable = false)
-    private Long miniheartToday;
-
     // 회원별 메시지 total
     @Column(name = "message_total")
     private Long messageTotal;
@@ -77,8 +69,6 @@ public class User {
         this.reportedCount = 0;
         this.status = 'A';
         this.role = "ROLE_USER";
-        this.miniheartToday = 0L;
-        this.miniheartTotal = 0L;
         this.messageTotal = 0L;
     }
 
