@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Slf4j
 @ToString
 @Entity
 @Getter
@@ -32,20 +31,24 @@ public class User {
     private String nickname;
 
     // refresh토큰
-    @Column(unique = true, length = 200, name = "refresh_token")
+    @Column(name = "refresh_token", unique = true, length = 200)
     private String refreshToken;
 
     // 가입일시
-    @Column(nullable = false, name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
     // 수정일시
-    @Column(nullable = false, name = "updated_date")
+    @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
+    // 상태메시지
+    @Column(name = "status_message", length = 100)
+    private String statusMessage;
+
     // 누적 신고된 횟수
-    @Column(nullable = false, name = "report_count")
-    private int reportCount;
+    @Column(name = "reported_count", nullable = false)
+    private int reportedCount;
 
     // 회원상태(A : 활성화, P : 일시정지, O : 영구정지, D : 탈퇴)
     @Column(nullable = false)
@@ -56,16 +59,28 @@ public class User {
     private String role;
 
     // 회원별 미니하트 total
-    @Column(nullable = false, name = "miniheart_total")
+    @Column(name = "miniheart_total", nullable = false)
     private Long miniheartTotal;
 
     // 회원별 미니하트 today
-    @Column(nullable = false, name = "miniheart_today")
+    @Column(name = "miniheart_today", nullable = false)
     private Long miniheartToday;
 
     // 회원별 메시지 total
     @Column(name = "message_total")
     private Long messageTotal;
+
+    // Default Value 설정
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = LocalDateTime.now();
+        this.reportedCount = 0;
+        this.status = 'A';
+        this.role = "ROLE_USER";
+        this.miniheartToday = 0L;
+        this.miniheartTotal = 0L;
+        this.messageTotal = 0L;
+    }
 
 
     // 카카오 사용자 회원가입
