@@ -3,7 +3,7 @@ echo "***DEPLOYING DOCKER CONTAINERS***"
 echo "*********************************"
 
 # docker container run
-cd /var/jenkins_home/workspace/bbb-pipeline/pipeline
+cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline
 docker compose up -d
 
 # delete dangling images

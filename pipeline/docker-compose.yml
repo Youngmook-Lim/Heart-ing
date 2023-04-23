@@ -1,8 +1,8 @@
 version: "3"
 services:
   hearting-back:
-    container_name: sgr-back
-    image: sgr-backend:0.1
+    container_name: hearting-back
+    image: hearting-backend:v1
     build:
       context: ../backend
     ports:
