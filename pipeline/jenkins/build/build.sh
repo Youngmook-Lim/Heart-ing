@@ -22,5 +22,5 @@ echo "***Building DOCKER CONTAINERS***"
 echo "********************************"
 
 # docker container build
-cd /var/jenkins_home/workspace/bbb-pipeline/pipeline
+cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline
 docker compose build --no-cache
