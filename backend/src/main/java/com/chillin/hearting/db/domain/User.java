@@ -1,12 +1,12 @@
 package com.chillin.hearting.db.domain;
 
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Table(name = "\"user\"")
 @ToString
 @Entity
 @Getter
