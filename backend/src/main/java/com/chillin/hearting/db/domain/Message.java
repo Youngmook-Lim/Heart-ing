@@ -80,6 +80,7 @@ public class Message implements Serializable {
         this.emoji = emoji;
         this.sender = sender;
         this.receiver = receiver;
+        this.content = content;
         this.senderIp = senderIp;
     }
 
