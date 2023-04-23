@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    tools {
+        gradle 'gradle_7.6'
+        nodejs 'nodejs_18.13.0'
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './pipeline/jenkins/build/build.sh'
+
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './pipeline/jenkins/deploy/deploy.sh'
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+version: "3"
+services:
+  hearting-back:
+    container_name: hearting-back
+    image: hearting-backend:v1
+    build:
+      context: ../backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./env-files/env-back.env
+#  hearting-front:
+#    container_name: sgr-front
+#    image: sgr-frontend:0.1
+#    build:
+#      context: ../frontend
+#    ports:
+#      - "3000:80"
+
