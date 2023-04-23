@@ -40,7 +40,7 @@ public class Message implements Serializable {
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    @Column(length = 50, name= "title")
+    @Column(length = 50, name= "title", nullable = false)
     private String title;
 
     @Column(length = 500, name= "content")
@@ -75,11 +75,12 @@ public class Message implements Serializable {
     }
 
     @Builder
-    public Message(Heart heart, Emoji emoji, User sender, User receiver, String content, String senderIp) {
+    public Message(Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
         this.heart = heart;
         this.emoji = emoji;
         this.sender = sender;
         this.receiver = receiver;
+        this.title = title;
         this.content = content;
         this.senderIp = senderIp;
     }
