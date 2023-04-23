@@ -1,5 +1,6 @@
 package com.chillin.hearting.db.domain;
 
+import com.chillin.hearting.oauth.model.UserType;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Table(name = "\"user\"")
 @ToString
 @Entity
 @Getter
@@ -20,8 +22,9 @@ public class User implements Serializable {
     private String id;
 
     // 사용자 타입(KAKAO:카카오, GOOGLE:구글)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
-    private String type;
+    private UserType userType;
 
     // 이메일
     @Column(unique = true, nullable = false, length = 100)
@@ -75,12 +78,13 @@ public class User implements Serializable {
 
 
     // 카카오 사용자 회원가입
-//    public User(String email, String nickname) {
-//        this.email = email;
-//        this.nickname = nickname;
-//        this.type = "KAKAO";
-//        this.role = "ROLE_USER";
-//    }
+    @Builder
+    public User(String id, UserType type, String email, String nickname) {
+        this.id = id;
+        this.userType = type;
+        this.email = email;
+        this.nickname = nickname;
+    }
 
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
