@@ -2,6 +2,7 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.repository.HeartRepository;
+import com.chillin.hearting.db.repository.UserHeartRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,9 @@ public class HeartServiceTest {
 
     @Mock
     private HeartRepository heartRepository;
+
+    @Mock
+    private UserHeartRepository userHeartRepository;
 
     @Test
     public void 도감조회() {
