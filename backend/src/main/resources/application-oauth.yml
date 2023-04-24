@@ -43,8 +43,8 @@ jwt:
 app:
   auth:
     token-secret:
-    token-expiry: 1800000 # 30분
-    refresh-token-expiry: 604800000 # 7일
+    token-expiry: 86400000 # 24시간
+    refresh-token-expiry: 1209600000 # 7일
   oauth2:
     authorized-redirect-uris: http://localhost:3000/oauth2/code/kakao
 
