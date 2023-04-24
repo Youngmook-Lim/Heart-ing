@@ -43,6 +43,10 @@ dependencies {
 
     //s3
     implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+
+    // Data JPA Test
+    testImplementation 'com.h2database:h2'
+
 }
 
 tasks.named('test') {
