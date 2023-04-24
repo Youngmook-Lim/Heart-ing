@@ -1,6 +1,7 @@
 package com.chillin.hearting.db.repository;
 
 import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class HeartRepositoryTest {
     @Autowired
     private HeartRepository heartRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public Heart createHeart() {
         Heart heart = Heart.builder()
                 .name("테스트하트")
@@ -28,6 +32,16 @@ public class HeartRepositoryTest {
                 .build();
 
         return heart;
+    }
+
+    public User createUser() {
+        User user = User.builder()
+                .id("test123")
+                .type("ROLE_TEST")
+                .email("test-email.com")
+                .nickname("test-nick")
+                .build();
+        return user;
     }
 
     @Test
@@ -42,6 +56,18 @@ public class HeartRepositoryTest {
         // then
         assertThat(findHeart.getId())
                 .isEqualTo(savedHeart.getId());
+    }
+
+    @Test
+    public void 도감획득() {
+        // given
+        Heart createHeart = createHeart();
+        User createUser = createUser();
+
+        // when
+        Heart savedHeart = heartRepository.save(createHeart);
+        User savedUser = userRepository.save(createUser);
+
     }
 
     @Test
