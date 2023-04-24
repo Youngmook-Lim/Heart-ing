@@ -1,5 +1,6 @@
 package com.chillin.hearting.db.domain;
 
+import com.chillin.hearting.oauth.model.UserType;
 import lombok.*;
 
 import javax.persistence.*;
