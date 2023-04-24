@@ -1,0 +1,63 @@
+# MySQL
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:
+    username:
+    password:
+
+  # Social Login
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id:
+            client-secret:
+            client-name: kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:3000/oauth2/code/kakao
+            client-authentication-method: POST
+            scope:
+              - profile_nickname
+              - account_email
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+  # s3 file size bigger setting
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# jwt secret key
+jwt:
+  secret:
+
+  # auth : for normal user | oauth2 : for kakao user
+app:
+  auth:
+    token-secret:
+    token-expiry: 1800000 # 30분
+    refresh-token-expiry: 604800000 # 7일
+  oauth2:
+    authorized-redirect-uris: http://localhost:3000/oauth2/code/kakao
+
+# S3 Setting
+cloud:
+  aws:
+    credentials:
+      accessKey:         # AWS IAM AccessKey 적기
+      secretKey:         # AWS IAM SecretKey 적기
+    s3:
+      bucket: heart-ing  # 버킷 이름
+      dir: S3 /profile   # s3 디렉토리 이름
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
