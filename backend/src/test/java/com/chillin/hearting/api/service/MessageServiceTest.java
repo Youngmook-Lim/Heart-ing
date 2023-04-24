@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.response.SendMessageRes;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
@@ -45,7 +46,7 @@ public class MessageServiceTest {
     private final String senderIp = "senderIp";
     private final User receiver = User.builder().build();
     private final User sender = User.builder().build();
-    private final Heart heart = Heart.builder().build();
+    private final Heart heart = Heart.builder().name("testHeart").build();
 
     @Test
     public void failSendMessage_NoReceiver() {
@@ -95,16 +96,10 @@ public class MessageServiceTest {
         doReturn(Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
 
         // when
-        Message message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
+        final SendMessageRes message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
 
         // then
-        assertThat(message.getHeart()).isEqualTo(heart);
-        assertThat(message.getSender()).isEqualTo(sender);
-        assertThat(message.getReceiver()).isEqualTo(receiver);
-        assertThat(message.getTitle()).isEqualTo(title);
-        assertThat(message.getContent()).isEqualTo(content);
-        assertThat(message.getSenderIp()).isEqualTo(senderIp);
-        assertThat(message.isRead()).isFalse();
+        assertThat(message.getData().get("heartName")).isEqualTo("testHeart");
 
         // verify
         verify(userRepository, times(1)).findById(receiverId);

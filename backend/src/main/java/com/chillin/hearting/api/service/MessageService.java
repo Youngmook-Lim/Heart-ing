@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.response.SendMessageRes;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,7 @@ public class MessageService {
     private final HeartRepository heartRepository;
 
     @Transactional
-    public Message sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
+    public SendMessageRes sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
 
         // Check if receiver exists
         User receiver = userRepository.findById(receiverId).orElseThrow(UserNotFoundException::new);
@@ -37,8 +41,17 @@ public class MessageService {
 
         // Create message
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
+        message = messageRepository.save(message);
 
-        return messageRepository.save(message);
+        // Put into DTO
+        Map<String, Object> data = new HashMap<>();
+        data.put("messageId", message.getId());
+        data.put("heartId", message.getHeart().getId());
+        data.put("heartName", message.getHeart().getName());
+        data.put("heartUrl", message.getHeart().getImageUrl());
+        data.put("isRead", message.isRead());
+
+        return SendMessageRes.builder().data(data).build();
     }
 
 }
