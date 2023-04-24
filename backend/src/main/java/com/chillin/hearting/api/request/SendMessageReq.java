@@ -13,10 +13,15 @@ public class SendMessageReq {
 
     @NotBlank
     private long heartId;
+
     @NotBlank
     private String senderId;
+
     @NotBlank
     private String receiverId;
-    
+
+    @NotBlank
+    private String title;
+
     private String content;
 }
