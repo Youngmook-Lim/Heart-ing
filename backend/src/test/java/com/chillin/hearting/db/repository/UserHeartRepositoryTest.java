@@ -3,6 +3,7 @@ package com.chillin.hearting.db.repository;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,82 +25,30 @@ public class UserHeartRepositoryTest {
     @Autowired
     private UserHeartRepository userHeartRepository;
 
-    @Test
-    public void 기본하트저장() {
-        // given
-        List<Heart> resultList = createDefaultHearts();
-        User createUser = createUser();
+    private Heart savedSpecialHeart;
+    private User savedUser;
 
-        // when
-        User findUser = userRepository.save(createUser);
-        List<Heart> findHeartList = heartRepository.saveAll(resultList);
-
-        List<UserHeart> userHeartList = new ArrayList<>();
-        for (Heart defaultHeart : findHeartList) {
-            userHeartList.add(UserHeart.builder().user(findUser).heart(defaultHeart).build());
-        }
-        List<UserHeart> findUserHeartList = userHeartRepository.saveAll(userHeartList);
-
-        // then
-        assertThat(findUserHeartList)
-                .isEqualTo(findHeartList.size());
+    @BeforeEach
+    public void 데이터생성() {
+        User user = createUser();
+        Heart specialHeart = createSpecialHeart();
+        savedUser = userRepository.save(user);
+        savedSpecialHeart = heartRepository.save(specialHeart);
     }
 
-    public List<Heart> createDefaultHearts() {
-        List<Heart> resultList = new ArrayList<>();
+    @Test
+    public void 유저획득하트조회() {
+        // given
+        UserHeart userHeart = UserHeart.builder().user(savedUser).heart(savedSpecialHeart).build();
+        UserHeart savedUserHeart = userHeartRepository.save(userHeart);
 
-        Heart heart1 = Heart.builder()
-                .name("호감 하트")
-                .imageUrl("yellow.com")
-                .shortDescription("yellow")
-                .longDescription("yellowyellow")
-                .acqCondition("yellow condition")
-                .type("DEFAUT")
-                .build();
+        // when
+        List<UserHeart> findUserHeartList = userHeartRepository.findByUser(savedUser);
 
-        Heart heart2 = Heart.builder()
-                .name("응원 하트")
-                .imageUrl("blue.com")
-                .shortDescription("blue")
-                .longDescription("blueblue")
-                .acqCondition("blue condition")
-                .type("DEFAUT")
-                .build();
-
-        Heart heart3 = Heart.builder()
-                .name("우정 하트")
-                .imageUrl("green.com")
-                .shortDescription("green")
-                .longDescription("greengreen")
-                .acqCondition("green condition")
-                .type("DEFAUT")
-                .build();
-
-        Heart heart4 = Heart.builder()
-                .name("설렘 하트")
-                .imageUrl("pink.com")
-                .shortDescription("pink")
-                .longDescription("pinkpink")
-                .acqCondition("pink condition")
-                .type("DEFAUT")
-                .build();
-
-        Heart heart5 = Heart.builder()
-                .name("애정 하트")
-                .imageUrl("red.com")
-                .shortDescription("red")
-                .longDescription("redred")
-                .acqCondition("red condition")
-                .type("DEFAUT")
-                .build();
-
-        resultList.add(heart1);
-        resultList.add(heart2);
-        resultList.add(heart3);
-        resultList.add(heart4);
-        resultList.add(heart5);
-
-        return resultList;
+        // then
+        assertThat(findUserHeartList).anySatisfy(uh -> {
+            assertThat(uh.getUser().getId()).isEqualTo(savedUser.getId());
+        });
     }
 
     public User createUser() {
@@ -110,5 +59,18 @@ public class UserHeartRepositoryTest {
                 .nickname("test-nick")
                 .build();
         return user;
+    }
+
+    public Heart createSpecialHeart() {
+        Heart heart = Heart.builder()
+                .name("행성 하트")
+                .imageUrl("universe.com")
+                .shortDescription("우주에 단 하나 뿐인 너 !")
+                .longDescription("우주의 탄생 스토리")
+                .acqCondition("특정인에게 5회 이상 메시지 전송")
+                .type("SPECIAL")
+                .build();
+
+        return heart;
     }
 }
