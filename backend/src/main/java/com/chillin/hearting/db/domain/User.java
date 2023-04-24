@@ -75,12 +75,13 @@ public class User implements Serializable {
 
 
     // 카카오 사용자 회원가입
-//    public User(String email, String nickname) {
-//        this.email = email;
-//        this.nickname = nickname;
-//        this.type = "KAKAO";
-//        this.role = "ROLE_USER";
-//    }
+    @Builder
+    public User(String id, String type, String email, String nickname) {
+        this.id = id;
+        this.type = type;
+        this.email = email;
+        this.nickname = nickname;
+    }
 
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
