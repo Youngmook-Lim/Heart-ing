@@ -10,18 +10,25 @@ import java.io.Serializable;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access =  AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class UserHeart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
     private Long id;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "user_id") // null 가능
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "heart_id") // null 가능
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "heart_id", nullable = false)
     private Heart heart;
+
+    @Builder
+    public UserHeart(User user, Heart heart) {
+        this.user = user;
+        this.heart = heart;
+    }
+
 }
