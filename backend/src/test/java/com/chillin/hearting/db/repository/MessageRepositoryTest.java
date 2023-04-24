@@ -31,7 +31,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
-    public void sendMessage() {
+    public void successSendMessage() {
         // given
         Heart heart = Heart.builder().name("testHeart").imageUrl("testUrl").shortDescription("short").longDescription("long").type("type").acqCondition("acq").build();
         User sender = User.builder().id("1").type("KAKAO").email("email1").nickname("test1").build();
@@ -60,7 +60,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
-    public void updateUserMessageTotal() {
+    public void successUpdateUserMessageTotal() {
         // given
         Heart heart = Heart.builder().name("testHeart").imageUrl("testUrl").shortDescription("short").longDescription("long").type("type").acqCondition("acq").build();
         User sender = User.builder().id("1").type("KAKAO").email("email1").nickname("test1").build();
