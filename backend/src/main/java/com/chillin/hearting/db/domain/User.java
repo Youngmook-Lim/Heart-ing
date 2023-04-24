@@ -83,6 +83,10 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
+    public void updateUserStatusToActive() {
+        this.status = 'A';
+    }
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
