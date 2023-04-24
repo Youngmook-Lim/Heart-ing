@@ -3,23 +3,20 @@ package com.chillin.hearting.db.repository;
 import com.chillin.hearting.db.domain.Heart;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class HeartRepositoryTest {
 
     @Autowired
     private HeartRepository heartRepository;
 
     @Test
-    @Rollback(value = false)
     public void 도감저장() {
         Heart heart = Heart.builder()
                 .name("테스트하트")
