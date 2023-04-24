@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access =  AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Heart implements Serializable {
 
@@ -31,7 +31,7 @@ public class Heart implements Serializable {
     @Column(name = "long_description", unique = true, nullable = false, length = 500)
     private String longDescription;
 
-    @Column(name = "type", unique = true, nullable = false, length = 100)
+    @Column(name = "type", nullable = false, length = 100)
     private String type;
 
     @Column(name = "acq_condition", unique = true, nullable = true, length = 500)
