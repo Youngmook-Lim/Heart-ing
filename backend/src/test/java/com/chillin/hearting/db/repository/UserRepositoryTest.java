@@ -35,7 +35,7 @@ public class UserRepositoryTest {
 
         // then
         assertThat(result.getId()).isEqualTo("abc");
-        assertThat(result.getUserType()).isEqualTo("KAKAO");
+        assertThat(result.getType()).isEqualTo("KAKAO");
         assertThat(result.getEmail()).isEqualTo("wjdwn@naver.com");
         assertThat(result.getNickname()).isEqualTo("jj");
         assertThat(result.getReportedCount()).isEqualTo(0);

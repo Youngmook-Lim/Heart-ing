@@ -1,6 +1,5 @@
 package com.chillin.hearting.db.domain;
 
-import com.chillin.hearting.oauth.model.UserType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +21,7 @@ public class User implements Serializable {
 
     // 사용자 타입(KAKAO:카카오, GOOGLE:구글)
     @Column(nullable = false, length = 15)
-    private String userType;
+    private String type;
 
     // 이메일
     @Column(unique = true, nullable = false, length = 100)
@@ -79,7 +78,7 @@ public class User implements Serializable {
     @Builder
     public User(String id, String type, String email, String nickname) {
         this.id = id;
-        this.userType = type;
+        this.type = type;
         this.email = email;
         this.nickname = nickname;
     }
