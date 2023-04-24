@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
+@Builder
 public class SendMessageReq {
 
     @NotBlank
@@ -24,4 +25,12 @@ public class SendMessageReq {
     private String title;
 
     private String content;
+
+    @Builder
+    public SendMessageReq(long heartId, String senderId, String receiverId, String title) {
+        this.heartId = heartId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.title = title;
+    }
 }
