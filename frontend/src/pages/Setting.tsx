@@ -41,7 +41,8 @@ function Setting() {
         onChange={onNicknameHandler} />
       {nicknameFormError}
       <button
-        onClick={onSaveNicknameHandler}>수정</button>
+        onClick={onSaveNicknameHandler}
+        disabled={nicknameFormError ? true : false}>수정</button>
     </div>
   )
 }
