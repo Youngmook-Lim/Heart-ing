@@ -14,6 +14,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControllerExceptionHandler {
     private static final String FAIL = "fail";
 
+    @ExceptionHandler(MessageAlreadyDeletedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleMessageAlreadyDeletedException(MessageAlreadyDeletedException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(MessageNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
