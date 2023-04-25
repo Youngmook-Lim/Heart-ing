@@ -5,7 +5,6 @@ import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
 import com.chillin.hearting.db.repository.UserRepository;
-import com.chillin.hearting.exception.DuplicateException;
 import com.chillin.hearting.exception.NotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
@@ -65,15 +64,6 @@ public class UserService {
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
 
-    // 닉네임 중복체크
-    public void duplicateNickname(String nickname) throws DuplicateException {
-
-        if (userRepository.findByNickname(nickname).isPresent()) {
-            throw new DuplicateException("중복된 닉네임입니다.");
-        }
-
-    }
-
     @Transactional
     public SocialLoginData kakaoLogin(String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
 
@@ -84,6 +74,7 @@ public class UserService {
 
         try {
             User kakaoUser = getKakaoInfo(kakaoAccessToken);
+            log.debug("{}", kakaoUser);
 
             if (kakaoUser == null) {
                 throw new NotFoundException("카카오로부터 user 정보를 가져오지 못했습니다.");
@@ -114,8 +105,6 @@ public class UserService {
                     .userId(kakaoUser.getId())
                     .nickname(kakaoUser.getNickname())
                     .accessToken(accessToken.getToken())
-                    .statusMessage(kakaoUser.getStatusMessage())
-                    .messageTotal(kakaoUser.getMessageTotal())
                     .build();
 
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
@@ -128,7 +117,6 @@ public class UserService {
             log.error("로그인 실패 : {}", e.getMessage());
             throw new IllegalArgumentException("카카오로부터 user 정보를 가져오지 못했습니다.");
         }
-
         return socialLoginData;
 
     }
@@ -192,6 +180,7 @@ public class UserService {
             int responseCode = conn.getResponseCode();
             log.debug("responseCode : {} ", responseCode);
 
+
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
@@ -242,6 +231,7 @@ public class UserService {
                 UUID uuid = UUID.randomUUID();
                 user = new User(uuid.toString(), ProviderType.KAKAO.toString(), email, nickname);
 
+                System.out.println("user : " + user.toString());
                 return userRepository.saveAndFlush(user);
             }
         } catch (Exception e) {

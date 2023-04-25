@@ -20,19 +20,12 @@ public class SocialLoginData extends Data {
     // accessToken
     private String accessToken;
 
-    // 상태메시지
-    private String statusMessage;
-
-    // 회원별 누적 메시지 수
-    private Long messageTotal;
-
     @Builder
-    public SocialLoginData(String userId, String nickname, String accessToken, String statusMessage, Long messageTotal) {
+    public SocialLoginData(String userId, String nickname, String accessToken) {
+
         this.userId = userId;
         this.nickname = nickname;
         this.accessToken = accessToken;
-        this.statusMessage = statusMessage;
-        this.messageTotal = messageTotal;
     }
 
 }
