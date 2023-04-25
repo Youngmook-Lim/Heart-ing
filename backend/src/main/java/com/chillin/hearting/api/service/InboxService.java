@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.InboxData;
+import com.chillin.hearting.api.data.InboxDetailData;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.InboxRepository;
@@ -29,5 +30,11 @@ public class InboxService {
     public InboxData findInboxMessages(String userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return InboxData.builder().inboxList(inboxRepository.findAllByReceiverAndIsStored(user, true)).build();
+    }
+
+    public InboxDetailData findInboxDetailMessage(String userId, Long messageId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        return InboxDetailData.builder().message(findMessage).build();
     }
 }
