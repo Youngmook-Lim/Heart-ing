@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.response.HeartRes;
+import com.chillin.hearting.api.data.HeartData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
@@ -34,11 +34,11 @@ public class HeartService {
      * @param user
      * @return 하트 DTO
      */
-    public List<HeartRes> findAllHearts(User user) {
+    public List<HeartData> findAllHearts(User user) {
         List<Heart> findHearts = heartRepository.findAll();
-        List<HeartRes> resHearts = new ArrayList<>();
+        List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : findHearts) {
-            resHearts.add(HeartRes.builder()
+            resHearts.add(HeartData.builder()
                     .heart(heart)
                     .isLocked((heart.getType() == DEFAULT_TYPE) ? false : true)
                     .build());
@@ -46,10 +46,10 @@ public class HeartService {
 
         if (user != null) {
             List<UserHeart> userHearts = userHeartRepository.findByUser(user);
-            for (HeartRes heartRes : resHearts) {
+            for (HeartData heartData : resHearts) {
                 for (UserHeart myHeart : userHearts) {
-                    if (heartRes.getType() != DEFAULT_TYPE && heartRes.getId() == myHeart.getHeart().getId()) {
-                        heartRes.unLock();
+                    if (heartData.getType() != DEFAULT_TYPE && heartData.getId() == myHeart.getHeart().getId()) {
+                        heartData.unLock();
                         break;
                     }
                 }
