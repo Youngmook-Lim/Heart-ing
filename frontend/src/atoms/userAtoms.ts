@@ -3,14 +3,14 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
 
-export const IsLoginAtom = atom<boolean>({
+export const isLoginAtom = atom<boolean>({
   key: 'isLogin',
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
 
-export const userIdAtom = atom<string>({
-  key: 'userId',
+export const userStautsMessageAtom = atom<string>({
+  key: 'userStatusMessage',
   default: '',
   effects_UNSTABLE: [persistAtom],
 });
