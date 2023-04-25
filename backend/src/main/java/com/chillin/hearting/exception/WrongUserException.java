@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class WrongUserException extends RuntimeException {
 
+    public static final String DEFAULT_MESSAGE = "잘못된 유저입니다.";
+
     public WrongUserException() {
-        super("잘못된 유저입니다.");
+        super(DEFAULT_MESSAGE);
     }
 
     public WrongUserException(String msg) {

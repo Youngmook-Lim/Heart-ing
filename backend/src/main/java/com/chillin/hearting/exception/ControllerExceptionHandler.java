@@ -17,7 +17,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorRes handleWrongUserException(WrongUserException e) {
         log.error(e.getMessage());
-        return ErrorRes.make("잘못된 유저입니다.");
+        return ErrorRes.make(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
