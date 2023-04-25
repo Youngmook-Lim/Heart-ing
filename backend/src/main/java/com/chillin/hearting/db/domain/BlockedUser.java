@@ -1,7 +1,7 @@
 package com.chillin.hearting.db.domain;
 
+import com.chillin.hearting.exception.ServerLogicException;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BlockedUser implements Serializable {
 
@@ -20,7 +21,7 @@ public class BlockedUser implements Serializable {
     private Long id;
 
     // FK
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -36,6 +37,23 @@ public class BlockedUser implements Serializable {
     @PrePersist
     public void prePersist() {
         this.startDate = LocalDateTime.now();
+    }
+
+    // EndDate 설정
+    public void updateEndDate(char status) {
+        switch (status) {
+            case 'P':
+                this.endDate = this.startDate.plusDays(3);
+                break;
+            case 'O':
+                this.endDate = LocalDateTime.of(9999, 12, 31, 0, 0);
+                break;
+            case 'A':
+                throw new ServerLogicException("이 유저는 BlockedUser에 추가되면 안됩니다.");
+            default:
+                throw new ServerLogicException("이 유저는 이미 탈퇴한 유저입니다.");
+        }
+
     }
 
 }
