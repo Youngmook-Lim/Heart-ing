@@ -8,6 +8,7 @@ import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.MessageRepository;
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
+import com.chillin.hearting.exception.MessageNotFoundException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,10 +45,12 @@ public class MessageServiceTest {
     private final String title = "title";
     private final String content = "content";
     private final String senderIp = "senderIp";
-    private final User receiver = User.builder().id("receiver").build();
+    private final long messageId = 0L;
+    private final User receiver = User.builder().id("receiver").messageTotal(0L).build();
     private final User sender = User.builder().id("sender").build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
 
+    // sendMessage
     @Test
     public void failSendMessage_NoReceiver() {
         //given
@@ -57,7 +60,7 @@ public class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), "해당 유저를 찾을 수 없습니다.");
+        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
     }
 
     @Test
@@ -70,7 +73,7 @@ public class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), "해당 유저를 찾을 수 없습니다.");
+        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
     }
 
     @Test
@@ -84,13 +87,14 @@ public class MessageServiceTest {
         HeartNotFoundException exception = assertThrows(HeartNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), "해당 하트를 찾을 수 없습니다.");
+        assertEquals(exception.getMessage(), HeartNotFoundException.DEFAULT_MESSAGE);
     }
 
     @Test
     public void successSendMessage() {
         // given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
+        doReturn(receiver).when(userRepository).save(receiver);
         doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
         doReturn(Optional.of(heart)).when(heartRepository).findById(heartId);
         doReturn(Message.builder().id(0L).heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
@@ -106,6 +110,18 @@ public class MessageServiceTest {
         verify(userRepository, times(1)).findById(senderId);
         verify(heartRepository, times(1)).findById(heartId);
         verify(messageRepository, times(1)).save(any(Message.class));
+    }
 
+    // deleteMessage
+    @Test
+    public void failDeleteMessage_NoMessage() {
+        //given
+        doReturn(Optional.empty()).when(messageRepository).findById(messageId);
+
+        // when
+        MessageNotFoundException exception = assertThrows(MessageNotFoundException.class, () -> messageService.deleteMessage(messageId));
+
+        // then
+        assertEquals(exception.getMessage(), MessageNotFoundException.DEFAULT_MESSAGE);
     }
 }
