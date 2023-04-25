@@ -20,6 +20,7 @@ public class MessageService {
     private final HeartRepository heartRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final ReportRepository reportRepository;
+    private final EmojiRepository emojiRepository;
 
     @Transactional
     public MessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
@@ -122,6 +123,25 @@ public class MessageService {
         report = reportRepository.save(report);
 
         return report.getId();
+    }
+
+    @Transactional
+    public Long addEmoji(long messageId, String userId, long emojiId) {
+
+        // Check if message, emoji exist
+        Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        Emoji emoji = emojiId == -1 ? null : emojiRepository.findById(emojiId).orElseThrow(EmojiNotFoundException::new);
+
+        // Check if userId matches receiver of message
+        if (!message.getReceiver().getId().equals(userId)) {
+            throw new UnAuthorizedException("본인이 받은 메시지에만 이모지를 달 수 있습니다.");
+        }
+
+        message.updateEmoji(emoji);
+
+        message = messageRepository.save(message);
+
+        return message.getId();
     }
 
 }

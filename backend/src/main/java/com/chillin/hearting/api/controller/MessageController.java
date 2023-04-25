@@ -6,10 +6,7 @@ import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
-import com.chillin.hearting.exception.DeleteMessageFailException;
-import com.chillin.hearting.exception.ReportFailException;
-import com.chillin.hearting.exception.UnAuthorizedException;
-import com.chillin.hearting.exception.WrongUserException;
+import com.chillin.hearting.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -58,16 +55,13 @@ public class MessageController {
     public ResponseEntity<ResponseDTO> deleteMessage(@PathVariable("messageId") long messageId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
 
-        ////////// FOR TESTING PURPOSES //////////
-//        User user = User.builder().id("bbbb").build();
-
         // Check if user has permissions
         if (user == null) {
             throw new UnAuthorizedException();
         }
 
-        boolean result = messageService.deleteMessage(messageId, user.getId());
-        if (result) {
+        boolean returnedIsActive = messageService.deleteMessage(messageId, user.getId());
+        if (returnedIsActive) {
             throw new DeleteMessageFailException();
         }
 
@@ -84,16 +78,13 @@ public class MessageController {
 
         User user = (User) httpServletRequest.getAttribute("user");
 
-        ////////// FOR TESTING PURPOSES //////////
-//        User user = User.builder().id("bbbb").build();
-
         // Check if user has permissions
         if (user == null) {
             throw new UnAuthorizedException();
         }
 
-        Long reportId = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
-        if (reportId == null) {
+        Long returnedReportId = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
+        if (returnedReportId == null) {
             throw new ReportFailException();
         }
 
@@ -103,6 +94,29 @@ public class MessageController {
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{messageId}/emojis/{emojiId}")
+    public ResponseEntity<ResponseDTO> addEmoji(@PathVariable("messageId") long messageId, @PathVariable("emojiId") long emojiId, HttpServletRequest httpServletRequest) {
+
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        // Check if user has permissions
+        if (user == null) {
+            throw new UnAuthorizedException();
+        }
+
+        Long returnedMessageId = messageService.addEmoji(messageId, user.getId(), emojiId);
+        if (returnedMessageId == null) {
+            throw new EmojiFailException();
+        }
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("이모지가 성공적으로 변경되었습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 }
