@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-@Slf4j // log를 사용하기 위한 어노테이션
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
