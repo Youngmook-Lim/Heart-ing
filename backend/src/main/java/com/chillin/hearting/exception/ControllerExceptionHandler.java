@@ -15,9 +15,30 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControllerExceptionHandler {
     private static final String FAIL = "fail";
 
+    @ExceptionHandler(EmojiFailException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResponseDTO handleEmojiFailException(EmojiFailException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(EmojiNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleEmojiNotFoundException(EmojiNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 
     @ExceptionHandler(ReportFailException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ResponseDTO handleReportFailException(ReportFailException e) {
         log.error(e.getMessage());
@@ -28,7 +49,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ServerLogicException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ResponseDTO handleServerLogicException(ServerLogicException e) {
         log.error(e.getMessage());
@@ -39,7 +60,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(MessageAlreadyReportedException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseDTO handleMessageAlreadyReportedException(MessageAlreadyReportedException e) {
         log.error(e.getMessage());
@@ -50,7 +71,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(MessageAlreadyDeletedException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseDTO handleMessageAlreadyDeletedException(MessageAlreadyDeletedException e) {
         log.error(e.getMessage());
@@ -72,7 +93,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(DeleteMessageFailException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ResponseDTO handleDeleteMessageFailException(DeleteMessageFailException e) {
         log.error(e.getMessage());
