@@ -12,15 +12,7 @@ public class HeartRes {
     private String name;
     private String imageUrl;
     private String type;
-    private boolean isLocked = true;
-
-//    @Builder
-//    public HeartRes(Heart heart) {
-//        this.id = heart.getId();
-//        this.name = heart.getName();
-//        this.imageUrl = heart.getImageUrl();
-//        this.type = heart.getType();
-//    }
+    private Boolean isLocked = true;
 
     @Builder
     public HeartRes(Heart heart, boolean isLocked) {
