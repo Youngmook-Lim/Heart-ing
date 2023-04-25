@@ -1,6 +1,8 @@
 package com.chillin.hearting.db.repository;
 
 import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -10,32 +12,78 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class HeartRepositoryTest {
 
     @Autowired
     private HeartRepository heartRepository;
 
-    @Test
-    public void 도감저장() {
-        Heart heart = Heart.builder()
-                .name("테스트하트")
-                .imageUrl("test.com")
-                .shortDescription("short test dsc")
-                .longDescription("long test dsc")
-                .acqCondition("test condition")
-                .type("DEFAUT")
-                .build();
+    @Autowired
+    private UserRepository userRepository;
 
-        heartRepository.save(heart);
+    private Heart savedDefaultHeart;
+    private Heart savedSpecialHeart;
+    private User savedUser;
+
+    @BeforeEach
+    public void 데이터생성() {
+        Heart defaultHeart = createDefaultHeart();
+        Heart specialHeart = createSpecialHeart();
+        User user = createUser();
+
+        savedDefaultHeart = heartRepository.save(defaultHeart);
+        savedSpecialHeart = heartRepository.save(specialHeart);
+        savedUser = userRepository.save(user);
     }
+
 
     @Test
     public void 모든도감조회() {
+        // when
         List<Heart> heartList = heartRepository.findAll();
+
+        // then
         assertThat(heartList)
                 .anySatisfy(heart -> {
-                    assertThat(heart.getName()).isEqualTo("테스트하트");
+                    assertThat(heart.getName()).isEqualTo(savedDefaultHeart.getName());
                 });
+
+        assertThat(heartList).extracting("type")
+                .containsOnly("DEFAULT", "SPECIAL");
+    }
+
+    public Heart createDefaultHeart() {
+        Heart heart = Heart.builder()
+                .name("호감 하트")
+                .imageUrl("test.com")
+                .shortDescription("짧은 설명 !")
+                .longDescription("호감의 탄생 스토리")
+                .acqCondition("기본 제공")
+                .type("DEFAULT")
+                .build();
+
+        return heart;
+    }
+
+    public Heart createSpecialHeart() {
+        Heart heart = Heart.builder()
+                .name("행성 하트")
+                .imageUrl("universe.com")
+                .shortDescription("우주에 단 하나 뿐인 너 !")
+                .longDescription("우주의 탄생 스토리")
+                .acqCondition("특정인에게 5회 이상 메시지 전송")
+                .type("SPECIAL")
+                .build();
+
+        return heart;
+    }
+
+    public User createUser() {
+        User user = User.builder()
+                .id("test123")
+                .type("ROLE_TEST")
+                .email("test-email.com")
+                .nickname("test-nick")
+                .build();
+        return user;
     }
 }
