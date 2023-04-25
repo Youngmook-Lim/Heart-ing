@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.response.SendMessageRes;
+import com.chillin.hearting.api.data.MessageData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
@@ -44,9 +44,9 @@ public class MessageServiceTest {
     private final String title = "title";
     private final String content = "content";
     private final String senderIp = "senderIp";
-    private final User receiver = User.builder().build();
-    private final User sender = User.builder().build();
-    private final Heart heart = Heart.builder().name("testHeart").build();
+    private final User receiver = User.builder().id("receiver").build();
+    private final User sender = User.builder().id("sender").build();
+    private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
 
     @Test
     public void failSendMessage_NoReceiver() {
@@ -93,13 +93,13 @@ public class MessageServiceTest {
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
         doReturn(Optional.of(heart)).when(heartRepository).findById(heartId);
-        doReturn(Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
+        doReturn(Message.builder().id(0L).heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
 
         // when
-        final SendMessageRes message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
+        final MessageData message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
 
         // then
-        assertThat(message.getData().get("heartName")).isEqualTo("testHeart");
+        assertThat(message.getHeartName()).isEqualTo("testHeart");
 
         // verify
         verify(userRepository, times(1)).findById(receiverId);
