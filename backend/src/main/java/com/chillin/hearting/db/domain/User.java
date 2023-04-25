@@ -70,6 +70,7 @@ public class User implements Serializable {
         this.reportedCount = 0;
         this.status = 'A';
         this.role = "ROLE_USER";
+        this.statusMessage = "";
         this.messageTotal = 0L;
     }
 
@@ -81,6 +82,10 @@ public class User implements Serializable {
         this.type = type;
         this.email = email;
         this.nickname = nickname;
+    }
+
+    public void updateUserStatusToActive() {
+        this.status = 'A';
     }
 
     public void saveRefreshToken(String refreshToken) {
@@ -97,7 +102,7 @@ public class User implements Serializable {
     }
 
     // message_total 추가
-    public void updateMessageTotal () {
+    public void updateMessageTotal() {
         this.messageTotal++;
     }
 

@@ -1,8 +1,10 @@
 package com.chillin.hearting.config;
 
 import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.jwt.AuthTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -14,9 +16,9 @@ public class JwtConfig {
     @Value("${jwt.secret}")
     private String secret;
 
-//    @Bean
-//    public AuthTokenProvider jwtProvider() {
-//        return new AuthTokenProvider(secret, userRepository);
-//    }
+    @Bean
+    public AuthTokenProvider jwtProvider() {
+        return new AuthTokenProvider(secret, userRepository);
+    }
 
 }
