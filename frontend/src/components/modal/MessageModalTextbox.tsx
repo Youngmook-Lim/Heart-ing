@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
 
-function MessageModalTextbox() {
+function MessageModalTextbox({ ...props }) {
   return (
     <div>
-      여기에는 메세지 내용이 들어가면 되겠죠
+      <div>{props.title}</div>
+      <div>{props.content}</div>
     </div>
-  )
+  );
 }
 
-export default MessageModalTextbox
+export default MessageModalTextbox;

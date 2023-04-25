@@ -1,11 +1,32 @@
-import React from 'react'
+import React from "react";
 
-function MessageModalButtonBox() {
+import { IMessageModalTypes } from "../../types/messageType";
+
+import MessageModalButtonBoxClose from "./MessageModalButtonBoxClose";
+import MessageModalButtonBoxDelete from "./MessageModalButtonBoxDelete";
+import MessageModalButtonBoxEmoji from "./MessageModalButtonBoxEmoji";
+import MessageModalButtonBoxSave from "./MessageModalButtonBoxSave";
+
+function MessageModalButtonBox({ mode, isExpired }: IMessageModalTypes) {
+  // recent : 24시간 리스트에서 읽을 때 => 삭제, 보관, 반응
+  // save : 영구보관에서 읽을 때 => 삭제, 닫기, 반응
+  // send : 보낸메시지에서 읽을 때 => 닫기
+  // 반응은 만료되지 않은 메시지에서만 가능
+
   return (
     <div>
-      props에 따라 버튼 종류 다르게 넣어주면 되지 않을까 하는 의도...인데 바꾸셔도 ㅇㅋ...
+      {mode === "recent" || mode === "save" ? (
+        <MessageModalButtonBoxClose />
+      ) : null}
+      {mode === "recent" ? <MessageModalButtonBoxDelete /> : null}
+      {mode === "save" || mode === "send" ? (
+        <MessageModalButtonBoxEmoji />
+      ) : null}
+      {(mode === "recent" || mode === "save") && !isExpired ? (
+        <MessageModalButtonBoxSave />
+      ) : null}
     </div>
-  )
+  );
 }
 
-export default MessageModalButtonBox
+export default MessageModalButtonBox;
