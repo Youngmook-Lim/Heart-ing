@@ -4,15 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class HeartNotFoundException extends RuntimeException {
+public class MessageNotFoundException extends RuntimeException {
 
-    public static final String DEFAULT_MESSAGE = "해당 하트를 찾을 수 없습니다.";
+    public static final String DEFAULT_MESSAGE = "해당 메시지를 찾을 수 없습니다.";
 
-    public HeartNotFoundException() {
+    public MessageNotFoundException() {
         super(DEFAULT_MESSAGE);
     }
 
-    public HeartNotFoundException(String msg) {
+    public MessageNotFoundException(String msg) {
         super(msg);
     }
 }
