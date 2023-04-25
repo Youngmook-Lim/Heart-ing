@@ -1,7 +1,7 @@
 package com.chillin.hearting.api.controller;
 
+import com.chillin.hearting.api.data.MessageData;
 import com.chillin.hearting.api.request.SendMessageReq;
-import com.chillin.hearting.api.response.SendMessageRes;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.ControllerExceptionHandler;
@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -118,17 +117,13 @@ public class MessageControllerTest {
                 .title("title")
                 .build();
 
-        SendMessageRes expectedResponse = SendMessageRes.builder()
-                .data(Map.of(
-                        "messageId", 1L,
-                        "heartId", 0L,
-                        "heartName", "exampleHeartName",
-                        "heartUrl", "exampleHeartUrl",
-                        "isRead", false
-                ))
+        MessageData expectedResponse = MessageData.builder()
+                .messageId(0L)
+                .heartId(sendMessageReq.getHeartId())
                 .build();
 
         doReturn(expectedResponse).when(messageService).sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), null, null);
+
 
         // when
         final ResultActions resultActions = mockMvc.perform(
@@ -142,12 +137,10 @@ public class MessageControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.messageId", is(1)))
+        resultActions.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.messageId", is(0)))
                 .andExpect(jsonPath("$.data.heartId", is(0)))
-                .andExpect(jsonPath("$.data.heartName", is("exampleHeartName")))
-                .andExpect(jsonPath("$.data.heartUrl", is("exampleHeartUrl")))
-                .andExpect(jsonPath("$.data.isRead", is(false)));
+                .andExpect(jsonPath("$.status", is("success")));
     }
 
 
