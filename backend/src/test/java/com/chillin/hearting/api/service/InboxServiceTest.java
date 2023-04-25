@@ -100,6 +100,24 @@ public class InboxServiceTest {
         assertThat(inboxDetailData.getMessageId()).isEqualTo(fakeMessageId);
     }
 
+    @Test
+    public void 메시지영구삭제() {
+        // given
+        Long fakeId = 1L;
+        Message savedMessage = createMessage(fakeId);
+        savedMessage.deleteInbox();
+
+        // mocking
+        when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
+
+        // when
+        inboxService.deleteMessage(fakeId);
+
+        // then
+        Optional<Message> findMessage = inboxRepository.findById(fakeId);
+        assertThat(findMessage.get().isActive()).isEqualTo(false);
+    }
+
 
     public User createUser(String id, String email, String nickname) {
         if ("".equals(email)) email = "test.com";
