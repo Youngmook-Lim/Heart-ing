@@ -1,12 +1,8 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.MessageData;
-import com.chillin.hearting.db.domain.Heart;
-import com.chillin.hearting.db.domain.Message;
-import com.chillin.hearting.db.domain.User;
-import com.chillin.hearting.db.repository.HeartRepository;
-import com.chillin.hearting.db.repository.MessageRepository;
-import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.db.domain.*;
+import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +18,8 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
+    private final BlockedUserRepository blockedUserRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
     public MessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
@@ -58,7 +56,7 @@ public class MessageService {
 
         // Check if userId matches the receiverId
         if (!message.getReceiver().getId().equals(userId)) {
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException("본인에게 온 메시지만 삭제할 수 있습니다.");
         }
 
         // Check if already deleted
@@ -71,6 +69,59 @@ public class MessageService {
         message = messageRepository.save(message);
 
         return message.isActive();
+    }
+
+    @Transactional
+    public Long reportMessage(long messageId, String userId, String content) {
+
+        // Check if message, reportedUser, reporter exist
+        Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        User reportedUser = userRepository.findById(message.getSender().getId()).orElseThrow(UserNotFoundException::new);
+        User reporter = userRepository.findById(message.getReceiver().getId()).orElseThrow(UserNotFoundException::new);
+
+        // Check if userId matches the receiverId
+        if (!message.getReceiver().getId().equals(userId)) {
+            throw new UnAuthorizedException("본인이 받은 메시지만 신고할 수 있습니다.");
+        }
+
+        // Check if already reported
+        if (message.isReported()) {
+            throw new MessageAlreadyReportedException();
+        }
+
+        // Update message
+        message.reportMessage();
+
+
+        // Update user and add to BlockedUser if necessary
+
+        reportedUser.reportUser();
+
+        int reportedCnt = reportedUser.getReportedCount();
+
+        if (reportedCnt == 3 || reportedCnt == 5) {
+            char newStatus = reportedCnt == 3 ? 'P' : 'O';
+
+            reportedUser.updateUserStatus(newStatus);
+
+            // Add to Blocked User
+            BlockedUser blockedUser = BlockedUser.builder().user(reportedUser).build();
+            blockedUser.prePersist();
+            blockedUser.updateEndDate(newStatus);
+            // Persist blockedUser
+            blockedUserRepository.save(blockedUser);
+        }
+
+        // Persist message
+        message = messageRepository.save(message);
+        // Persist reportedUser
+        reportedUser = userRepository.save(reportedUser);
+
+        // Create Report
+        Report report = Report.builder().message(message).reporter(reporter).reportedUser(reportedUser).content(content).build();
+        report = reportRepository.save(report);
+
+        return report.getId();
     }
 
 }
