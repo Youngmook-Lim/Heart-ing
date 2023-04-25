@@ -39,22 +39,13 @@ public class MessageService {
         // Create message
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
         message = messageRepository.save(message);
-
-        // Put into DTO
-//        Map<String, Object> data = new HashMap<>();
-        MessageData messageData = MessageData.builder()
+        
+        return MessageData.builder()
                 .messageId(message.getId())
                 .heartId(message.getHeart().getId())
                 .heartName(message.getHeart().getName())
                 .heartUrl(message.getHeart().getImageUrl())
                 .isRead(message.isRead()).build();
-//        data.put("messageId", message.getId());
-//        data.put("heartId", message.getHeart().getId());
-//        data.put("heartName", message.getHeart().getName());
-//        data.put("heartUrl", message.getHeart().getImageUrl());
-//        data.put("isRead", message.isRead());
-
-        return messageData;
     }
 
 }

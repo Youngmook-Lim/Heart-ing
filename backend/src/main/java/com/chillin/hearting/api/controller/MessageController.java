@@ -25,15 +25,16 @@ import javax.validation.Valid;
 public class MessageController {
 
     private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
     private final MessageService messageService;
 
     @PostMapping("")
     public ResponseEntity<ResponseDTO> sendMessage(@Valid @RequestBody SendMessageReq sendMessageReq, HttpServletRequest httpServletRequest) {
+
+
         User user = (User) httpServletRequest.getAttribute("user");
 
         // Check if logged in user is same as sender
-        if (!user.getId().equals(sendMessageReq.getSenderId())) {
+        if (user != null && !user.getId().equals(sendMessageReq.getSenderId())) {
             throw new WrongUserException();
         }
 
@@ -43,8 +44,6 @@ public class MessageController {
                 .status(SUCCESS)
                 .message("메시지가 성공적으로 발송되었습니다.")
                 .data(data).build();
-//        responseDTO.setStatus(SUCCESS);
-//        responseDTO.setMessage("메시지가 성공적으로 발송되었습니다.");
 
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);

@@ -3,6 +3,7 @@ package com.chillin.hearting.exception;
 import com.chillin.hearting.api.response.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +13,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ControllerExceptionHandler {
     private static final String FAIL = "fail";
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message("RequestBody를 확인해 주세요.")
+                .build();
+    }
 
     @ExceptionHandler(WrongUserException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
