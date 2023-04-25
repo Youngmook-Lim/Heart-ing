@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route index element={<Manual />} />
           <Route path="/*" element={<ErrorPage />} />
-          <Route path="/heartboard/:id" element={<HeartBoard />} />
+          <Route path="/heartboard/user" element={<HeartBoard />} />
           <Route path="/heartguide" element={<HeartGuide />} />
           <Route path="/heartwriting" element={<Heartwriting />} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
