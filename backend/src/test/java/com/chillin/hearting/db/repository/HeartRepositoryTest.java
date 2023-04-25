@@ -2,7 +2,6 @@ package com.chillin.hearting.db.repository;
 
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
-import com.chillin.hearting.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class HeartRepositoryTest {
 
     @Autowired
@@ -50,7 +48,7 @@ public class HeartRepositoryTest {
                 });
 
         assertThat(heartList).extracting("type")
-                .containsOnly("DEFAULT","SPECIAL");
+                .containsOnly("DEFAULT", "SPECIAL");
     }
 
     public Heart createDefaultHeart() {
