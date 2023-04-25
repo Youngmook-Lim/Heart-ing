@@ -8,6 +8,7 @@ import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.MessageRepository;
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
+import com.chillin.hearting.exception.MessageNotFoundException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,14 @@ public class MessageService {
                 .heartName(message.getHeart().getName())
                 .heartUrl(message.getHeart().getImageUrl())
                 .isRead(message.isRead()).build();
+    }
+
+    @Transactional
+    public void deleteMessage(long messageId) {
+
+        // Check if messageId exists
+        Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+
     }
 
 }
