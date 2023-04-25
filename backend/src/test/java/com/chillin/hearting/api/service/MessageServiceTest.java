@@ -19,8 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -46,10 +45,10 @@ public class MessageServiceTest {
     private final String content = "content";
     private final String senderIp = "senderIp";
     private final long messageId = 0L;
-    private final Message message = Message.builder().id(0L).isActive(true).build();
-    private final User receiver = User.builder().id("receiver").messageTotal(0L).build();
-    private final User sender = User.builder().id("sender").build();
+    private final User receiver = User.builder().id(receiverId).messageTotal(0L).build();
+    private final User sender = User.builder().id(senderId).build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
+    private final Message message = Message.builder().id(0L).receiver(receiver).isActive(true).build();
 
     // sendMessage
     @Test
@@ -120,7 +119,7 @@ public class MessageServiceTest {
         doReturn(Optional.empty()).when(messageRepository).findById(messageId);
 
         // when
-        MessageNotFoundException exception = assertThrows(MessageNotFoundException.class, () -> messageService.deleteMessage(messageId));
+        MessageNotFoundException exception = assertThrows(MessageNotFoundException.class, () -> messageService.deleteMessage(messageId, receiverId));
 
         // then
         assertEquals(exception.getMessage(), MessageNotFoundException.DEFAULT_MESSAGE);
@@ -130,12 +129,12 @@ public class MessageServiceTest {
     public void successDeleteMessage() {
         //given
         doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
-        doReturn(Message.builder().id(0L).isActive(false).build()).when(messageRepository).save(any(Message.class));
+        doReturn(Message.builder().id(0L).receiver(receiver).isActive(false).build()).when(messageRepository).save(any(Message.class));
 
         // when
-        Long id = messageService.deleteMessage(messageId);
+        boolean result = messageService.deleteMessage(messageId, receiverId);
 
         // then
-        assertEquals(id, messageId);
+        assertFalse(result);
     }
 }
