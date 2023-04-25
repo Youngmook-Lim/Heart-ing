@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements Serializable {
 
     // pk
@@ -70,6 +70,7 @@ public class User implements Serializable {
         this.reportedCount = 0;
         this.status = 'A';
         this.role = "ROLE_USER";
+        this.statusMessage = "";
         this.messageTotal = 0L;
     }
 
@@ -101,7 +102,7 @@ public class User implements Serializable {
     }
 
     // message_total 추가
-    public void updateMessageTotal () {
+    public void updateMessageTotal() {
         this.messageTotal++;
     }
 
