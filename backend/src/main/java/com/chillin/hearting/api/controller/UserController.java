@@ -1,9 +1,8 @@
 package com.chillin.hearting.api.controller;
 
-import com.chillin.hearting.api.response.SocialLoginRes;
-import com.chillin.hearting.api.response.SuccessRes;
+import com.chillin.hearting.api.data.Data;
+import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.UserService;
-import com.chillin.hearting.exception.DuplicateException;
 import com.chillin.hearting.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,25 +27,22 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping(value = "/guests/nickname/{nickname}")
-    public ResponseEntity<SuccessRes> duplicateNickname(@PathVariable("nickname") String nickname) throws DuplicateException {
-
-        log.debug("중복체크 요청 닉네임 = {}", nickname);
-
-        userService.duplicateNickname(nickname);
-
-        SuccessRes successRes = SuccessRes.builder().message(SUCCESS).build();
-
-        return new ResponseEntity<>(successRes, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/guests/kakao/{code}")
-    public ResponseEntity<SocialLoginRes> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
+    public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
         log.debug("카카오 로그인 시작!");
 
         String kakaoAccessToken = userService.getKakaoAccessToken(code);
 
-        return userService.kakaoLogin(kakaoAccessToken, httpServletRequest, httpServletResponse);
+        Data socialLoginData = userService.kakaoLogin(kakaoAccessToken, httpServletRequest, httpServletResponse);
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("소셜 로그인 성공")
+                .data(socialLoginData)
+                .build();
+
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 }

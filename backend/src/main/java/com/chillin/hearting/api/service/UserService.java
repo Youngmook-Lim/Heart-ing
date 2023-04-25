@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.response.SocialLoginRes;
+import com.chillin.hearting.api.data.SocialLoginData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -20,7 +20,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,12 +75,12 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<SocialLoginRes> kakaoLogin(String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
+    public SocialLoginData kakaoLogin(String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
 
         String kakaoAccessToken = getKakaoAccessToken(code);
 
         HttpStatus status = null;
-        SocialLoginRes socialLoginRes = null;
+        SocialLoginData socialLoginData = null;
 
         try {
             User kakaoUser = getKakaoInfo(kakaoAccessToken);
@@ -111,7 +110,7 @@ public class UserService {
             log.debug("kakaoUser 리프레시 토큰 저장한 후 : {}", kakaoUser.getRefreshToken());
             userRepository.saveAndFlush(kakaoUser);
 
-            socialLoginRes = SocialLoginRes.builder()
+            socialLoginData = SocialLoginData.builder()
                     .userId(kakaoUser.getId())
                     .nickname(kakaoUser.getNickname())
                     .accessToken(accessToken.getToken())
@@ -130,7 +129,7 @@ public class UserService {
             throw new IllegalArgumentException("카카오로부터 user 정보를 가져오지 못했습니다.");
         }
 
-        return new ResponseEntity<>(socialLoginRes, status);
+        return socialLoginData;
 
     }
 
@@ -250,5 +249,5 @@ public class UserService {
         }
         return user;
     }
-    
+
 }

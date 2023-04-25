@@ -100,4 +100,9 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
+    // message_total 추가
+    public void updateMessageTotal () {
+        this.messageTotal++;
+    }
+
 }

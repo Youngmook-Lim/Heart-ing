@@ -1,4 +1,4 @@
-package com.chillin.hearting.api.response;
+package com.chillin.hearting.api.data;
 
 
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-public class SocialLoginRes {
+public class SocialLoginData extends Data {
 
     // user 고유 코드
     private String userId;
@@ -27,7 +27,7 @@ public class SocialLoginRes {
     private Long messageTotal;
 
     @Builder
-    public SocialLoginRes(String userId, String nickname, String accessToken, String statusMessage, Long messageTotal) {
+    public SocialLoginData(String userId, String nickname, String accessToken, String statusMessage, Long messageTotal) {
         this.userId = userId;
         this.nickname = nickname;
         this.accessToken = accessToken;
