@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -51,10 +53,50 @@ public class InboxRepositoryTest {
 
         // when
         savedMessage.toInbox();
-        Message storedMessage = messageRepository.save(savedMessage);
+        Message storedMessage = inboxRepository.save(savedMessage);
 
         // then
         assertThat(storedMessage.isStored()).isEqualTo(true);
+    }
+
+    @Test
+    public void 영구보관메시지조회() {
+        // given
+        User savedUser1 = userRepository.save(user1);
+        User savedUser2 = userRepository.save(user2);
+        Heart savedHeart = heartRepository.save(heart);
+        Emoji savedEmoji = emojiRepository.save(emoji);
+        Message message1 = Message.builder()
+                .id(1L)
+                .heart(heart)
+                .emoji(emoji)
+                .sender(user1)
+                .receiver(user2)
+                .title("title")
+                .content("content")
+                .build();
+        Message savedMessage1 = inboxRepository.save(message1);
+
+        Message message2 = Message.builder()
+                .id(2L)
+                .heart(heart)
+                .emoji(emoji)
+                .sender(user1)
+                .receiver(user2)
+                .title("title")
+                .content("content")
+                .build();
+        Message savedMessage2 = inboxRepository.save(message2);
+
+        // when
+        savedMessage1.toInbox();
+        savedMessage2.toInbox();
+        Message storedMessage1 = inboxRepository.save(savedMessage1);
+        Message storedMessage2 = inboxRepository.save(savedMessage2);
+        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStored(savedUser2,true);
+        // then
+
+        assertThat(inboxList.size()).isEqualTo(2);
     }
 
     public User createUser(String id, String email, String nickname) {
