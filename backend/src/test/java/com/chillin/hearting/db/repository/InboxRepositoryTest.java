@@ -4,6 +4,7 @@ import com.chillin.hearting.db.domain.Emoji;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
+import com.chillin.hearting.exception.MessageNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -93,10 +94,37 @@ public class InboxRepositoryTest {
         savedMessage2.toInbox();
         Message storedMessage1 = inboxRepository.save(savedMessage1);
         Message storedMessage2 = inboxRepository.save(savedMessage2);
-        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStored(savedUser2,true);
+        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStored(savedUser2, true);
         // then
 
         assertThat(inboxList.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void 영구보관메시지상세조회() throws Exception {
+        // given
+        User sender = userRepository.save(user1);
+        User receiver = userRepository.save(user2);
+        Heart savedHeart = heartRepository.save(heart);
+        Emoji savedEmoji = emojiRepository.save(emoji);
+        Long testId = 1L;
+        Message message = Message.builder()
+                .id(testId)
+                .heart(heart)
+                .emoji(emoji)
+                .sender(sender)
+                .receiver(receiver)
+                .title("title")
+                .content("content")
+                .build();
+        Message savedMessage = inboxRepository.save(message);
+
+        // when
+        savedMessage.toInbox();
+        Message findMessage = inboxRepository.findByIdAndReceiverAndIsStored(testId, receiver, true).orElseThrow(MessageNotFoundException::new);
+
+        // then
+        assertThat(findMessage.getId()).isEqualTo(savedMessage.getId());
     }
 
     public User createUser(String id, String email, String nickname) {
