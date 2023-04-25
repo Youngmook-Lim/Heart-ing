@@ -1,11 +1,13 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
+import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.DeleteMessageFailException;
+import com.chillin.hearting.exception.ReportFailException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.WrongUserException;
 import lombok.RequiredArgsConstructor;
@@ -54,11 +56,10 @@ public class MessageController {
 
     @DeleteMapping("/{messageId}")
     public ResponseEntity<ResponseDTO> deleteMessage(@PathVariable("messageId") long messageId, HttpServletRequest httpServletRequest) {
-
-//        User user = (User) httpServletRequest.getAttribute("user");
+        User user = (User) httpServletRequest.getAttribute("user");
 
         ////////// FOR TESTING PURPOSES //////////
-        User user = User.builder().id("bbbb").build();
+//        User user = User.builder().id("bbbb").build();
 
         // Check if user has permissions
         if (user == null) {
@@ -76,6 +77,32 @@ public class MessageController {
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/{messageId}/reports")
+    public ResponseEntity<ResponseDTO> reportMessage(@Valid @RequestBody ReportReq reportReq, @PathVariable("messageId") long messageId, HttpServletRequest httpServletRequest) {
+
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        ////////// FOR TESTING PURPOSES //////////
+//        User user = User.builder().id("bbbb").build();
+
+        // Check if user has permissions
+        if (user == null) {
+            throw new UnAuthorizedException();
+        }
+
+        Long reportId = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
+        if (reportId == null) {
+            throw new ReportFailException();
+        }
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("메시지가 성공적으로 신고되었습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
 }
