@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.controller;
 
-import com.chillin.hearting.api.response.SuccessRes;
+import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.exception.DuplicateException;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +24,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(value = "/guests/nickname/{nickname}")
-    public ResponseEntity<SuccessRes> duplicateNickname(@PathVariable("nickname") String nickname) throws DuplicateException {
+    public ResponseEntity<ResponseDTO> duplicateNickname(@PathVariable("nickname") String nickname) throws DuplicateException {
 
         log.debug("중복체크 요청 닉네임 = {}", nickname);
 
         userService.duplicateNickname(nickname);
 
-        SuccessRes successRes = SuccessRes.builder().message(SUCCESS).build();
+        ResponseDTO responseDTO = ResponseDTO.builder().message(SUCCESS).build();
 
-        return new ResponseEntity<>(successRes, HttpStatus.OK);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 }

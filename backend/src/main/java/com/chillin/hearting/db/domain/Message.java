@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access =  AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Message implements Serializable {
 
@@ -21,29 +21,29 @@ public class Message implements Serializable {
     private Long id;
 
     // FK
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "heart_id", nullable = false)
     private Heart heart;
 
     // FK
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emoji_id") // null 가능
     private Emoji emoji;
 
     // FK
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id") // null 가능
     private User sender;
 
     // FK
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    @Column(length = 50, name= "title", nullable = false)
+    @Column(length = 50, name = "title", nullable = false)
     private String title;
 
-    @Column(length = 500, name= "content")
+    @Column(length = 500, name = "content")
     private String content;
 
     @Column(name = "is_read", nullable = false)
@@ -58,7 +58,7 @@ public class Message implements Serializable {
     @Column(name = "is_reported", nullable = false)
     private boolean isReported;
 
-    @Column(length = 20, name= "sender_ip")
+    @Column(length = 20, name = "sender_ip")
     private String senderIp;
 
     @Column(name = "created_date", nullable = false)
@@ -75,7 +75,8 @@ public class Message implements Serializable {
     }
 
     @Builder
-    public Message(Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
+    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
+        this.id = id;
         this.heart = heart;
         this.emoji = emoji;
         this.sender = sender;
