@@ -29,6 +29,9 @@ public class MessageService {
 
         // Check if receiver exists
         User receiver = userRepository.findById(receiverId).orElseThrow(UserNotFoundException::new);
+        // Add cnt to receiver's messageTotal
+        receiver.updateMessageTotal();
+        userRepository.save(receiver);
 
         // Check if sender exists (if logged in user)
         User sender = senderId == null ? null : userRepository.findById(senderId).orElseThrow(UserNotFoundException::new);
@@ -39,7 +42,7 @@ public class MessageService {
         // Create message
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
         message = messageRepository.save(message);
-        
+
         return MessageData.builder()
                 .messageId(message.getId())
                 .heartId(message.getHeart().getId())
