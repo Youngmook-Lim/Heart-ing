@@ -18,7 +18,7 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void KakaoLoginSuccess(){
+    public void KakaoSignupSuccess(){
 
         LocalDateTime now = LocalDateTime.now();
         // given
