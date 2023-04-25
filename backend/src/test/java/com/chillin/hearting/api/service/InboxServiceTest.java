@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.InboxData;
+import com.chillin.hearting.api.data.InboxDetailData;
 import com.chillin.hearting.db.domain.Emoji;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
@@ -46,6 +47,7 @@ public class InboxServiceTest {
         // given
         Long fakeId = 1L;
         Message savedMessage = createMessage(fakeId);
+
         // mocking
         when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
 
@@ -78,6 +80,24 @@ public class InboxServiceTest {
         assertThat(inboxData.getInboxList()).allSatisfy(message -> {
             assertThat(message.isStored()).isEqualTo(true);
         });
+    }
+
+    @Test
+    public void 영구보관메시지상세조회() {
+        // given
+        Long fakeMessageId = 1L;
+        Message message = createMessage(fakeMessageId);
+        message.toInbox();
+
+        // mocking
+        when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(message));
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
+
+        // when
+        InboxDetailData inboxDetailData = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
+
+        // then
+        assertThat(inboxDetailData.getMessageId()).isEqualTo(fakeMessageId);
     }
 
 
