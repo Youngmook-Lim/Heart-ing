@@ -75,7 +75,7 @@ public class MessageController {
                 .message("메시지가 성공적으로 삭제되었습니다.")
                 .build();
 
-        return new ResponseEntity<>(responseDTO, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
 }
