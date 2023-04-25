@@ -5,15 +5,14 @@ import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
+import com.chillin.hearting.exception.DeleteMessageFailException;
+import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.WrongUserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -51,6 +50,32 @@ public class MessageController {
                 .data(data).build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{messageId}")
+    public ResponseEntity<ResponseDTO> deleteMessage(@PathVariable("messageId") long messageId, HttpServletRequest httpServletRequest) {
+
+//        User user = (User) httpServletRequest.getAttribute("user");
+
+        ////////// FOR TESTING PURPOSES //////////
+        User user = User.builder().id("bbbb").build();
+
+        // Check if user has permissions
+        if (user == null) {
+            throw new UnAuthorizedException();
+        }
+
+        boolean result = messageService.deleteMessage(messageId, user.getId());
+        if (result) {
+            throw new DeleteMessageFailException();
+        }
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("메시지가 성공적으로 삭제되었습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.NO_CONTENT);
     }
 
 }
