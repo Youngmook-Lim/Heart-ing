@@ -107,4 +107,14 @@ public class User implements Serializable {
         this.messageTotal++;
     }
 
+    // 유저 신고
+    public void reportUser() {
+        this.reportedCount++;
+    }
+
+    // 유저 상태 업데이트
+    public void updateUserStatus(char status) {
+        this.status = status;
+    }
+
 }
