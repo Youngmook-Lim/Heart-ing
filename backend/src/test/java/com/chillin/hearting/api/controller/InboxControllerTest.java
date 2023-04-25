@@ -59,7 +59,7 @@ public class InboxControllerTest {
 
         // when
         final ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.post(url)
+                MockMvcRequestBuilders.get(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(request -> {
                                     request.setAttribute("user", user);
@@ -67,5 +67,29 @@ public class InboxControllerTest {
                                 }
                         )
         );
+
+        // then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void 영구보관메시지상세조회() throws Exception {
+        // given
+        final String url = "/api/v1/messages/inbox/1";
+        User user = User.builder().id("otherSender").build();
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                                    request.setAttribute("user", user);
+                                    return request;
+                                }
+                        )
+        );
+
+        // then
+        resultActions.andExpect(status().isOk());
     }
 }
