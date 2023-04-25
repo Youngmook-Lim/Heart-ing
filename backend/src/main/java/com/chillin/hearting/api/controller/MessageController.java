@@ -38,13 +38,17 @@ public class MessageController {
             throw new WrongUserException();
         }
 
+        // Check if sent to myself
+        if (user != null && user.getId().equals(sendMessageReq.getReceiverId())) {
+            throw new WrongUserException("본인에게 메시지를 보냈습니다.");
+        }
+
         Data data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), null);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("메시지가 성공적으로 발송되었습니다.")
                 .data(data).build();
-
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
