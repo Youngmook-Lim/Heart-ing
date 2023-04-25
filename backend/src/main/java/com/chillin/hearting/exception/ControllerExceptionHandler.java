@@ -14,6 +14,28 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControllerExceptionHandler {
     private static final String FAIL = "fail";
 
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleMessageNotFoundException(MessageNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(DeleteMessageFailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseDTO handleDeleteMessageFailException(DeleteMessageFailException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -21,7 +43,7 @@ public class ControllerExceptionHandler {
         log.error(e.getMessage());
         return ResponseDTO.builder()
                 .status(FAIL)
-                .message("RequestBody를 확인해 주세요.")
+                .message("RequestBody가 잘못되었습니다.")
                 .build();
     }
 
