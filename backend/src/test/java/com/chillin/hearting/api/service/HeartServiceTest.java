@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.response.HeartRes;
+import com.chillin.hearting.api.data.HeartData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
@@ -59,11 +59,11 @@ public class HeartServiceTest {
 
         // when
         List<Heart> savedHearts = heartRepository.findAll();
-        List<HeartRes> allHearts = heartService.findAllHearts(fakeUser);
+        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartRes heartRes : allHearts) {
-            assertThat(heartRes.getIsLocked()).isEqualTo((heartRes.getType() == "DEFAULT") ? false : true);
+        for (HeartData heartData : allHearts) {
+            assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() == "DEFAULT") ? false : true);
         }
     }
 
@@ -80,11 +80,11 @@ public class HeartServiceTest {
         when(userHeartRepository.findByUser(fakeUser)).thenReturn(userHearts);
 
         // when
-        List<HeartRes> allHearts = heartService.findAllHearts(fakeUser);
+        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartRes heartRes : allHearts) {
-            assertThat(heartRes.getIsLocked()).isEqualTo((heartRes.getType() != "DEFAULT" && heartRes.getId() == notMyHeart.getId()) ? true : false);
+        for (HeartData heartData : allHearts) {
+            assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getId() == notMyHeart.getId()) ? true : false);
         }
     }
 
