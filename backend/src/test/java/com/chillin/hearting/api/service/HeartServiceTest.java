@@ -75,7 +75,7 @@ public class HeartServiceTest {
         userHearts = new ArrayList<>();
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
-        // moking
+        // mocking
         when(heartRepository.findAll()).thenReturn(findHearts);
         when(userHeartRepository.findByUser(fakeUser)).thenReturn(userHearts);
 
