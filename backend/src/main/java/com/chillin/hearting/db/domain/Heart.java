@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Slf4j
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Heart implements Serializable {
@@ -38,7 +37,8 @@ public class Heart implements Serializable {
     private String acqCondition;
 
     @Builder
-    public Heart(String name, String imageUrl, String shortDescription, String longDescription, String type, String acqCondition) {
+    public Heart(Long id, String name, String imageUrl, String shortDescription, String longDescription, String type, String acqCondition) {
+        this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.shortDescription = shortDescription;
