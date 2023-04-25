@@ -30,4 +30,4 @@ logging:
   level:
     root: info
     com:
-      temp: debug
+      chillin: debug
