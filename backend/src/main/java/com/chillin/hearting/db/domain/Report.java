@@ -1,7 +1,6 @@
 package com.chillin.hearting.db.domain;
 
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,17 +19,17 @@ public class Report implements Serializable {
     private Long id;
 
     // FK
-    @OneToOne(fetch =  FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "message_id", nullable = false)
     private Message message;
 
     // FK, 신고자
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id", nullable = false)
     private User reporter;
 
     // FK, 신고 당한 사람
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_id")
     private User reportedUser;
 
@@ -46,5 +45,13 @@ public class Report implements Serializable {
     @PrePersist
     public void prePersist() {
         this.createdDate = LocalDateTime.now();
+    }
+
+    @Builder
+    public Report(Message message, User reporter, User reportedUser, String content) {
+        this.message = message;
+        this.reporter = reporter;
+        this.reportedUser = reportedUser;
+        this.content = content;
     }
 }
