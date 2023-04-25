@@ -53,11 +53,16 @@ public class MessageService {
     }
 
     @Transactional
-    public void deleteMessage(long messageId) {
+    public long deleteMessage(long messageId) {
 
         // Check if messageId exists
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
 
+        message.deleteMessage();
+        
+        message = messageRepository.save(message);
+
+        return message.getId();
     }
 
 }

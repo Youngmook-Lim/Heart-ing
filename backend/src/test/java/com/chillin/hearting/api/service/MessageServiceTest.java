@@ -46,6 +46,7 @@ public class MessageServiceTest {
     private final String content = "content";
     private final String senderIp = "senderIp";
     private final long messageId = 0L;
+    private final Message message = Message.builder().id(0L).isActive(true).build();
     private final User receiver = User.builder().id("receiver").messageTotal(0L).build();
     private final User sender = User.builder().id("sender").build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
@@ -123,5 +124,18 @@ public class MessageServiceTest {
 
         // then
         assertEquals(exception.getMessage(), MessageNotFoundException.DEFAULT_MESSAGE);
+    }
+
+    @Test
+    public void successDeleteMessage() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Message.builder().id(0L).isActive(false).build()).when(messageRepository).save(any(Message.class));
+
+        // when
+        Long id = messageService.deleteMessage(messageId);
+
+        // then
+        assertEquals(id, messageId);
     }
 }
