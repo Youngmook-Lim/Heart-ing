@@ -72,6 +72,7 @@ public class Message implements Serializable {
     public void prePersist() {
         this.createdDate = LocalDateTime.now();
         this.expiredDate = this.createdDate.plusHours(EXPIRY_TIME);
+        this.isActive = true;
     }
 
     @Builder
@@ -88,6 +89,10 @@ public class Message implements Serializable {
 
     public void toInbox() {
         this.isStored = true;
+    }
+
+    public void deleteInbox() {
+        this.isActive = false;
     }
 
 }
