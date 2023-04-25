@@ -1,16 +1,20 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.db.domain.Emoji;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.InboxRepository;
+import com.chillin.hearting.db.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,16 +30,22 @@ public class InboxServiceTest {
     @Mock
     private InboxRepository inboxRepository;
 
-    private User user1 = createUser("1", "test1.com", "nick1");
-    private User user2 = createUser("2", "test2.com", "nick2");
+    @Mock
+    private UserRepository userRepository;
+
+    private final String fakeSenderId = "1";
+    private final String getFakeReceiverId = "2";
+    private User user1 = createUser(fakeSenderId, "test1.com", "nick1");
+    private User user2 = createUser(getFakeReceiverId, "test2.com", "nick2");
     private Heart heart = createDefaultHeart();
     private Emoji emoji = createEmoji();
-    private Message savedMessage = createMessage();
+
 
     @Test
     public void 메시지영구보관() {
         // given
-
+        Long fakeId = 1L;
+        Message savedMessage = createMessage(fakeId);
         // mocking
         when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
 
@@ -47,6 +57,29 @@ public class InboxServiceTest {
         Optional<Message> findMessage = inboxRepository.findById(savedMessage.getId());
         assertThat(findMessage.get().isStored()).isEqualTo(true);
     }
+
+    @Test
+    public void 영구보관메시지조회() {
+        // given
+        Message m1 = createMessage(1L);
+        Message m2 = createMessage(2L);
+        m1.toInbox();
+        m2.toInbox();
+        List<Message> inboxList = new ArrayList<>();
+        inboxList.add(m1);
+        inboxList.add(m2);
+
+        // mocking
+        when(inboxRepository.findAllByReceiverAndIsStored(any(), any())).thenReturn(inboxList);
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
+
+        // when
+        InboxData inboxData = inboxService.findInboxMessages(getFakeReceiverId);
+        assertThat(inboxData.getInboxList()).allSatisfy(message -> {
+            assertThat(message.isStored()).isEqualTo(true);
+        });
+    }
+
 
     public User createUser(String id, String email, String nickname) {
         if ("".equals(email)) email = "test.com";
@@ -82,9 +115,9 @@ public class InboxServiceTest {
         return emoji;
     }
 
-    public Message createMessage() {
+    public Message createMessage(Long id) {
         return Message.builder()
-                .id(1L)
+                .id(id)
                 .heart(heart)
                 .emoji(emoji)
                 .sender(user1)
