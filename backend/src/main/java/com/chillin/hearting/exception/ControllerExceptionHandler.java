@@ -1,5 +1,6 @@
 package com.chillin.hearting.exception;
 
+import com.chillin.hearting.api.response.ErrorRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +17,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public ErrorRes handleWrongUserException(WrongUserException e) {
         log.error(e.getMessage());
-        return ErrorRes.make(e.getMessage());
+        return ErrorRes.make("잘못된 유저입니다.");
     }
 
     @ExceptionHandler(NotFoundException.class)

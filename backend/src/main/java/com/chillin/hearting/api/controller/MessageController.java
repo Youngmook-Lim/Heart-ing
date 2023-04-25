@@ -2,6 +2,7 @@ package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.SendMessageRes;
+import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.WrongUserException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MessageController {
 
-    @PostMapping("/")
+    private final MessageService messageService;
+
+    @PostMapping("")
     public ResponseEntity<SendMessageRes> sendMessage(@Valid @RequestBody SendMessageReq sendMessageReq, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
 
@@ -29,6 +32,9 @@ public class MessageController {
         if (!user.getId().equals(sendMessageReq.getSenderId())) {
             throw new WrongUserException();
         }
+
+        SendMessageRes sendMessageRes = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), null);
+        
 
         return null;
     }

@@ -3,6 +3,8 @@ package com.chillin.hearting.api.controller;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
+import com.chillin.hearting.exception.ControllerExceptionHandler;
+import com.chillin.hearting.exception.UserNotFoundException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -38,7 +42,7 @@ public class MessageControllerTest {
     @BeforeEach
     public void init() {
         gson = new Gson();
-        mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(messageController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -47,7 +51,6 @@ public class MessageControllerTest {
         final String url = "/api/v1/messages";
         HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("otherSender").build();
-        when(req.getAttribute("user")).thenReturn(user);
 
         // when
         final ResultActions resultActions = mockMvc.perform(
@@ -61,9 +64,42 @@ public class MessageControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("잘못된 유저입니다.")));
 
     }
 
+    @Test
+    public void failSendMessage_ServiceError() throws Exception {
+        // given
+        final String url = "/api/v1/messages/";
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        User user = User.builder().id("sender").build();
+
+        SendMessageReq sendMessageReq = SendMessageReq.builder()
+                .heartId(0L)
+                .senderId("sender")
+                .receiverId("receiver")
+                .title("title")
+                .build();
+
+        // Mock the behavior of messageService to throw a UserNotFoundException using doThrow().when()
+        doThrow(new UserNotFoundException()).when(messageService)
+                .sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), null, null);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(sendMessageReq))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", is("해당 유저를 찾을 수 없습니다.")));
+    }
 
 }

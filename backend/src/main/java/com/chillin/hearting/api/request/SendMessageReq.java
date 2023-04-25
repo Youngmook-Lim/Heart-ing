@@ -3,6 +3,7 @@ package com.chillin.hearting.api.request;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class SendMessageReq {
 
-    @NotBlank
+    @NotNull
     private long heartId;
 
     @NotBlank
