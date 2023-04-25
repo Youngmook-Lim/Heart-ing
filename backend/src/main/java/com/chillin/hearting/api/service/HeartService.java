@@ -30,6 +30,7 @@ public class HeartService {
      * 모든 도감 리스트를 반환합니다.
      * 로그인 사용자는 하트 획득 조건을 달성한 도감에 대해 잠금이 해제됩니다.
      * 비로그인 사용자이면 DEFAULT 타입의 도감만 잠금이 해제됩니다.
+     *
      * @param user
      * @return 하트 DTO
      */
