@@ -92,5 +92,8 @@ public class Message implements Serializable {
         this.isActive = false;
     }
 
+    public void reportMessage() {
+        this.isReported = true;
+    }
 
 }
