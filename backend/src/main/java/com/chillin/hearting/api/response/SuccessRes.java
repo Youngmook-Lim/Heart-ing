@@ -9,12 +9,14 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class SuccessRes {
-    
+
+    private String status;
     private String message;
 
     // 성공 메시지
     public static SuccessRes make(String message) {
         return SuccessRes.builder()
+                .status("success")
                 .message(message)
                 .build();
     }
