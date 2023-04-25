@@ -5,6 +5,7 @@ import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.ControllerExceptionHandler;
 import com.chillin.hearting.exception.UserNotFoundException;
+import com.chillin.hearting.exception.WrongUserException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ public class MessageControllerTest {
         );
 
         // then
-        resultActions.andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("잘못된 유저입니다.")));
+        resultActions.andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is(WrongUserException.DEFAULT_MESSAGE)));
 
     }
 
@@ -99,7 +100,10 @@ public class MessageControllerTest {
 
         // then
         resultActions.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is("해당 유저를 찾을 수 없습니다.")));
+                .andExpect(jsonPath("$.message", is(UserNotFoundException.DEFAULT_MESSAGE)));
     }
+
+    @Test
+
 
 }
