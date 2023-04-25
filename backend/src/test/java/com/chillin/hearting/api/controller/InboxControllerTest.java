@@ -92,4 +92,21 @@ public class InboxControllerTest {
         // then
         resultActions.andExpect(status().isOk());
     }
+
+    @Test
+    public void 메시지영구삭제() throws Exception {
+
+        // given
+        final String url = "/api/v1/messages/inbox/1";
+        User user = User.builder().id("otherSender").build();
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        resultActions.andExpect(status().isCreated());
+    }
 }
