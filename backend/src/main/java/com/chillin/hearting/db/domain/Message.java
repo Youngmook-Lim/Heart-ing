@@ -100,4 +100,8 @@ public class Message implements Serializable {
         this.emoji = emoji;
     }
 
+    public void toInbox() {
+        this.isStored = true;
+    }
+
 }
