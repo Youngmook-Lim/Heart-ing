@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Slf4j // log 사용하기 위한 어노테이션
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -28,7 +28,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping(value = "/guests/kakao/{code}")
+    @GetMapping(value = "/guests/social/{code}")
     public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
         Data socialLoginData = userService.kakaoLogin(code, httpServletRequest, httpServletResponse);
