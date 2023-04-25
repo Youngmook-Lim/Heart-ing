@@ -2,9 +2,11 @@ package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.request.LoginTestReq;
+import com.chillin.hearting.api.request.UpdateNicknameReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.api.service.UserTestService;
+import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +55,22 @@ public class UserController {
                 .status(SUCCESS)
                 .message("테스트용 로그인 성공")
                 .data(socialLoginData)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @PatchMapping("/users/nickname")
+    public ResponseEntity<ResponseDTO> updateNickname(@RequestBody UpdateNicknameReq updateNicknameReq, HttpServletRequest httpServletRequest) {
+
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        Data data = userService.updateNickname(user.getId(), updateNicknameReq.getNickname());
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("닉네임 변경 성공")
+                .data(data)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);

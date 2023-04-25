@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SocialLoginData;
+import com.chillin.hearting.api.data.UpdateNicknameData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -238,6 +239,18 @@ public class UserService {
             log.debug(e.getMessage());
         }
         return user;
+    }
+
+    @Transactional
+    public UpdateNicknameData updateNickname(String userId, String nickname) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.updateNickname(nickname);
+
+        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(nickname).build();
+
+        return updateNicknameData;
+
     }
 
 }
