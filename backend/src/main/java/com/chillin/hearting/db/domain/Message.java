@@ -96,4 +96,8 @@ public class Message implements Serializable {
         this.isReported = true;
     }
 
+    public void updateEmoji(Emoji emoji) {
+        this.emoji = emoji;
+    }
+
 }
