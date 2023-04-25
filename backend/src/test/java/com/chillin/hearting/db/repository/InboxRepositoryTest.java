@@ -127,6 +127,34 @@ public class InboxRepositoryTest {
         assertThat(findMessage.getId()).isEqualTo(savedMessage.getId());
     }
 
+    @Test
+    public void 영구메시지삭제() {
+        // given
+        User savedUser1 = userRepository.save(user1);
+        User savedUser2 = userRepository.save(user2);
+        Heart savedHeart = heartRepository.save(heart);
+        Emoji savedEmoji = emojiRepository.save(emoji);
+        Message message = Message.builder()
+                .id(1L)
+                .heart(heart)
+                .emoji(emoji)
+                .sender(user1)
+                .receiver(user2)
+                .title("title")
+                .content("content")
+                .build();
+        Message savedMessage = messageRepository.save(message);
+
+        assertThat(savedMessage.isActive()).isEqualTo(true);
+
+        // when
+        savedMessage.deleteInbox();
+        Message storedMessage = inboxRepository.save(savedMessage);
+
+        // then
+        assertThat(storedMessage.isActive()).isEqualTo(false);
+    }
+
     public User createUser(String id, String email, String nickname) {
         if ("".equals(email)) email = "test.com";
         if ("".equals(nickname)) nickname = "test-nick";
