@@ -7,9 +7,7 @@ import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.MessageRepository;
 import com.chillin.hearting.db.repository.UserRepository;
-import com.chillin.hearting.exception.HeartNotFoundException;
-import com.chillin.hearting.exception.MessageNotFoundException;
-import com.chillin.hearting.exception.UserNotFoundException;
+import com.chillin.hearting.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,16 +51,26 @@ public class MessageService {
     }
 
     @Transactional
-    public long deleteMessage(long messageId) {
+    public boolean deleteMessage(long messageId, String userId) {
 
         // Check if messageId exists
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
 
+        // Check if userId matches the receiverId
+        if (!message.getReceiver().getId().equals(userId)) {
+            throw new UnAuthorizedException();
+        }
+
+        // Check if already deleted
+        if (!message.isActive()) {
+            throw new MessageAlreadyDeletedException();
+        }
+
         message.deleteMessage();
-        
+
         message = messageRepository.save(message);
 
-        return message.getId();
+        return message.isActive();
     }
 
 }
