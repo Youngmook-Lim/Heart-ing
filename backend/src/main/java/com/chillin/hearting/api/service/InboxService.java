@@ -37,4 +37,9 @@ public class InboxService {
         Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         return InboxDetailData.builder().message(findMessage).build();
     }
+
+    public void deleteMessage(Long messageId) {
+        Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        findMessage.deleteInbox();
+    }
 }
