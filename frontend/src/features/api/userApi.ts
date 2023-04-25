@@ -11,3 +11,14 @@ export async function loginKakao(code: string) {
     return null
   }
 }
+
+export async function modifyNickname(nickname: object) {
+  try{
+    const res = await axios.patch('api/v1/auth/users/nickname', nickname)
+    const status = res.data.status
+    return status
+  } catch(err) {
+    console.log('닉넴 못바꿧어용')
+    return err
+  }
+}
