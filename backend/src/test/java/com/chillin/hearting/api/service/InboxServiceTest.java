@@ -1,7 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.InboxData;
-import com.chillin.hearting.api.data.InboxDetailData;
+import com.chillin.hearting.api.data.InboxDTO;
 import com.chillin.hearting.db.domain.Emoji;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
@@ -72,14 +71,12 @@ public class InboxServiceTest {
         inboxList.add(m2);
 
         // mocking
-        when(inboxRepository.findAllByReceiverAndIsStored(any(), any())).thenReturn(inboxList);
+        when(inboxRepository.findAllByReceiverAndIsStoredAndIsActive(any(), any(), any())).thenReturn(inboxList);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
 
         // when
-        InboxData inboxData = inboxService.findInboxMessages(getFakeReceiverId);
-        assertThat(inboxData.getInboxList()).allSatisfy(message -> {
-            assertThat(message.isStored()).isEqualTo(true);
-        });
+        List<InboxDTO> findList = inboxService.findInboxMessages(getFakeReceiverId);
+        assertThat(findList.size()).isEqualTo(inboxList.size());
     }
 
     @Test
@@ -90,14 +87,15 @@ public class InboxServiceTest {
         message.toInbox();
 
         // mocking
-        when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(message));
+        when(inboxRepository.findByIdAndIsActive(any(), any())).thenReturn(Optional.ofNullable(message));
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
+        when(inboxRepository.findByIdAndIsActive(any(), any())).thenReturn(Optional.of(message));
 
         // when
-        InboxDetailData inboxDetailData = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
+        Message findMessage = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
 
         // then
-        assertThat(inboxDetailData.getMessageId()).isEqualTo(fakeMessageId);
+        assertThat(findMessage.getId()).isEqualTo(fakeMessageId);
     }
 
     @Test
