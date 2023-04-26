@@ -46,13 +46,14 @@ public class InboxServiceTest {
         // given
         Long fakeId = 1L;
         Message savedMessage = createMessage(fakeId);
+        savedMessage.prePersist();
 
         // mocking
         when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
 
         // when
         assertThat(savedMessage.isStored()).isEqualTo(false);
-        inboxService.storeMessage(savedMessage.getId());
+        inboxService.storeMessage(fakeId);
 
         // then
         Optional<Message> findMessage = inboxRepository.findById(savedMessage.getId());
@@ -71,7 +72,7 @@ public class InboxServiceTest {
         inboxList.add(m2);
 
         // mocking
-        when(inboxRepository.findAllByReceiverAndIsStored(any(), any())).thenReturn(inboxList);
+        when(inboxRepository.findAllByReceiverIdAndIsStored(any(), any())).thenReturn(inboxList);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
 
         // when
@@ -88,7 +89,7 @@ public class InboxServiceTest {
 
         // mocking
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
-        when(inboxRepository.findByIdAndIsStored(any(), any())).thenReturn(Optional.of(message));
+        when(inboxRepository.findByIdAndReceiverIdAndIsStored(any(), any(), any())).thenReturn(Optional.of(message));
 
         // when
         Message findMessage = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
