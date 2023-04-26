@@ -1,11 +1,23 @@
-import React from 'react'
+import React from "react";
 
-function MessageModalTime() {
+import MessageModalTimeTimer from "./MessageModalTimeTimer";
+
+function MessageModalTime({ ...props }) {
+  // recent : 24시간 리스트에서 읽을 때 => 타이머
+  // save : 영구보관에서 읽을 때 => 수신날짜
+  // send : 보낸메시지에서 읽을 때 => 타이머
   return (
     <div>
-      여기는 props에 따라 타이머나 수신날짜 들어가도록 해주면 좋을 것 같고요?
+      {props.mode !== "save" ? (
+        <div>
+          {" "}
+          <MessageModalTimeTimer remainTime={10800} />
+        </div>
+      ) : (
+        <div>{props.createdDate}</div>
+      )}
     </div>
-  )
+  );
 }
 
-export default MessageModalTime
+export default MessageModalTime;
