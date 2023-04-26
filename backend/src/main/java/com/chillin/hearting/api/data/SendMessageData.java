@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MessageData extends Data {
+public class SendMessageData extends Data {
 
     private long messageId;
     private long heartId;
