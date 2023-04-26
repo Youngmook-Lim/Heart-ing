@@ -10,11 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class InboxData extends Data {
-    private List<InboxDTO> inboxList;
+public class InboxListData extends Data {
+    private List<InboxData> inboxList;
 
     @Builder
-    public InboxData(List inboxList) {
+    public InboxListData(List inboxList) {
         this.inboxList = inboxList;
     }
 }
