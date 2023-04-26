@@ -21,17 +21,18 @@ function Kakao() {
       const data = await loginKakao(code)
       if (data !== null) {
         console.log('카카오 됏당')
-        if (data.nickname === '') {
+        console.log('닉네임 머임?', data.data)
+        const userInfo = {
+          userId : data.data.userId,
+          accessToken: data.data.accessToken,
+        }
+        savingAccessToken(userInfo)
+        setIsLogin(true)
+        if (data.data.nickname === '') {
           navigate('/setting')
         } else {
-          const userInfo = {
-            userId : data.userId,
-            accessToken: data.accessToken,
-          }
-          savingAccessToken(userInfo)
-          setIsLogin(true)
-          setUserNickname(data.nickname)
-          setUserStatusMessage(data.statusMessage)
+          setUserNickname(data.data.nickname)
+          setUserStatusMessage(data.data.statusMessage)
           navigate(-3);
         }
       } else {

@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil';
 import { userNicknameAtom } from '../atoms/userAtoms';
 import nicknameValidation from "../features/nicknameValidation";
 import { modifyNickname } from "../features/api/userApi";
+import { getUserInfo } from "../features/userInfo";
 
 function Setting() {
   const navigate = useNavigate();
@@ -11,23 +12,26 @@ function Setting() {
   const [Nickname, setNickname] = useState("");
   const [nicknameFormError, setNicknameFormError] = useState("2자 이상 8자 이하의 문자를 입력해주세요");
   const setUserNickname = useSetRecoilState(userNicknameAtom)
+  const userId = getUserInfo().userId
 
   const onNicknameHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentNickname = e.currentTarget.value;
+    console.log('닉네임은 이겁니다', currentNickname)
     nicknameValidation(currentNickname)
       ? setNicknameFormError("")
       : setNicknameFormError("2자 이상 8자 이하의 문자를 입력해주세요");
-    setUserNickname(e.currentTarget.value);
+      setNickname(currentNickname);
   };
 
   const onSaveNicknameHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('닉네임은 이겁니다', Nickname)
     const body = { nickname: Nickname };
     const message = await modifyNickname(body);
 
     if (message === "success") {
       setUserNickname(Nickname)
       alert("닉네임 입력이 완료되었습니다");
-      navigate(-4);
+      navigate(`/heartboard/user?id=${userId}`);
     } else {
       alert("닉네임 입력이 실패했습니다. 다시 시도해주세요");
     }
