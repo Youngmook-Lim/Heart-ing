@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.SocialLoginData;
+import com.chillin.hearting.api.data.*;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -230,8 +231,6 @@ public class UserService {
 
                 UUID uuid = UUID.randomUUID();
                 user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(email).nickname(nickname).build();
-//                        new User(uuid.toString(), ProviderType.KAKAO.toString(), email, nickname);
-
                 return userRepository.saveAndFlush(user);
             }
         } catch (Exception e) {
@@ -239,5 +238,86 @@ public class UserService {
         }
         return user;
     }
+
+    @Transactional
+    public UpdateNicknameData updateNickname(String userId, String nickname) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.updateNickname(nickname);
+
+        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(user.getNickname()).build();
+
+        return updateNicknameData;
+
+    }
+
+    @Transactional
+    public UpdateStatusMessageData updateStatusMessage(String userId, String statusMessage) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.updateStatusMessage(statusMessage);
+
+        UpdateStatusMessageData updateStatusMessageData = UpdateStatusMessageData.builder().statusMessage(user.getStatusMessage()).build();
+
+        return updateStatusMessageData;
+
+    }
+
+    @Transactional
+    public void deleteRefreshToken(String userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.deleteRefreshToken();
+
+    }
+
+    // 하트판 주인 정보 조회
+    public HeartBoardOwnerData getBoardOwnerInformation(String userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        HeartBoardOwnerData heartBoardOwnerData = HeartBoardOwnerData.builder()
+                .nickname(user.getNickname())
+                .statusMessage(user.getStatusMessage())
+                .messageTotal(user.getMessageTotal())
+                .build();
+
+        return heartBoardOwnerData;
+    }
+
+    // access token 재발급
+    public ReissuedAccessTokenData reissueAccessToken(String userId, HttpServletRequest httpServletRequest) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
+                .map(Cookie::getValue)
+                .orElse(null);
+
+        log.debug("쿠키에 담긴 refreshToken : {}", refreshToken);
+
+        AuthToken authTokenRefreshToken = tokenProvider.convertAuthToken(refreshToken);
+
+        if (!authTokenRefreshToken.validate() || user.getRefreshToken() == null) {
+            log.debug("유효하지 않은 refresh token 입니다.");
+            throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
+        }
+
+        Date now = new Date();
+
+
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                user.getId(),
+                "ROLE_USER",
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        log.debug("정상적으로 액세스토큰 재발급!!!");
+
+        ReissuedAccessTokenData reissuedAccessTokenData = ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
+
+        return reissuedAccessTokenData;
+    }
+
 
 }

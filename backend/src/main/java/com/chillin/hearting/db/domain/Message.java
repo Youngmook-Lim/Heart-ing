@@ -111,4 +111,8 @@ public class Message implements Serializable {
         this.isRead = true;
     }
 
+    public void deleteInbox() {
+        this.isStored = false;
+    }
+
 }

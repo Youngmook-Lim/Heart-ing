@@ -213,5 +213,14 @@ public class ControllerExceptionHandler {
                 .build();
     }
 
-
+    @ExceptionHandler(MessageAlreadyExpiredException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleMessageNotFoundException(MessageNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 }

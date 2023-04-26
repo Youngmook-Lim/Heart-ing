@@ -3,6 +3,7 @@ package com.chillin.hearting.api.service;
 import com.chillin.hearting.api.data.MessageData;
 import com.chillin.hearting.api.data.ReceivedMessageData;
 import com.chillin.hearting.api.data.SendMessageData;
+import com.chillin.hearting.api.data.TotalMessageCountData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.*;
@@ -229,6 +230,18 @@ public class MessageService {
                 .content(message.getContent())
                 .shortDescription(heart.getShortDescription())
                 .build();
+    }
+
+    // 홈 화면 - 서비스 전체 누적 메시지 수
+    public TotalMessageCountData totalMessageCount() {
+
+        Long count = messageRepository.count();
+
+        log.debug("서비스 누적 메시지 수 {}", count);
+
+        TotalMessageCountData totalMessageCountData = TotalMessageCountData.builder().totalHeartCount(count).build();
+
+        return totalMessageCountData;
     }
 
 }
