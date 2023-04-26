@@ -1,5 +1,9 @@
 package com.chillin.hearting.config;
 
+import com.chillin.hearting.exception.RestAuthenticationEntryPoint;
+import com.chillin.hearting.jwt.AuthTokenProvider;
+import com.chillin.hearting.jwt.TokenAccessDeniedHandler;
+import com.chillin.hearting.jwt.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -17,8 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final CorsFilter corsFilter;
-//    private final AuthTokenProvider tokenProvider;
-//    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
+    private final AuthTokenProvider tokenProvider;
+    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -31,6 +36,7 @@ public class SecurityConfig {
                 "/api/v1/login" // 임시
         );
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,11 +54,11 @@ public class SecurityConfig {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
-//                .and()
-//                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling()
-//                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-//                .accessDeniedHandler(tokenAccessDeniedHandler)
+                .and()
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
                 .build();
     }
@@ -61,10 +67,11 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
 
-//    @Bean
-//    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-//        return new TokenAuthenticationFilter(tokenProvider);
-//    }
+    @Bean
+    public TokenAuthenticationFilter tokenAuthenticationFilter() {
+        return new TokenAuthenticationFilter(tokenProvider);
+    }
 
 }

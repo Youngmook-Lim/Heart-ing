@@ -86,5 +86,8 @@ public class Message implements Serializable {
         this.senderIp = senderIp;
     }
 
+    public void toInbox() {
+        this.isStored = true;
+    }
 
 }
