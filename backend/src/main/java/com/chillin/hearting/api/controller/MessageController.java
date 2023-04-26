@@ -119,54 +119,5 @@ public class MessageController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/received/{userId}")
-    public ResponseEntity<ResponseDTO> getReceivedMessages(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
-
-        User user = (User) httpServletRequest.getAttribute("user");
-
-        // Check if the user is requesting his own page
-        boolean isSelf = false;
-        if (user != null && userId.equals(user.getId())) {
-            isSelf = true;
-        }
-
-        Data data = messageService.getReceivedMessages(userId, isSelf);
-
-        if (data == null) {
-            throw new ReceivedMessagesListFailException();
-        }
-
-        ResponseDTO responseDTO = ResponseDTO.builder()
-                .status(SUCCESS)
-                .message("받은메시지 리스트가 성공적으로 반환되었습니다.")
-                .data(data)
-                .build();
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
-
-    @GetMapping("/received/detail/{messageId}")
-    public ResponseEntity<ResponseDTO> getMessageDetail(@PathVariable("messageId") long messageId, HttpServletRequest httpServletRequest) {
-
-        User user = (User) httpServletRequest.getAttribute("user");
-
-        if (user == null) {
-            throw new UnAuthorizedException();
-        }
-
-        Data data = messageService.getMessageDetail(messageId, user.getId());
-
-        if (data == null) {
-            throw new MessageDetailFailException();
-        }
-
-        ResponseDTO responseDTO = ResponseDTO.builder()
-                .status(SUCCESS)
-                .message("메시지 상세가 성공적으로 반환되었습니다.")
-                .data(data)
-                .build();
-
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
 
 }

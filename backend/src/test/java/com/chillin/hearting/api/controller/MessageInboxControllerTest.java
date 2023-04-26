@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.controller;
 
-import com.chillin.hearting.api.service.InboxService;
+import com.chillin.hearting.api.service.MessageInboxService;
 import com.chillin.hearting.db.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,19 +17,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class InboxControllerTest {
+public class MessageInboxControllerTest {
 
     @InjectMocks
-    private InboxController inboxController;
+    private MessageInboxController messageInboxController;
 
     @Mock
-    private InboxService inboxService;
+    private MessageInboxService messageInboxService;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(inboxController)
+        mockMvc = MockMvcBuilders.standaloneSetup(messageInboxController)
                 .build();
     }
 
