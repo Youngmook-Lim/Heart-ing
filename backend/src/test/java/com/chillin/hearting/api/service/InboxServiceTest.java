@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.InboxDTO;
+import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.db.domain.Emoji;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
@@ -71,11 +71,11 @@ public class InboxServiceTest {
         inboxList.add(m2);
 
         // mocking
-        when(inboxRepository.findAllByReceiverAndIsStoredAndIsActive(any(), any(), any())).thenReturn(inboxList);
+        when(inboxRepository.findAllByReceiverAndIsStored(any(), any())).thenReturn(inboxList);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
 
         // when
-        List<InboxDTO> findList = inboxService.findInboxMessages(getFakeReceiverId);
+        List<InboxData> findList = inboxService.findInboxMessages(getFakeReceiverId);
         assertThat(findList.size()).isEqualTo(inboxList.size());
     }
 
@@ -87,9 +87,8 @@ public class InboxServiceTest {
         message.toInbox();
 
         // mocking
-        when(inboxRepository.findByIdAndIsActive(any(), any())).thenReturn(Optional.ofNullable(message));
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
-        when(inboxRepository.findByIdAndIsActive(any(), any())).thenReturn(Optional.of(message));
+        when(inboxRepository.findByIdAndIsStored(any(), any())).thenReturn(Optional.of(message));
 
         // when
         Message findMessage = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
