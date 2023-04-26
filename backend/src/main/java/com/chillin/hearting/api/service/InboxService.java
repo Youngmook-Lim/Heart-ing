@@ -1,7 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.InboxData;
-import com.chillin.hearting.api.data.InboxDetailData;
+import com.chillin.hearting.api.data.InboxDTO;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.InboxRepository;
@@ -13,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,22 +24,28 @@ public class InboxService {
     private final InboxRepository inboxRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void storeMessage(Long messageId) {
         Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         findMessage.toInbox();
     }
 
-    public InboxData findInboxMessages(String userId) {
+    @Transactional
+    public List<InboxDTO> findInboxMessages(String userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return InboxData.builder().inboxList(inboxRepository.findAllByReceiverAndIsStored(user, true)).build();
+        List<Message> findMessages = inboxRepository.findAllByReceiverAndIsStoredAndIsActive(user, true, true);
+        List<InboxDTO> inboxList = findMessages.stream().map(message -> InboxDTO.of(message)).collect(Collectors.toList());
+        return inboxList;
     }
 
-    public InboxDetailData findInboxDetailMessage(String userId, Long messageId) {
+    @Transactional
+    public Message findInboxDetailMessage(String userId, Long messageId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
-        return InboxDetailData.builder().message(findMessage).build();
+        Message findMessage = inboxRepository.findByIdAndIsActive(messageId, true).orElseThrow(MessageNotFoundException::new);
+        return findMessage;
     }
 
+    @Transactional
     public void deleteMessage(Long messageId) {
         Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         findMessage.deleteInbox();
