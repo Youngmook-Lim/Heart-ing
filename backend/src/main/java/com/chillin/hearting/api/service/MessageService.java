@@ -169,16 +169,15 @@ public class MessageService {
                 // Create MessageData
                 Heart heart = m.getHeart();
                 Emoji emoji = m.getEmoji();
-                boolean isEmoji = emoji != null;
                 MessageData messageData = MessageData.builder()
                         .messageId(m.getId())
                         .title(m.getTitle())
                         .heartId(heart.getId())
                         .heartName(heart.getName())
                         .heartUrl(heart.getImageUrl())
-                        .emojiId(isEmoji ? emoji.getId() : -1)
-                        .emojiName(isEmoji ? emoji.getName() : null)
-                        .emojiUrl(isEmoji ? emoji.getImageUrl() : null)
+                        .emojiId(emoji != null ? emoji.getId() : -1)
+                        .emojiName(emoji != null ? emoji.getName() : null)
+                        .emojiUrl(emoji != null ? emoji.getImageUrl() : null)
                         .createdDate(m.getCreatedDate())
                         .expiredDate(m.getExpiredDate()).build();
                 if (isSelf) {
@@ -194,6 +193,42 @@ public class MessageService {
         }
 
         return receivedMessageData;
+    }
+
+    public MessageData getMessageDetail(long messageId, String userId) {
+
+        // Check if message belongs to the user
+        Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+
+        // Check if userId matches receiver of message
+        if (!message.getReceiver().getId().equals(userId)) {
+            throw new UnAuthorizedException("본인의 메시지만 상세열람할 수 있습니다.");
+        }
+
+        // Read message and persist
+        message.readMessage();
+        messageRepository.save(message);
+
+        Heart heart = message.getHeart();
+        Emoji emoji = message.getEmoji();
+
+        return MessageData.builder()
+                .messageId(message.getId())
+                .title(message.getTitle())
+                .heartId(heart.getId())
+                .heartName(heart.getName())
+                .heartUrl(heart.getImageUrl())
+                .emojiId(emoji != null ? emoji.getId() : -1)
+                .emojiName(emoji != null ? emoji.getName() : null)
+                .emojiUrl(emoji != null ? emoji.getImageUrl() : null)
+                .createdDate(message.getCreatedDate())
+                .expiredDate(message.getExpiredDate())
+                .isRead(message.isRead())
+                .isReported(message.isReported())
+                .isStored(message.isStored())
+                .content(message.getContent())
+                .shortDescription(heart.getShortDescription())
+                .build();
     }
 
 }
