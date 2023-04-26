@@ -10,8 +10,10 @@ import MessageModal from "../components/modal/MessageModal";
 import { getUserInfo } from "../features/userInfo";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
 import { getProfile } from "../features/api/userApi";
+import { useNavigate } from "react-router-dom";
 
 function HeartBoard() {
+  const navigate = useNavigate()
   // 로그인 유무 확인
   const isLogin = useRecoilValue(isLoginAtom);
   // const isLogin = true;
@@ -26,6 +28,9 @@ function HeartBoard() {
     const data = await getProfile(userId)
     if (data.status === 'success') {
       setUserProfile(data.data)
+    } else {
+      console.log('에러났당')
+      navigate('/notfound')
     }
   }
 

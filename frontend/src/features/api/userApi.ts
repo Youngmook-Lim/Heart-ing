@@ -23,6 +23,17 @@ export async function modifyNickname(nickname: object) {
   }
 }
 
+export async function modifyStatusMessage(statusMessage: object) {
+  try{
+    const res = await axios.patch('api/v1/auth/users/nickname', statusMessage)
+    const status = res.data.status
+    return status
+  } catch(err) {
+    console.log('상메 못바꿧어용')
+    return err
+  }
+}
+
 export async function logout() {
   try{
     const res = await axios.patch('api/v1/auth/users/logout')
@@ -41,6 +52,6 @@ export async function getProfile(userId:string) {
     return data
   } catch(err) {
     console.log('없는 유저')
-    return null
+    return err
   }
 }
