@@ -92,7 +92,7 @@ public class Message implements Serializable {
     }
 
     public void deleteInbox() {
-        this.isActive = false;
+        this.isStored = false;
     }
 
 }
