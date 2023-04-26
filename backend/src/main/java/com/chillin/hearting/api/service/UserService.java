@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.HeartBoardOwnerData;
 import com.chillin.hearting.api.data.SocialLoginData;
 import com.chillin.hearting.api.data.UpdateNicknameData;
 import com.chillin.hearting.api.data.UpdateStatusMessageData;
@@ -268,11 +269,25 @@ public class UserService {
 
     @Transactional
     public void deleteRefreshToken(String userId) {
-        
+
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         user.deleteRefreshToken();
 
+    }
+
+    // 하트판 주인 정보 조회
+    public HeartBoardOwnerData getBoardOwnerInformation(String userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        HeartBoardOwnerData heartBoardOwnerData = HeartBoardOwnerData.builder()
+                .nickname(user.getNickname())
+                .statusMessage(user.getStatusMessage())
+                .messageTotal(user.getMessageTotal())
+                .build();
+
+        return heartBoardOwnerData;
     }
 
 

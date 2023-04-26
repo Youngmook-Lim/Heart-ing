@@ -109,4 +109,19 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    // 하트판 주인 정보 조회
+    @GetMapping("/guests/{userId}")
+    public ResponseEntity<ResponseDTO> getBoardOwnerInformation(@PathVariable("userId") String userId) {
+
+        Data data = userService.getBoardOwnerInformation(userId);
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("하트판 주인 정보 반환합니다.")
+                .data(data)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
 }
