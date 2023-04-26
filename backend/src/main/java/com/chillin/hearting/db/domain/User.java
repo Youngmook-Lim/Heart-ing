@@ -97,14 +97,19 @@ public class User implements Serializable {
         this.refreshToken = null;
     }
 
-    // 프로필 수정
-    public void updateUser(String nickname) {
+    // 닉네임 수정
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 
     // message_total 추가
     public void updateMessageTotal() {
         this.messageTotal++;
+    }
+
+    // 상태메시지 수정
+    public void updateStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 
     // 유저 신고
