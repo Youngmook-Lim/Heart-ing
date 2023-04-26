@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.MessageData;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
@@ -10,6 +10,7 @@ import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
 import com.chillin.hearting.exception.MessageNotFoundException;
 import com.chillin.hearting.exception.UserNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +49,12 @@ public class MessageServiceTest {
     private final User receiver = User.builder().id(receiverId).messageTotal(0L).build();
     private final User sender = User.builder().id(senderId).build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
-    private final Message message = Message.builder().id(0L).receiver(receiver).isActive(true).build();
+    private final Message message = Message.builder().id(0L).receiver(receiver).build();
+
+    @BeforeEach
+    public void setupIsActive() {
+        message.undeleteMessage();
+    }
 
     // sendMessage
     @Test
@@ -100,7 +106,7 @@ public class MessageServiceTest {
         doReturn(Message.builder().id(0L).heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
 
         // when
-        final MessageData message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
+        final SendMessageData message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
 
         // then
         assertThat(message.getHeartName()).isEqualTo("testHeart");
@@ -129,7 +135,7 @@ public class MessageServiceTest {
     public void successDeleteMessage() {
         //given
         doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
-        doReturn(Message.builder().id(0L).receiver(receiver).isActive(false).build()).when(messageRepository).save(any(Message.class));
+        doReturn(Message.builder().id(0L).receiver(receiver).build()).when(messageRepository).save(any(Message.class));
 
         // when
         boolean result = messageService.deleteMessage(messageId, receiverId);
