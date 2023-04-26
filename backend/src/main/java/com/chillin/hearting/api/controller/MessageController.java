@@ -1,7 +1,6 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
-import com.chillin.hearting.api.data.ReceivedMessageData;
 import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -131,16 +130,16 @@ public class MessageController {
             isSelf = true;
         }
 
-        ReceivedMessageData receivedMessageData = messageService.getReceivedMessages(userId, isSelf);
+        Data data = messageService.getReceivedMessages(userId, isSelf);
 
-        if (receivedMessageData == null) {
+        if (data == null) {
             throw new ReceivedMessagesListFailException();
         }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("받은메시지 리스트가 성공적으로 반환되었습니다.")
-                .data(receivedMessageData)
+                .data(data)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
