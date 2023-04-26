@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
+import com.chillin.hearting.api.data.ReceivedMessageData;
 import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -114,6 +115,32 @@ public class MessageController {
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("이모지가 성공적으로 변경되었습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/received/{userId}")
+    public ResponseEntity<ResponseDTO> getReceivedMessages(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
+
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        // Check if the user is requesting his own page
+        boolean isSelf = false;
+        if (user != null && userId.equals(user.getId())) {
+            isSelf = true;
+        }
+
+        ReceivedMessageData receivedMessageData = messageService.getReceivedMessages(userId, isSelf);
+
+        if (receivedMessageData == null) {
+            throw new ReceivedMessagesListFailException();
+        }
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("받은메시지 리스트가 성공적으로 반환되었습니다.")
+                .data(receivedMessageData)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
