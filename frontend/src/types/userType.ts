@@ -2,3 +2,9 @@ export interface IUserSavingInfoTypes {
   userId: string;
   accessToken : string;
 }
+
+export interface IUserProfileTypes {
+  nickname : string,
+  statusMessage : string,
+  messageTotal : number,
+}
