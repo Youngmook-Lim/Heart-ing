@@ -2,9 +2,7 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 
-type propType = { remainTime: number };
-
-function MessageModalTimeTimer({ remainTime }: propType) {
+function MessageModalTimeTimer(remainTime: number) {
   const [time, setTime] = useState(remainTime); // 남은 시간 (단위: 초)
 
   useEffect(() => {
