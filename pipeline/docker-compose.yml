@@ -9,6 +9,13 @@ services:
       - "8080:8080"
     env_file:
       - ./env-files/env-back.env
+  hearting-websocket:
+    container_name: hearting-websocket
+    image: hearting-websocket:v1
+    build:
+      context: ../backend-nodejs
+    ports:
+      - "8000:8000"
 #  hearting-front:
 #    container_name: sgr-front
 #    image: sgr-frontend:0.1
