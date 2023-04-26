@@ -1,7 +1,7 @@
 import React from "react";
 
 function MessageModalButtonBoxClose() {
-  return <div>닫기버튼~</div>;
+  return <div className="modal-button">닫기</div>;
 }
 
 export default MessageModalButtonBoxClose;

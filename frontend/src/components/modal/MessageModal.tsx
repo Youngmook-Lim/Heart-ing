@@ -16,23 +16,26 @@ import MessageModalButtonBox from "./MessageModalButtonBox";
 import MessageModalHeart from "./MessageModalHeart";
 import MessageModalTextbox from "./MessageModalTextbox";
 import MessageModalTime from "./MessageModalTime";
+import ButtonIcon from "../common/ButtonIcon";
 
 // 더미데이터
 const messageExample: IMessageDetailTypes = {
   messageId: "message id",
   title: "메시지 제목입니다",
-  heartId: "heart id",
+  heartId: 1,
   heartName: "heart name",
   heartUrl: "url",
   emojiId: "emoji id",
   emojiName: "emoji name",
   emojiUrl: "emoji url",
-  content: "안녕친구야 만나서 반가워 나는 메시지 더미 내용이야",
   isRead: false,
   isStored: false,
   createdDate: "00000",
   expiredDate: "00000",
   isReported: false,
+  content:
+    "100자를 채우기 위한 여정... 쉽지 않다; 하지만 최대 길이에 맞춰서 레이아웃을 짜야하니까 어쩔 수 없어! 꽉 찼을 때랑 널널하게 찼을 때를 모두 고려해서 예쁜 높이 찾자~!",
+  shortDescription: "하트 짧은 한줄 설명",
 };
 
 function MessageModal({ mode }: IMessageModalTypes) {
@@ -53,27 +56,32 @@ function MessageModal({ mode }: IMessageModalTypes) {
 
   return (
     <div className="modal border-hrtColorOutline">
-      <div className="modal-header bg-hrtColorOutline">마음 읽기</div>
-      여긴 모달창 {selectedMessageId} 의 메시지 정보를 불러올 것입니다
-      <p>임시로 더미데이터를 prop으로 보냅니다</p>
-      <p>{messageData.heartId}번 하트를 불러옵니다</p>
-      <MessageModalHeart
-        heartUrl={messageData.heartUrl}
-        heartName={messageData.heartName}
-        heartContext={"하트 한줄 설명이 없어요!!!"}
-        emojiUrl={messageData.emojiUrl}
-      />
-      <MessageModalTime
-        createdDate={messageData.createdDate}
-        expiredDate={messageData.expiredDate}
-        mode={mode}
-      />
-      <MessageModalTextbox
-        title={messageData.title}
-        content={messageData.content}
-      />
-      <MessageModalButtonBox mode={mode} isExpired={false} />
-      <button onClick={() => closeModal()}>모달닫기</button>
+      <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
+        <div className="flex-auto">마음 읽기</div>
+        <button onClick={() => closeModal()} className="flex-none">
+          <ButtonIcon id={0} />
+        </button>
+      </div>
+      {/* <p>{selectedMessageId} 메시지 / 지금은 더미데이터</p> */}
+      <div className="mx-6">
+        <MessageModalHeart
+          heartId={messageData.heartId}
+          heartUrl={messageData.heartUrl}
+          heartName={messageData.heartName}
+          heartContext={messageData.shortDescription}
+          emojiUrl={messageData.emojiUrl}
+        />
+        <MessageModalTime
+          createdDate={messageData.createdDate}
+          expiredDate={messageData.expiredDate}
+          mode={mode}
+        />
+        <MessageModalTextbox
+          title={messageData.title}
+          content={messageData.content}
+        />
+        <MessageModalButtonBox mode={mode} isExpired={false} />
+      </div>
     </div>
   );
 }
