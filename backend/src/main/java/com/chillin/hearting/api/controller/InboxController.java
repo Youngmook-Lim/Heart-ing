@@ -1,9 +1,11 @@
 package com.chillin.hearting.api.controller;
 
+import com.chillin.hearting.api.data.InboxDTO;
 import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.api.data.InboxDetailData;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.InboxService;
+import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,7 +30,7 @@ public class InboxController {
     private final String INBOX_DELETE_SUCCESS = "영구 보관 메시지 삭제를 성공했습니다.";
 
     @PostMapping("/{messageId}")
-    public ResponseEntity<ResponseDTO> storeMessageToInbox(@PathVariable("messageId") Long messageId, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDTO> storeMessageToInbox(@PathVariable("messageId") Long messageId) {
         inboxService.storeMessage(messageId);
 
         ResponseDTO responseDTO = ResponseDTO.builder().status("success").message(INBOX_STORE_SUCCESS).build();
@@ -37,18 +40,21 @@ public class InboxController {
     @GetMapping("")
     public ResponseEntity<ResponseDTO> findInboxMessages(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        InboxData inboxData = inboxService.findInboxMessages(user.getId());
-
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(inboxData).message(INBOX_FIND_SUCCESS).build();
+        log.debug("사용자 정보: {}", user);
+        List<InboxDTO> inboxList = inboxService.findInboxMessages(user.getId());
+        log.debug("영구 보관 메시지 개수: {}", inboxList.size());
+        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
         return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{messageId}")
     public ResponseEntity<ResponseDTO> findInboxDetailMessage(@PathVariable("messageId") Long messageId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        InboxDetailData inboxDetailData = inboxService.findInboxDetailMessage(user.getId(), messageId);
+        log.debug("사용자 정보: {}", user);
+        Message findMessage = inboxService.findInboxDetailMessage(user.getId(), messageId);
+        log.debug("영구 보관 상세 메시지 ID : {}", messageId);
 
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(inboxDetailData).message(INBOX_DETAIL_FIND_SUCCESS).build();
+        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxDetailData.builder().message(findMessage).build()).message(INBOX_DETAIL_FIND_SUCCESS).build();
         return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
     }
 
