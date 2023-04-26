@@ -1,6 +1,8 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.MessageData;
+import com.chillin.hearting.api.data.ReceivedMessageData;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.*;
@@ -8,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,7 +29,7 @@ public class MessageService {
     private final EmojiRepository emojiRepository;
 
     @Transactional
-    public MessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
+    public SendMessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
 
         // Check if receiver exists
         User receiver = userRepository.findById(receiverId).orElseThrow(UserNotFoundException::new);
@@ -41,7 +47,7 @@ public class MessageService {
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
         message = messageRepository.save(message);
 
-        return MessageData.builder()
+        return SendMessageData.builder()
                 .messageId(message.getId())
                 .heartId(message.getHeart().getId())
                 .heartName(message.getHeart().getName())
@@ -142,6 +148,52 @@ public class MessageService {
         message = messageRepository.save(message);
 
         return message.getId();
+    }
+
+    @Transactional
+    public ReceivedMessageData getReceivedMessages(String userId, boolean isSelf) {
+
+        // Get list of all received messages
+        List<Message> initialList = messageRepository.findByReceiverIdAndIsActiveTrue(userId);
+        log.debug(initialList.toString());
+
+        // Update expired messages
+        ReceivedMessageData receivedMessageData = ReceivedMessageData.builder()
+                .messageList(new ArrayList<>()).build();
+
+        for (Message m : initialList) {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime expiredDate = m.getExpiredDate();
+            if (expiredDate.isAfter(now)) {
+                // Not yet expired
+                // Create MessageData
+                Heart heart = m.getHeart();
+                Emoji emoji = m.getEmoji();
+                boolean isEmoji = emoji != null;
+                MessageData messageData = MessageData.builder()
+                        .messageId(m.getId())
+                        .title(m.getTitle())
+                        .heartId(heart.getId())
+                        .heartName(heart.getName())
+                        .heartUrl(heart.getImageUrl())
+                        .emojiId(isEmoji ? emoji.getId() : -1)
+                        .emojiName(isEmoji ? emoji.getName() : null)
+                        .emojiUrl(isEmoji ? emoji.getImageUrl() : null)
+                        .createdDate(m.getCreatedDate())
+                        .expiredDate(m.getExpiredDate()).build();
+                if (isSelf) {
+                    messageData.setRead(m.isRead());
+                }
+
+                receivedMessageData.getMessageList().add(messageData);
+            } else {
+                // Expired, need to persist to DB
+                m.deleteMessage();
+                messageRepository.save(m);
+            }
+        }
+
+        return receivedMessageData;
     }
 
 }
