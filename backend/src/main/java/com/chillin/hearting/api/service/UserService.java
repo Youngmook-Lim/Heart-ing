@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -209,10 +207,10 @@ public class UserService {
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
                     BlockedUser blockedUser = blockedUserRepository.findByUserId(user.getId()).orElseThrow(UserNotFoundException::new);
-                    LocalDateTime localDateTime = LocalDateTime.now();
+                    LocalDateTime locaDateTimeNow = LocalDateTime.now();
 
                     // 계정 정지 기간이 이미 기간이 지난 경우
-                    if (!localDateTime.isBefore(blockedUser.getEndDate())) {
+                    if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {
                         user.updateUserStatusToActive();
                         log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
                         return userRepository.saveAndFlush(user);
@@ -233,8 +231,11 @@ public class UserService {
                 user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(email).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
-        } catch (Exception e) {
-            log.debug(e.getMessage());
+        } catch (UnAuthorizedException e) {
+            log.error("로그인 한 회원 status : {}", e.getMessage());
+            throw new UnAuthorizedException(e.getMessage());
+        } catch (IOException | ParseException e) {
+            log.error(e.getMessage());
         }
         return user;
     }
