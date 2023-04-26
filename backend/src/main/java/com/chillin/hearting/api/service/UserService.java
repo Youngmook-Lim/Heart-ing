@@ -268,10 +268,12 @@ public class UserService {
 
     @Transactional
     public void deleteRefreshToken(String userId) {
+        
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         user.deleteRefreshToken();
 
     }
+
 
 }

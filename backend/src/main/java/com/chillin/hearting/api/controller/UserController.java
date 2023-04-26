@@ -97,6 +97,8 @@ public class UserController {
     public ResponseEntity<ResponseDTO> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         User user = (User) httpServletRequest.getAttribute("user");
 
+        userService.deleteRefreshToken(user.getId());
+
         CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
