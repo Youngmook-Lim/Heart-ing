@@ -2,6 +2,7 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SocialLoginData;
 import com.chillin.hearting.api.data.UpdateNicknameData;
+import com.chillin.hearting.api.data.UpdateStatusMessageData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -247,9 +248,29 @@ public class UserService {
 
         user.updateNickname(nickname);
 
-        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(nickname).build();
+        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(user.getNickname()).build();
 
         return updateNicknameData;
+
+    }
+
+    @Transactional
+    public UpdateStatusMessageData updateStatusMessage(String userId, String statusMessage) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.updateStatusMessage(statusMessage);
+
+        UpdateStatusMessageData updateStatusMessageData = UpdateStatusMessageData.builder().statusMessage(user.getStatusMessage()).build();
+
+        return updateStatusMessageData;
+
+    }
+
+    @Transactional
+    public void deleteRefreshToken(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        user.deleteRefreshToken();
 
     }
 

@@ -3,11 +3,13 @@ package com.chillin.hearting.api.controller;
 import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.request.LoginTestReq;
 import com.chillin.hearting.api.request.UpdateNicknameReq;
+import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
+import com.chillin.hearting.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ public class UserController {
     private final UserTestService userTestService;
 
 
-    @GetMapping(value = "/guests/social/{code}")
+    @GetMapping("/guests/social/{code}")
     public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
         Data socialLoginData = userService.kakaoLogin(code, httpServletRequest, httpServletResponse);
@@ -47,7 +49,7 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/guests/test/login")
+    @PostMapping("/guests/test/login")
     public ResponseEntity<ResponseDTO> testLogin(@RequestBody LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         Data socialLoginData = userTestService.testLogin(loginReq, httpServletRequest, httpServletResponse);
 
@@ -71,6 +73,35 @@ public class UserController {
                 .status(SUCCESS)
                 .message("닉네임 변경 성공")
                 .data(data)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @PatchMapping("/users/status-message")
+    public ResponseEntity<ResponseDTO> updateStatusMessage(@RequestBody UpdateStatusMessageReq updateStatusMessageReq, HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        Data data = userService.updateStatusMessage(user.getId(), updateStatusMessageReq.getStatusMessage());
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("상태메시지 변경 성공")
+                .data(data)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @PatchMapping("/users/logout")
+    public ResponseEntity<ResponseDTO> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        User user = (User) httpServletRequest.getAttribute("user");
+
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("로그아웃 성공")
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
