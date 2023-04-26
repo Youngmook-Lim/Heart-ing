@@ -1,11 +1,50 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
 
+const plugin = require("tailwindcss/plugin");
+
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      sans: ["NeoDunggeunmo", "Arial", "sans-serif"],
+      colors: {
+        hrtColorOutline: "#43316b",
+        hrtColorOutline100: "#1d005c",
+        hrtColorOutline200: "#260b60",
+        hrtColorOutline300: "#2f1763",
+        hrtColorOutline400: "#392467",
+        hrtColorOutline500: "#43316b",
+        hrtColorOutline600: "#634f90",
+        hrtColorOutline700: "#8772b5",
+        hrtColorOutline800: "#b09cda",
+        hrtColorOutline900: "#dcccff",
+        hrtColorPurple: "#d5a7ea",
+        hrtColorPink: "#fb8bb0",
+        hrtColorYellow: "#fff0b2",
+        hrtColorRed: "#db443a",
+        hrtColorBackground: "#dbf0ff",
+        hrtColorGray: "#dbdbdb",
+      },
+    },
+  },
+  plugins: [
+    plugin(function ({ addComponents }) {
+      addComponents({
+        ".modal": {
+          borderWidth: "4px",
+          borderRadius: "0.125rem",
+          backgroundColor: "rgba(255,255,255,0.8)",
+        },
+        ".modal-header": {
+          color: "#fff",
+          height: "2.5rem",
+          fontSize: "1.25rem" /* 16px */,
+          lineHeight: "2.5rem",
+          textAlign: "left",
+          paddingLeft: "0.5rem",
+          paddingRight: "0.5rem",
+        },
+      });
+    }),
+  ],
+};
