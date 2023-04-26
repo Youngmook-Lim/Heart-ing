@@ -36,7 +36,7 @@ public class InboxService {
     @Transactional
     public List<InboxData> findInboxMessages(String userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<Message> findMessages = inboxRepository.findAllByReceiverAndIsStored(user, true);
+        List<Message> findMessages = inboxRepository.findAllByReceiverIdAndIsStored(userId, true);
         List<InboxData> inboxList = findMessages.stream().map(message -> InboxData.of(message)).collect(Collectors.toList());
         return inboxList;
     }
@@ -44,7 +44,7 @@ public class InboxService {
     @Transactional
     public Message findInboxDetailMessage(String userId, Long messageId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Message findMessage = inboxRepository.findByIdAndIsStored(messageId, true).orElseThrow(MessageNotFoundException::new);
+        Message findMessage = inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
         return findMessage;
     }
 
