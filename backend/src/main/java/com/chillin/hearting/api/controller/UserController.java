@@ -124,4 +124,19 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    // access token 재발급
+    @GetMapping("/users/access-token")
+    public ResponseEntity<ResponseDTO> reissueAccessToken(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        Data data = userService.reissueAccessToken(user.getId(), httpServletRequest);
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("access token 재발급 성공")
+                .data(data)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
 }

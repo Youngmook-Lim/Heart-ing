@@ -1,9 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.HeartBoardOwnerData;
-import com.chillin.hearting.api.data.SocialLoginData;
-import com.chillin.hearting.api.data.UpdateNicknameData;
-import com.chillin.hearting.api.data.UpdateStatusMessageData;
+import com.chillin.hearting.api.data.*;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -25,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -288,6 +286,39 @@ public class UserService {
                 .build();
 
         return heartBoardOwnerData;
+    }
+
+    // access token 재발급
+    public ReissuedAccessTokenData reissueAccessToken(String userId, HttpServletRequest httpServletRequest) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
+                .map(Cookie::getValue)
+                .orElse(null);
+
+        log.debug("쿠키에 담긴 refreshToken : {}", refreshToken);
+
+        AuthToken authTokenRefreshToken = tokenProvider.convertAuthToken(refreshToken);
+
+        if (!authTokenRefreshToken.validate() || user.getRefreshToken() == null) {
+            log.debug("유효하지 않은 refresh token 입니다.");
+            throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
+        }
+
+        Date now = new Date();
+
+
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                user.getId(),
+                "ROLE_USER",
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        log.debug("정상적으로 액세스토큰 재발급!!!");
+
+        ReissuedAccessTokenData reissuedAccessTokenData = ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
+
+        return reissuedAccessTokenData;
     }
 
 
