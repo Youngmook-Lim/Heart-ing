@@ -72,10 +72,11 @@ public class Message implements Serializable {
     public void prePersist() {
         this.createdDate = LocalDateTime.now();
         this.expiredDate = this.createdDate.plusHours(EXPIRY_TIME);
+        this.isActive = true;
     }
 
     @Builder
-    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
+    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp, boolean isActive) {
         this.id = id;
         this.heart = heart;
         this.emoji = emoji;
@@ -84,6 +85,19 @@ public class Message implements Serializable {
         this.title = title;
         this.content = content;
         this.senderIp = senderIp;
+        this.isActive = isActive;
+    }
+
+    public void deleteMessage() {
+        this.isActive = false;
+    }
+
+    public void reportMessage() {
+        this.isReported = true;
+    }
+
+    public void updateEmoji(Emoji emoji) {
+        this.emoji = emoji;
     }
 
     public void toInbox() {

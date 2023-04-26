@@ -231,8 +231,6 @@ public class UserService {
 
                 UUID uuid = UUID.randomUUID();
                 user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(email).nickname(nickname).build();
-//                user = new User(uuid.toString(), ProviderType.KAKAO.toString(), email, nickname);
-
                 return userRepository.saveAndFlush(user);
             }
         } catch (Exception e) {

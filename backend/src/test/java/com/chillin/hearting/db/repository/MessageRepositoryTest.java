@@ -87,4 +87,28 @@ public class MessageRepositoryTest {
         assertThat(result.getId()).isNotNull();
         assertThat(after - before).isEqualTo(1);
     }
+
+    @Test
+    public void successDeleteMessage() {
+        // given
+        Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+
+        // when
+        heartRepository.save(heart);
+        userRepository.save(sender);
+        userRepository.save(receiver);
+        emojiRepository.save(emoji);
+
+        Message messagePrev = messageRepository.save(message);
+        // then
+        assertThat(messagePrev.isActive()).isEqualTo(true);
+
+        // when
+        messagePrev.deleteMessage();
+        Message messageAfter = messageRepository.save(messagePrev);
+
+        // then
+        assertThat(messageAfter.getId()).isNotNull();
+        assertThat(messageAfter.isActive()).isEqualTo(false);
+    }
 }
