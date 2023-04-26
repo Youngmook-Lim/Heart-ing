@@ -52,7 +52,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
   };
 
   return (
-    <div>
+    <div className="modal border-hrtColorOutline">
+      <div className="modal-header bg-hrtColorOutline">마음 읽기</div>
       여긴 모달창 {selectedMessageId} 의 메시지 정보를 불러올 것입니다
       <p>임시로 더미데이터를 prop으로 보냅니다</p>
       <p>{messageData.heartId}번 하트를 불러옵니다</p>

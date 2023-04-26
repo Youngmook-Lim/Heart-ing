@@ -8,6 +8,7 @@ import { readMessageAtom, isMyBoardAtom } from "../atoms/messageAtoms";
 import HeartBoardList from "../components/heartBoard/HeartBoardList";
 import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton";
 import MessageModal from "../components/modal/MessageModal";
+import ProfileBox from "../components/heartBoard/ProfileBox";
 
 function HeartBoard() {
   // 로그인 유무 확인
@@ -29,14 +30,17 @@ function HeartBoard() {
   });
 
   return (
-    <div>
-      하트보드 페이지 입니다
-      <HeartBoardList />
-      {isMyBoard ? (
-        <HeartBoardMainButton context={"공유하기"} />
-      ) : (
-        <HeartBoardMainButton context={"마음 보내기"} />
-      )}
+    <div className="container mx-auto px-8 py-8">
+      <div className="modal border-hrtColorPink">
+        <div className="modal-header bg-hrtColorPink">마음 수신함</div>
+        <ProfileBox />
+        <HeartBoardList />
+        {isMyBoard ? (
+          <HeartBoardMainButton context={"공유하기"} />
+        ) : (
+          <HeartBoardMainButton context={"마음 보내기"} />
+        )}
+      </div>
       {isLogin ? null : <button>나의 마음 수신함 만들러가기</button>}
       {readMessage ? <MessageModal mode={"recent"} /> : null}
     </div>
