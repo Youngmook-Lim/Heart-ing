@@ -94,7 +94,7 @@ public class InboxRepositoryTest {
         savedMessage2.toInbox();
         Message storedMessage1 = inboxRepository.save(savedMessage1);
         Message storedMessage2 = inboxRepository.save(savedMessage2);
-        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStored(savedUser2, true);
+        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStoredAndIsActive(savedUser2, true, true);
         // then
 
         assertThat(inboxList.size()).isEqualTo(2);
@@ -121,7 +121,7 @@ public class InboxRepositoryTest {
 
         // when
         savedMessage.toInbox();
-        Message findMessage = inboxRepository.findByIdAndReceiverAndIsStored(testId, receiver, true).orElseThrow(MessageNotFoundException::new);
+        Message findMessage = inboxRepository.findByIdAndReceiverAndIsStoredAndIsActive(testId, receiver, true, true).orElseThrow(MessageNotFoundException::new);
 
         // then
         assertThat(findMessage.getId()).isEqualTo(savedMessage.getId());
