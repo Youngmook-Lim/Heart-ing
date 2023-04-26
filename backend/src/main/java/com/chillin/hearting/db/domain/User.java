@@ -77,11 +77,12 @@ public class User implements Serializable {
 
     // 카카오 사용자 회원가입
     @Builder
-    public User(String id, String type, String email, String nickname) {
+    public User(String id, String type, String email, String nickname, long messageTotal) {
         this.id = id;
         this.type = type;
         this.email = email;
         this.nickname = nickname;
+        this.messageTotal = messageTotal;
     }
 
     public void updateUserStatusToActive() {
@@ -96,14 +97,29 @@ public class User implements Serializable {
         this.refreshToken = null;
     }
 
-    // 프로필 수정
-    public void updateUser(String nickname) {
+    // 닉네임 수정
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 
     // message_total 추가
     public void updateMessageTotal() {
         this.messageTotal++;
+    }
+
+    // 상태메시지 수정
+    public void updateStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    // 유저 신고
+    public void reportUser() {
+        this.reportedCount++;
+    }
+
+    // 유저 상태 업데이트
+    public void updateUserStatus(char status) {
+        this.status = status;
     }
 
 }

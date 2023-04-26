@@ -16,7 +16,6 @@ public class SendMessageReq {
     @NotNull
     private long heartId;
 
-    @NotBlank
     private String senderId;
 
     @NotBlank

@@ -22,3 +22,14 @@ export async function modifyNickname(nickname: object) {
     return err
   }
 }
+
+export async function logout() {
+  try{
+    const res = await axios.patch('api/v1/auth/users/logout')
+    const status = res.data.status
+    return status
+  } catch(err) {
+    console.log('로그아웃 안됐단다')
+    return null
+  }
+}
