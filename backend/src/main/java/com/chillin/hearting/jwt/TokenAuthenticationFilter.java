@@ -58,6 +58,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             response.setCharacterEncoding("utf-8");
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
+            // writeValueAsString() : Object to JSON in String
             response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
             return;
         }

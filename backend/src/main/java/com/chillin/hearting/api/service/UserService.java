@@ -5,6 +5,7 @@ import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
 import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.exception.JwtNotExpiredException;
 import com.chillin.hearting.exception.NotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
@@ -13,6 +14,7 @@ import com.chillin.hearting.jwt.AuthTokenProvider;
 import com.chillin.hearting.oauth.domain.AppProperties;
 import com.chillin.hearting.oauth.domain.ProviderType;
 import com.chillin.hearting.util.CookieUtil;
+import com.chillin.hearting.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -291,9 +293,22 @@ public class UserService {
     public ReissuedAccessTokenData reissueAccessToken(String userId, HttpServletRequest httpServletRequest) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
+        String headerAccessToken = HeaderUtil.getAccessToken(httpServletRequest);
+
+        AuthToken authHeaderAccessToken = tokenProvider.convertAuthToken(headerAccessToken);
+
+        if (authHeaderAccessToken.getExpiredTokenClaims() != null) {
+            log.debug("access token 유효기간이 남아있습니다.");
+            throw new JwtNotExpiredException();
+        }
+
         String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElseThrow(() -> new UnAuthorizedException("쿠키에 refresh token이 없습니다. 다시 로그인 해주세요."));
+
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new UnAuthorizedException("DB에 저장되어 있는 refreshToken과 다릅니다. 다시 로그인 해주세요.");
+        }
 
         log.debug("쿠키에 담긴 refreshToken : {}", refreshToken);
 
@@ -305,7 +320,6 @@ public class UserService {
         }
 
         Date now = new Date();
-
 
         AuthToken accessToken = tokenProvider.createAuthToken(
                 user.getId(),
