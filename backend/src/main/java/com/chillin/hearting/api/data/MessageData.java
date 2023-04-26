@@ -23,7 +23,6 @@ public class MessageData extends Data {
     private String emojiUrl;
     private LocalDateTime createdDate;
     private LocalDateTime expiredDate;
-    private String shortDescription;
 
     @Getter(onMethod_ = {@JsonProperty("isRead")})
     @Setter(onMethod_ = {@JsonProperty("isRead")})
@@ -34,5 +33,8 @@ public class MessageData extends Data {
     @Getter(onMethod_ = {@JsonProperty("isStored")})
     @Setter(onMethod_ = {@JsonProperty("isStored")})
     private boolean isStored;
+
+    private String content;
+    private String shortDescription;
 
 }
