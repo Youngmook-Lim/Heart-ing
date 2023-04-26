@@ -94,7 +94,7 @@ public class InboxRepositoryTest {
         savedMessage2.toInbox();
         Message storedMessage1 = inboxRepository.save(savedMessage1);
         Message storedMessage2 = inboxRepository.save(savedMessage2);
-        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStoredAndIsActive(savedUser2, true, true);
+        List<Message> inboxList = inboxRepository.findAllByReceiverAndIsStored(savedUser2, true);
         // then
 
         assertThat(inboxList.size()).isEqualTo(2);
@@ -117,11 +117,11 @@ public class InboxRepositoryTest {
                 .title("title")
                 .content("content")
                 .build();
+        message.toInbox();
         Message savedMessage = inboxRepository.save(message);
 
         // when
-        savedMessage.toInbox();
-        Message findMessage = inboxRepository.findByIdAndReceiverAndIsStoredAndIsActive(testId, receiver, true, true).orElseThrow(MessageNotFoundException::new);
+        Message findMessage = inboxRepository.findByIdAndReceiverAndIsStored(testId, receiver, true).orElseThrow(MessageNotFoundException::new);
 
         // then
         assertThat(findMessage.getId()).isEqualTo(savedMessage.getId());
@@ -143,16 +143,19 @@ public class InboxRepositoryTest {
                 .title("title")
                 .content("content")
                 .build();
+        message.toInbox();
         Message savedMessage = messageRepository.save(message);
 
-        assertThat(savedMessage.isActive()).isEqualTo(true);
+        assertThat(savedMessage.isStored()).isEqualTo(true);
 
         // when
         savedMessage.deleteInbox();
-        Message storedMessage = inboxRepository.save(savedMessage);
+        System.out.println(savedMessage.isStored());
+        inboxRepository.save(savedMessage);
+        Message storedMessage = inboxRepository.findById(savedMessage.getId()).orElseThrow(MessageNotFoundException::new);
 
         // then
-        assertThat(storedMessage.isActive()).isEqualTo(false);
+        assertThat(storedMessage.isStored()).isEqualTo(false);
     }
 
     public User createUser(String id, String email, String nickname) {
@@ -199,7 +202,6 @@ public class InboxRepositoryTest {
                 .name("emoji")
                 .imageUrl("emojiUrl")
                 .build();
-
         return emoji;
     }
 
