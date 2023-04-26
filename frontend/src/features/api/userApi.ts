@@ -33,3 +33,14 @@ export async function logout() {
     return null
   }
 }
+
+export async function getProfile(userId:string) {
+  try{
+    const res = await axios.get(`api/v1/auth/guests/${userId}`)
+    const data = res.data
+    return data
+  } catch(err) {
+    console.log('없는 유저')
+    return null
+  }
+}
