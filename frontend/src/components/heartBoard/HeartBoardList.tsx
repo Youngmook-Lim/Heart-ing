@@ -46,7 +46,7 @@ function HeartBoardList() {
 
   // recentMessageList 길이 만큼 반복해 HeartItem를 불러옵니다
   return (
-    <div>
+    <div className="grid grid-cols-3">
       {recentMessageList.map(
         ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
           <HeartItem
