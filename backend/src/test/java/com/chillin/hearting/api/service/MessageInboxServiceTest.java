@@ -22,10 +22,10 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class InboxServiceTest {
+public class MessageInboxServiceTest {
 
     @InjectMocks
-    private InboxService inboxService;
+    private MessageInboxService messageInboxService;
 
     @Mock
     private InboxRepository inboxRepository;
@@ -53,7 +53,7 @@ public class InboxServiceTest {
 
         // when
         assertThat(savedMessage.isStored()).isEqualTo(false);
-        inboxService.storeMessage(fakeId);
+        messageInboxService.storeMessage(fakeId);
 
         // then
         Optional<Message> findMessage = inboxRepository.findById(savedMessage.getId());
@@ -76,7 +76,7 @@ public class InboxServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
 
         // when
-        List<InboxData> findList = inboxService.findInboxMessages(getFakeReceiverId);
+        List<InboxData> findList = messageInboxService.findInboxMessages(getFakeReceiverId);
         assertThat(findList.size()).isEqualTo(inboxList.size());
     }
 
@@ -92,7 +92,7 @@ public class InboxServiceTest {
         when(inboxRepository.findByIdAndReceiverIdAndIsStored(any(), any(), any())).thenReturn(Optional.of(message));
 
         // when
-        Message findMessage = inboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
+        Message findMessage = messageInboxService.findInboxDetailMessage(user2.getId(), fakeMessageId);
 
         // then
         assertThat(findMessage.getId()).isEqualTo(fakeMessageId);
@@ -109,7 +109,7 @@ public class InboxServiceTest {
         when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
 
         // when
-        inboxService.deleteMessage(fakeId);
+        messageInboxService.deleteMessage(fakeId);
 
         // then
         Optional<Message> findMessage = inboxRepository.findById(fakeId);

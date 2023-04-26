@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class InboxService {
+public class MessageInboxService {
 
     private final InboxRepository inboxRepository;
     private final UserRepository userRepository;
