@@ -24,7 +24,6 @@ public class InboxDetailData extends Data {
     @Builder
     public InboxDetailData(Message message) {
         Heart heart = message.getHeart();
-        Emoji emoji = message.getEmoji();
 
         this.messageId = message.getId();
         this.heartId = heart.getId();
@@ -32,7 +31,11 @@ public class InboxDetailData extends Data {
         this.heartUrl = heart.getImageUrl();
         this.content = message.getContent();
         this.createdDate = message.getCreatedDate();
-        this.emojiUrl = emoji.getImageUrl();
-        this.emojiName = emoji.getName();
+
+        Emoji emoji = message.getEmoji();
+        if (emoji != null) {
+            this.emojiUrl = emoji.getImageUrl();
+            this.emojiName = emoji.getName();
+        }
     }
 }
