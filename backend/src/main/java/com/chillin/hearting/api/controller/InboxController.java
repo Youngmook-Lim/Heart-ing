@@ -1,8 +1,8 @@
 package com.chillin.hearting.api.controller;
 
-import com.chillin.hearting.api.data.InboxDTO;
 import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.api.data.InboxDetailData;
+import com.chillin.hearting.api.data.InboxListData;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.InboxService;
 import com.chillin.hearting.db.domain.Message;
@@ -41,9 +41,9 @@ public class InboxController {
     public ResponseEntity<ResponseDTO> findInboxMessages(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         log.debug("사용자 정보: {}", user);
-        List<InboxDTO> inboxList = inboxService.findInboxMessages(user.getId());
+        List<InboxData> inboxList = inboxService.findInboxMessages(user.getId());
         log.debug("영구 보관 메시지 개수: {}", inboxList.size());
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
+        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxListData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
         return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
     }
 
