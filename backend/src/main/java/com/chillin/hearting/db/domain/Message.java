@@ -107,4 +107,8 @@ public class Message implements Serializable {
         this.isStored = true;
     }
 
+    public void readMessage() {
+        this.isRead = true;
+    }
+
 }
