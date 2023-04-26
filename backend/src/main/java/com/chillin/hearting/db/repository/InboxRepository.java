@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface InboxRepository extends JpaRepository<Message, Long> {
 
-    public Optional<Message> findByIdAndIsActive(Long messageId, Boolean isActive);
+    public Optional<Message> findByIdAndIsStored(Long messageId, Boolean isStore);
 
-    public List<Message> findAllByReceiverAndIsStoredAndIsActive(User user, Boolean isStored, Boolean isActive);
+    public List<Message> findAllByReceiverAndIsStored(User user, Boolean isStored);
 
-    public Optional<Message> findByIdAndReceiverAndIsStoredAndIsActive(Long id, User user, Boolean isStored, Boolean isActive);
+    public Optional<Message> findByIdAndReceiverAndIsStored(Long id, User user, Boolean isStored);
 
 }
