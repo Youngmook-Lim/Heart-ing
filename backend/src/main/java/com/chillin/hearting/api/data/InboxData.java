@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-public class InboxDTO {
+public class InboxData {
     private Long messageId;
     private String messageTitle;
     private String messageContent;
@@ -24,10 +24,10 @@ public class InboxDTO {
     private String emojiUrl;
     private LocalDateTime createdDate;
 
-    public static InboxDTO of(Message message) {
+    public static InboxData of(Message message) {
         Heart heart = message.getHeart();
         Emoji emoji = message.getEmoji();
-        return InboxDTO.builder()
+        return InboxData.builder()
                 .messageId(message.getId())
                 .messageTitle(message.getTitle())
                 .messageContent(message.getContent())
