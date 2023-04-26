@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.MessageData;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
@@ -100,7 +100,7 @@ public class MessageServiceTest {
         doReturn(Message.builder().id(0L).heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build()).when(messageRepository).save(any(Message.class));
 
         // when
-        final MessageData message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
+        final SendMessageData message = messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp);
 
         // then
         assertThat(message.getHeartName()).isEqualTo("testHeart");

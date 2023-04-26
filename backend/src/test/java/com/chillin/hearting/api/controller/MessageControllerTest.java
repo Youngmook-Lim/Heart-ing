@@ -1,6 +1,6 @@
 package com.chillin.hearting.api.controller;
 
-import com.chillin.hearting.api.data.MessageData;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
@@ -117,7 +117,7 @@ public class MessageControllerTest {
                 .title("title")
                 .build();
 
-        MessageData expectedResponse = MessageData.builder()
+        SendMessageData expectedResponse = SendMessageData.builder()
                 .messageId(0L)
                 .heartId(sendMessageReq.getHeartId())
                 .build();
