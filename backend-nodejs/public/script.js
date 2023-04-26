@@ -36,7 +36,7 @@ connectBtn.addEventListener("click", () => {
     }
 
     // socket = io("http://localhost:8000");
-    socket = io("https://heart-ing.com/ws");
+    socket = io("http://heart-ing.com:8000");
 
     socket.on("connect", () => {
       console.log("웹소켓 서버에 연결");
