@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class InboxListData extends Data {
+public class InboxListData implements Data {
     private List<InboxData> inboxList;
 
     @Builder

@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageInboxControllerTest {
+class MessageInboxControllerTest {
 
     @InjectMocks
     private MessageInboxController messageInboxController;

@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReissuedAccessTokenData extends Data {
+public class ReissuedAccessTokenData implements Data {
 
     private String accessToken;
 }

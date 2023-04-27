@@ -38,37 +38,46 @@ public class MessageReceivedService {
                 .messageList(new ArrayList<>()).build();
 
         for (Message m : initialList) {
-            LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-            LocalDateTime expiredDate = m.getExpiredDate();
-            if (expiredDate.isAfter(now)) {
-                // Not yet expired
-                // Create MessageData
-                Heart heart = m.getHeart();
-                Emoji emoji = m.getEmoji();
-                MessageData messageData = MessageData.builder()
-                        .messageId(m.getId())
-                        .title(m.getTitle())
-                        .heartId(heart.getId())
-                        .heartName(heart.getName())
-                        .heartUrl(heart.getImageUrl())
-                        .emojiId(emoji != null ? emoji.getId() : -1)
-                        .emojiName(emoji != null ? emoji.getName() : null)
-                        .emojiUrl(emoji != null ? emoji.getImageUrl() : null)
-                        .createdDate(m.getCreatedDate())
-                        .expiredDate(m.getExpiredDate()).build();
-                if (isSelf) {
-                    messageData.setRead(m.isRead());
-                }
-
-                receivedMessageData.getMessageList().add(messageData);
-            } else {
-                // Expired, need to persist to DB
-                m.deleteMessage();
-                messageRepository.save(m);
-            }
+            processMessage(m, receivedMessageData, isSelf);
         }
 
+        log.debug(receivedMessageData.toString());
+
         return receivedMessageData;
+    }
+
+    private void processMessage(Message m, ReceivedMessageData receivedMessageData, boolean isSelf) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime expiredDate = m.getExpiredDate();
+        if (expiredDate.isAfter(now)) {
+            // Not yet expired
+            // Create MessageData
+            Heart heart = m.getHeart();
+            Emoji emoji = m.getEmoji();
+            long emojiId = emoji != null ? emoji.getId() : -1;
+            String emojiName = emoji != null ? emoji.getName() : null;
+            String emojiUrl = emoji != null ? emoji.getImageUrl() : null;
+            MessageData messageData = MessageData.builder()
+                    .messageId(m.getId())
+                    .title(m.getTitle())
+                    .heartId(heart.getId())
+                    .heartName(heart.getName())
+                    .heartUrl(heart.getImageUrl())
+                    .emojiId(emojiId)
+                    .emojiName(emojiName)
+                    .emojiUrl(emojiUrl)
+                    .createdDate(m.getCreatedDate())
+                    .expiredDate(m.getExpiredDate()).build();
+            if (isSelf) {
+                messageData.setRead(m.isRead());
+            }
+
+            receivedMessageData.getMessageList().add(messageData);
+        } else {
+            // Expired, need to persist to DB
+            m.deleteMessage();
+            messageRepository.save(m);
+        }
     }
 
     public MessageData getMessageDetail(long messageId, String userId) {
