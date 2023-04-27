@@ -18,7 +18,7 @@ function MessageModalButtonBox({ mode, isExpired }: IMessageModalTypes) {
       {mode === "send" || mode === "save" ? (
         <MessageModalButtonBoxClose />
       ) : null}
-      {mode === "recent" ? <MessageModalButtonBoxDelete /> : null}
+      {mode === "recent" ? <MessageModalButtonBoxDelete mode={mode}/> : null}
       {(mode === "recent" || mode === "save") && !isExpired ? (
         <MessageModalButtonBoxSave />
       ) : null}
