@@ -14,23 +14,6 @@ app.use(
     credentials: true,
   })
 );
-// app.use(function (req, res, next) {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//   );
-
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With,content-type"
-//   );
-
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-
-//   next();
-// });
 
 // HTTP 서버 초기화 -> socket.io가 필요로 함
 const http = require("http");
@@ -41,12 +24,6 @@ const { Server } = require("socket.io");
 // const io = new Server(server);
 const io = new Server(server, {
   path: "/ws",
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["X-Requested-With", "content-type"],
-    credentials: true,
-  },
 });
 
 // app.get("/socket.io.js", (req, res) => {
@@ -62,7 +39,7 @@ const io = new Server(server, {
 // });
 
 // 샘플 FE 코드 위치 설정
-// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/public`));
 
 // 웹소켓 연결에 대한 Event Listener 설정
 io.on("connection", (socket) => {
