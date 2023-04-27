@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @DataJpaTest
@@ -114,7 +113,7 @@ class MessageRepositoryTest {
     }
 
     @Test
-    void successAddEmoji() {
+    void successReportMessage() {
         // given
         Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
 
@@ -125,13 +124,10 @@ class MessageRepositoryTest {
         emojiRepository.save(emoji);
         Message savedMessage = messageRepository.save(message);
 
-        Emoji newEmoji = Emoji.builder().name("emojiNew").imageUrl("emojiUrlNew").build();
-        emojiRepository.save(newEmoji);
-
-        savedMessage.updateEmoji(newEmoji);
+        savedMessage.reportMessage();
         Message updatedMessage = messageRepository.save(savedMessage);
 
         // then
-        assertEquals(updatedMessage.getEmoji().getId(), newEmoji.getId());
+        assertThat(updatedMessage.isReported()).isTrue();
     }
 }
