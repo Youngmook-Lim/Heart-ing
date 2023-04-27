@@ -132,7 +132,7 @@ class MessageServiceTest {
     }
 
     @Test
-    public void successDeleteMessage() {
+    void successDeleteMessage() {
         //given
         doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
         doReturn(Message.builder().id(0L).receiver(receiver).build()).when(messageRepository).save(any(Message.class));
