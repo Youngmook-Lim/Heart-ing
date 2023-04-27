@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ExtendWith(MockitoExtension.class)
-public class MessageControllerTest {
+class MessageControllerTest {
 
     @InjectMocks
     private MessageController messageController;
