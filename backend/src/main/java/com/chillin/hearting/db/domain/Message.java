@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -70,7 +71,7 @@ public class Message implements Serializable {
     // Default Value 설정
     @PrePersist
     public void prePersist() {
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.expiredDate = this.createdDate.plusHours(EXPIRY_TIME);
         this.isActive = true;
     }

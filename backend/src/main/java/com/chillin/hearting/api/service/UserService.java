@@ -32,6 +32,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -206,7 +207,7 @@ public class UserService {
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
                     BlockedUser blockedUser = blockedUserRepository.findByUserId(user.getId()).orElseThrow(UserNotFoundException::new);
-                    LocalDateTime locaDateTimeNow = LocalDateTime.now();
+                    LocalDateTime locaDateTimeNow = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
                     // 계정 정지 기간이 이미 기간이 지난 경우
                     if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {

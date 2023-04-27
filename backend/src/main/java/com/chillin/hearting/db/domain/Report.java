@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @ToString
 @Entity
@@ -44,7 +45,7 @@ public class Report implements Serializable {
     // Default Value 설정
     @PrePersist
     public void prePersist() {
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     @Builder

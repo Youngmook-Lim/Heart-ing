@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @ToString
 @Entity
@@ -36,7 +37,7 @@ public class BlockedUser implements Serializable {
     // Default Value 설정
     @PrePersist
     public void prePersist() {
-        this.startDate = LocalDateTime.now();
+        this.startDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
     // EndDate 설정

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -18,9 +19,9 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void KakaoSignupSuccess(){
+    public void KakaoSignupSuccess() {
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         // given
         final User member = User.builder()
                 .id("abc")

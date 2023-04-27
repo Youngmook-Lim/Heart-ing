@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Table(name = "\"user\"")
 @ToString
@@ -66,7 +67,7 @@ public class User implements Serializable {
     // Default Value 설정
     @PrePersist
     public void prePersist() {
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.reportedCount = 0;
         this.status = 'A';
         this.role = "ROLE_USER";
