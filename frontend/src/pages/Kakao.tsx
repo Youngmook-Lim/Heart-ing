@@ -33,7 +33,7 @@ function Kakao() {
         } else {
           setUserNickname(data.data.nickname)
           setUserStatusMessage(data.data.statusMessage)
-          navigate(-3);
+          navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
         console.log('로그인 실패ㅜ;')

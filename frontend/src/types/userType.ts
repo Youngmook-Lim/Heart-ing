@@ -8,3 +8,8 @@ export interface IUserProfileTypes {
   statusMessage : string,
   messageTotal : number,
 }
+
+export interface IUpdateProfileTypes {
+  nickname : string,
+  statusMessage : string,
+}
