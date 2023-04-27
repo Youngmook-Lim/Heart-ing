@@ -45,7 +45,7 @@ const io = new Server(server, {
 // });
 
 // 샘플 FE 코드 위치 설정
-app.use(express.static(`${__dirname}/public`));
+app.use("/wssample", express.static(`${__dirname}/public`));
 
 // 웹소켓 연결에 대한 Event Listener 설정
 io.on("connection", (socket) => {
