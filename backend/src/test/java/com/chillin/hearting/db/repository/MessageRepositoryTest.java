@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
@@ -129,5 +131,32 @@ class MessageRepositoryTest {
 
         // then
         assertThat(updatedMessage.isReported()).isTrue();
+    }
+
+    @Test
+    void successGetMessageDetail() {
+        // given
+        Message message1 = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+        Message message2 = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+        Message message3 = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+        Message message4 = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+        Message message5 = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
+
+        // when
+        heartRepository.save(heart);
+        userRepository.save(sender);
+        userRepository.save(receiver);
+        emojiRepository.save(emoji);
+        messageRepository.save(message1);
+        messageRepository.save(message2);
+        messageRepository.save(message3);
+        messageRepository.save(message4);
+        messageRepository.save(message5);
+
+        List<Message> messageList = messageRepository.findAll();
+
+        // then
+        assertThat(messageList.size()).isEqualTo(5);
+
     }
 }
