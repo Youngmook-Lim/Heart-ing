@@ -14,16 +14,16 @@ function MessageModalButtonBox({ mode, isExpired }: IMessageModalTypes) {
   // 반응은 만료되지 않은 메시지에서만 가능
 
   return (
-    <div>
-      {mode === "recent" || mode === "save" ? (
+    <div className="flex space-x-2 py-6">
+      {mode === "send" || mode === "save" ? (
         <MessageModalButtonBoxClose />
       ) : null}
       {mode === "recent" ? <MessageModalButtonBoxDelete /> : null}
-      {mode === "save" || mode === "send" ? (
-        <MessageModalButtonBoxEmoji />
-      ) : null}
       {(mode === "recent" || mode === "save") && !isExpired ? (
         <MessageModalButtonBoxSave />
+      ) : null}
+      {mode === "save" || mode === "recent" ? (
+        <MessageModalButtonBoxEmoji />
       ) : null}
     </div>
   );
