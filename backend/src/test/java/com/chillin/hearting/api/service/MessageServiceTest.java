@@ -120,7 +120,7 @@ class MessageServiceTest {
 
     // deleteMessage
     @Test
-    public void failDeleteMessage_NoMessage() {
+    void failDeleteMessage_NoMessage() {
         //given
         doReturn(Optional.empty()).when(messageRepository).findById(messageId);
 
