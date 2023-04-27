@@ -223,4 +223,28 @@ public class ControllerExceptionHandler {
                 .message(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(JwtNotExpiredException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseDTO handleJwtNotExpiredException(JwtNotExpiredException e) {
+        log.error(e.getMessage());
+
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(JwtExpiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ResponseDTO handleJwtExpiredException(JwtExpiredException e) {
+        log.error(e.getMessage());
+
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 }
