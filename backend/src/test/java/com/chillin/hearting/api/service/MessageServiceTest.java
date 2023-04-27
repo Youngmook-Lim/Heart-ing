@@ -70,7 +70,7 @@ class MessageServiceTest {
     }
 
     @Test
-    public void failSendMessage_NoSender() {
+    void failSendMessage_NoSender() {
         //given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(Optional.empty()).when(userRepository).findById(senderId);
@@ -79,7 +79,7 @@ class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(UserNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
