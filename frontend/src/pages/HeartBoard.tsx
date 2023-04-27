@@ -12,8 +12,6 @@ import HeartBoardList from "../components/heartBoard/HeartBoardList";
 import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton";
 import MessageModal from "../components/modal/MessageModal";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
-<<<<<<< HEAD
-import { getProfile } from "../features/api/userApi";
 import { useNavigate } from "react-router-dom";
 
 function HeartBoard() {
@@ -21,30 +19,16 @@ function HeartBoard() {
   // 로그인 유무 확인
   const isLogin = useRecoilValue(isLoginAtom);
   // const isLogin = true;
-=======
-import { IMessageSendTypes } from "../types/messageType";
 
-function HeartBoard() {
-  const [userProfile, setUserProfile] = useState({});
-  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom); // 나의 하트판인지 확인
-  const [receivedList, setReceivedList] = useState({});
-
-  const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
-  const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
->>>>>>> afe2fe86c1ed20d230ed21605ed40236fe9ff98c
+  const [userProfile, setUserProfile] = useState({})
+  const [receivedList, setReceivedList] = useState({})
+  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom)
+  const readMessage = useRecoilValue(readMessageAtom);
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
-  async function getUserProfile(userId: string | null) {
-    if (!userId) return;
-    const data = await getProfile(userId);
-    if (data.status === "success") {
-      setUserProfile(data.data);
-    }
-  }
 
-<<<<<<< HEAD
   async function getUserProfile(userId: string|null) {
     if (!userId) return
     const data = await getProfile(userId)
@@ -53,7 +37,8 @@ function HeartBoard() {
     } else {
       console.log('에러났당')
       navigate('/notfound')
-=======
+    }
+  }
   // useerId로 최근 메시지 리스트 가져오기
   async function getRecivedMessages(userId: string | null) {
     if (!userId) return;
@@ -64,13 +49,11 @@ function HeartBoard() {
       console.log(data.data);
       console.log(data.data.messageList);
       setReceivedList(data.data.messageList);
->>>>>>> afe2fe86c1ed20d230ed21605ed40236fe9ff98c
     }
   }
 
   // 내 userId localStorage에서 가져오기
   const myId = getUserInfo().userId;
-  const userNickname = useRecoilValue(userNicknameAtom);
 
   useEffect(() => {
     // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
