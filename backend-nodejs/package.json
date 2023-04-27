@@ -1,0 +1,17 @@
+{
+  "name": "backend-nodejs",
+  "version": "1.0.0",
+  "description": "WebSocket backend Node.js server with Socket.io ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "chillin'",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1"
+  }
+}
