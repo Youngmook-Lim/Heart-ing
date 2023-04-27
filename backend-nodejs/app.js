@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 
 // Enable CORS
-// app.use(cors());
+app.use(cors());
 // app.use(function (req, res, next) {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -31,14 +31,15 @@ const server = http.createServer(app);
 
 // socket.io 인스턴스 초기화
 const { Server } = require("socket.io");
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["X-Requested-With", "content-type"],
-    credentials: true,
-  },
-});
+const io = new Server(server);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*",
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["X-Requested-With", "content-type"],
+//     credentials: true,
+//   },
+// });
 
 // app.get("/socket.io.js", (req, res) => {
 //   res.sendFile(
