@@ -6,7 +6,6 @@ import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
 import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.UserHeartRepository;
-import com.chillin.hearting.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,6 @@ public class HeartService {
 
     private UserHeartRepository userHeartRepository;
 
-    private UserRepository userRepository;
-
     private final String DEFAULT_TYPE = "DEFAULT";
 
     /**
@@ -39,7 +36,7 @@ public class HeartService {
      * @return 하트 DTO
      */
     public List<HeartData> findAllHearts(User user) {
-        // DB의 모든 하트를 조회한다. 기본하트는 isLocked = false
+        log.debug("도감 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
         List<Heart> allHearts = heartRepository.findAll();
         List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : allHearts) {
@@ -47,9 +44,9 @@ public class HeartService {
         }
 
         HashSet<Long> hashSet = new HashSet<>();
-        if (user != null) {
-            String userId = user.getId();
-            userRepository.findById(userId);
+        String userId = user.getId();
+        if (userId != null) {
+            log.debug("들어온 유저 아이디 : {}", userId);
             List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
             for (UserHeart myHeart : userHearts) {
                 hashSet.add(myHeart.getId());
@@ -61,7 +58,22 @@ public class HeartService {
                 }
             }
         }
-        
+
         return resHearts;
+    }
+
+    public List<HeartData> findMessageHearts(User user) {
+        log.debug("메시지 전송용 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
+        List<HeartData> resHearts = new ArrayList<>();
+
+
+        String userId = user.getId();
+        if (userId != null) {
+
+        } else {
+
+        }
+
+        return null;
     }
 }
