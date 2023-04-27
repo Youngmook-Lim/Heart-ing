@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageServiceTest {
+class MessageServiceTest {
 
     @InjectMocks
     private MessageService messageService;
@@ -58,7 +58,7 @@ public class MessageServiceTest {
 
     // sendMessage
     @Test
-    public void failSendMessage_NoReceiver() {
+    void failSendMessage_NoReceiver() {
         //given
         doReturn(Optional.empty()).when(userRepository).findById(receiverId);
 
