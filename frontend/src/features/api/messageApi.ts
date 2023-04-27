@@ -46,3 +46,25 @@ export async function saveMessageApi(messageId: number) {
     return null
   }
 }
+
+export async function deletepermanentMessageApi(messageId: number) {
+  try {
+    const res = await axios.delete(`api/v1/messages/inbox/${messageId}`)
+    const status = res.data.status
+    return status
+  } catch (err) {
+    console.log('영구 삭제 못함ㅠ')
+    return null
+  }
+}
+
+export async function deleteTemporaryMessageApi(messageId: number) {
+  try {
+    const res = await axios.delete(`api/v1/messages/${messageId}`)
+    const status = res.data.status
+    return status
+  } catch (err) {
+    console.log('24시간 삭제 못함ㅠ')
+    return null
+  }
+}
