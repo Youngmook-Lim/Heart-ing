@@ -324,24 +324,18 @@ public class UserService {
 
         Date now = new Date();
 
-        AuthToken accessToken = tokenProvider.createAuthToken(
+        return tokenProvider.createAuthToken(
                 userId,
                 ROLE,
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
-
-        return accessToken;
     }
 
     public AuthToken makeRefreshToken() {
 
         Date now = new Date();
 
-        AuthToken refreshToken = tokenProvider.createAuthToken(
-                new Date(now.getTime() + refreshTokenExpiry)
-        );
-
-        return refreshToken;
+        return tokenProvider.createAuthToken(new Date(now.getTime() + refreshTokenExpiry));
     }
 
 
