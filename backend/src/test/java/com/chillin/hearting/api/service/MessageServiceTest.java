@@ -128,7 +128,7 @@ class MessageServiceTest {
         MessageNotFoundException exception = assertThrows(MessageNotFoundException.class, () -> messageService.deleteMessage(messageId, receiverId));
 
         // then
-        assertEquals(exception.getMessage(), MessageNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(MessageNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
