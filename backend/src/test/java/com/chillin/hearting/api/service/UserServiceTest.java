@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
 
     @InjectMocks
@@ -34,42 +34,23 @@ public class UserServiceTest {
     private final User user = User.builder().id("userId").nickname("testtest").build();
 
     @Test
-    public void kakaoLoginService() throws Exception {
-        // fail code 먼저 적기 아래 주석 말고
-        // given
-
-
-        //when
-//        String userId = userService.insertUser("abc", "KAAKO", "wjdwn@wjdwn.com", "jj");
-
-//        User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-
-//        assertThat(user.getId()).isEqualTo("abc");
-//        assertThat(user.getType()).isEqualTo("KAAKO");
-//        assertThat(user.getEmail()).isEqualTo("wjdwn@wjdwn.com");
-//        assertThat(user.getNickname()).isEqualTo("jj");
-//        assertThat(user.getStatus()).isEqualTo('A');
-
-    }
-
-    @Test
-    public void 사용자가_존재하지_않아서_updateNickname_실패() {
+    void 사용자가_존재하지_않아서_updateNickname_실패() {
         // given
         doReturn(Optional.empty()).when(userRepository).findById(userId);
 
         // when
         UserNotFoundException userNotFoundException = assertThrows(UserNotFoundException.class, () -> userService.updateNickname(userId, nickname));
 
-        assertEquals(userNotFoundException.getMessage(), "해당 유저를 찾을 수 없습니다.");
+        assertEquals("해당 유저를 찾을 수 없습니다.", userNotFoundException.getMessage());
 
 
     }
 
     @Test
-    public void successUpdateNickname() {
+    void successUpdateNickname() {
         // given
         doReturn(Optional.of(user)).when(userRepository).findById(userId);
-        
+
         // when
         final UpdateNicknameData updateNicknameData = userService.updateNickname(userId, nickname);
 
