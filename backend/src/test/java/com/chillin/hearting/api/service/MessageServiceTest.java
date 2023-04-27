@@ -66,7 +66,7 @@ class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(UserNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
