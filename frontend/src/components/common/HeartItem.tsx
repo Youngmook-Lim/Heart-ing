@@ -15,7 +15,7 @@ function HeartItem({ ...props }) {
   const isMyBoard = useRecoilValue(isMyBoardAtom);
   const isRead = props.isRead ? "true" : "false";
 
-  const readMessage = (messageId: string) => {
+  const readMessage = (messageId: number) => {
     console.log(messageId + " 메시지를 읽습니다");
     // messageId의 메시지를 열람합니다
     setReadMessageAtom(true);
