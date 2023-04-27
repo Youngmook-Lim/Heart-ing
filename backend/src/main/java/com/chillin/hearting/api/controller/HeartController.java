@@ -26,4 +26,11 @@ public class HeartController {
         heartService.findAllHearts(user);
         return null;
     }
+
+    @GetMapping("/message")
+    public ResponseEntity<ResponseDTO> findMessageHearts(HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        heartService.findMessageHearts(user);
+        return null;
+    }
 }
