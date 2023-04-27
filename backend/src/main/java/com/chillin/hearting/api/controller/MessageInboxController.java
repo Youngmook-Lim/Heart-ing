@@ -24,17 +24,18 @@ public class MessageInboxController {
 
     private final MessageInboxService messageInboxService;
 
-    private final String INBOX_STORE_SUCCESS = "메시지 영구 보관 저장을 성공했습니다.";
-    private final String INBOX_FIND_SUCCESS = "영구 보관 메시지 리스트 조회를 성공했습니다.";
-    private final String INBOX_DETAIL_FIND_SUCCESS = "영구 보관 메시지 상세 조회를 성공했습니다.";
-    private final String INBOX_DELETE_SUCCESS = "영구 보관 메시지 삭제를 성공했습니다.";
+    private static final String INBOX_STORE_SUCCESS = "메시지 영구 보관 저장을 성공했습니다.";
+    private static final String INBOX_FIND_SUCCESS = "영구 보관 메시지 리스트 조회를 성공했습니다.";
+    private static final String INBOX_DETAIL_FIND_SUCCESS = "영구 보관 메시지 상세 조회를 성공했습니다.";
+    private static final String INBOX_DELETE_SUCCESS = "영구 보관 메시지 삭제를 성공했습니다.";
+    private static final String MESSAGE_SUCCESS = "success";
 
     @PostMapping("/{messageId}")
     public ResponseEntity<ResponseDTO> storeMessageToInbox(@PathVariable("messageId") Long messageId) {
         messageInboxService.storeMessage(messageId);
 
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").message(INBOX_STORE_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(INBOX_STORE_SUCCESS).build();
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("")
@@ -43,8 +44,8 @@ public class MessageInboxController {
         log.debug("사용자 정보: {}", user);
         List<InboxData> inboxList = messageInboxService.findInboxMessages(user.getId());
         log.debug("영구 보관 메시지 개수: {}", inboxList.size());
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxListData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).data(InboxListData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{messageId}")
@@ -54,15 +55,15 @@ public class MessageInboxController {
         Message findMessage = messageInboxService.findInboxDetailMessage(user.getId(), messageId);
         log.debug("영구 보관 상세 메시지 ID : {}", messageId);
 
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").data(InboxDetailData.builder().message(findMessage).build()).message(INBOX_DETAIL_FIND_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).data(InboxDetailData.builder().message(findMessage).build()).message(INBOX_DETAIL_FIND_SUCCESS).build();
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{messageId}")
     public ResponseEntity<ResponseDTO> deleteInboxMessage(@PathVariable("messageId") Long messageId, HttpServletRequest httpServletRequest) {
         messageInboxService.deleteMessage(messageId);
 
-        ResponseDTO responseDTO = ResponseDTO.builder().status("success").message(INBOX_DELETE_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(INBOX_DELETE_SUCCESS).build();
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }
