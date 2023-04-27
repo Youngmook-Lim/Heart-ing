@@ -101,7 +101,7 @@ class MessageRepositoryTest {
 
         Message messagePrev = messageRepository.save(message);
         // then
-        assertThat(messagePrev.isActive()).isEqualTo(true);
+        assertThat(messagePrev.isActive()).isTrue();
 
         // when
         messagePrev.deleteMessage();
@@ -109,6 +109,6 @@ class MessageRepositoryTest {
 
         // then
         assertThat(messageAfter.getId()).isNotNull();
-        assertThat(messageAfter.isActive()).isEqualTo(false);
+        assertThat(messageAfter.isActive()).isFalse();
     }
 }
