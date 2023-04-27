@@ -83,7 +83,7 @@ class MessageServiceTest {
     }
 
     @Test
-    public void failSendMessage_NoHeart() {
+    void failSendMessage_NoHeart() {
         //given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
@@ -93,7 +93,7 @@ class MessageServiceTest {
         HeartNotFoundException exception = assertThrows(HeartNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), HeartNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(HeartNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
