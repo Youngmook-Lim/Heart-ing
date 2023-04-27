@@ -26,6 +26,7 @@ function HeartBoard() {
   const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setCurrentUserId = useSetRecoilState(currentUserIdAtom)
+  const setUserNickname = useSetRecoilState(userNicknameAtom)
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -63,6 +64,7 @@ function HeartBoard() {
 
     if (nicknameStatus === 'success' && statusMessageStatus === 'success') {
       getUserProfile(userId)
+      setUserNickname(profileInfo.nickname)
     }
   }
   // 내 userId localStorage에서 가져오기

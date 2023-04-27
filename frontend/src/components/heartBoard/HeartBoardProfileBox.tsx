@@ -42,10 +42,10 @@ function HeartBoardProfileBox({ ...props }) {
     {isSetting? 
       <form onSubmit={onSubmitHandler}>
         <label>닉네임 :</label>
-        <input type="text" onChange={onNicknameHandler}/>
+        <input type="text" value={newNickname} onChange={onNicknameHandler}/>
         <br/>
         <label>상태메세지 :</label>
-        <input type="text" onChange={onStatusMessageHandler}/>
+        <input type="text" value={newStatusMessage} onChange={onStatusMessageHandler}/>
         <br/>
         <button>수정완료</button>
       </form>
