@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -21,11 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HeartService {
 
-    private HeartRepository heartRepository;
+    private final HeartRepository heartRepository;
 
-    private UserHeartRepository userHeartRepository;
+    private final UserHeartRepository userHeartRepository;
 
     private final String DEFAULT_TYPE = "DEFAULT";
+    private final static HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
 
     /**
      * 모든 도감 리스트를 반환합니다.
@@ -40,20 +42,20 @@ public class HeartService {
         List<Heart> allHearts = heartRepository.findAll();
         List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : allHearts) {
-            resHearts.add(HeartData.of(heart, (heart.getType() == DEFAULT_TYPE) ? false : true));
+            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType())) ? false : true));
         }
 
         HashSet<Long> hashSet = new HashSet<>();
-        String userId = user.getId();
-        if (userId != null) {
+        if (user != null) {
+            String userId = user.getId();
             log.debug("들어온 유저 아이디 : {}", userId);
             List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
             for (UserHeart myHeart : userHearts) {
-                hashSet.add(myHeart.getId());
+                hashSet.add(myHeart.getHeart().getId());
             }
 
             for (HeartData heartData : resHearts) {
-                if (heartData.getType() != DEFAULT_TYPE && hashSet.contains(heartData.getId())) {
+                if (!DEFAULT_TYPE.equals(heartData.getType()) && hashSet.contains(heartData.getHeartId())) {
                     heartData.unLock();
                 }
             }
@@ -63,17 +65,32 @@ public class HeartService {
     }
 
     public List<HeartData> findMessageHearts(User user) {
-        log.debug("메시지 전송용 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
+        log.debug("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
-
-
-        String userId = user.getId();
-        if (userId != null) {
-
-        } else {
-
+        List<Heart> findHearts = heartRepository.findAllByType(DEFAULT_TYPE);
+        for (Heart heart : findHearts) {
+            resHearts.add(HeartData.of(heart, false));
         }
 
-        return null;
+        if (user != null) {
+            String userId = user.getId();
+            log.debug("들어온 유저 아이디 : {}", userId);
+            List<UserHeart> myHearts = userHeartRepository.findAllByUserId(userId);
+            for (UserHeart myHeart : myHearts) {
+                resHearts.add(HeartData.of(myHeart.getHeart(), false));
+            }
+        } else {
+            log.debug("비로그인 유저입니다.");
+            for (HeartData heartData : resHearts) {
+                if (lockedHeartSet.contains(heartData.getHeartId())) {
+                    heartData.setLock();
+                }
+            }
+        }
+
+        return resHearts;
+    }
+
+    public HeartDetailData findDetailHeart(Long heartId) {
     }
 }
