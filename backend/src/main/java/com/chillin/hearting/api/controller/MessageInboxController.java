@@ -35,7 +35,7 @@ public class MessageInboxController {
         messageInboxService.storeMessage(messageId);
 
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(INBOX_STORE_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("")
@@ -45,7 +45,7 @@ public class MessageInboxController {
         List<InboxData> inboxList = messageInboxService.findInboxMessages(user.getId());
         log.debug("영구 보관 메시지 개수: {}", inboxList.size());
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).data(InboxListData.builder().inboxList(inboxList).build()).message(INBOX_FIND_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{messageId}")
@@ -56,7 +56,7 @@ public class MessageInboxController {
         log.debug("영구 보관 상세 메시지 ID : {}", messageId);
 
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).data(InboxDetailData.builder().message(findMessage).build()).message(INBOX_DETAIL_FIND_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{messageId}")
@@ -64,6 +64,6 @@ public class MessageInboxController {
         messageInboxService.deleteMessage(messageId);
 
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(INBOX_DELETE_SUCCESS).build();
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 }
