@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeartBoardOwnerData extends Data {
+public class HeartBoardOwnerData implements Data {
 
     private String nickname;
     private String statusMessage;

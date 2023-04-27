@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateNicknameData extends Data {
+public class UpdateNicknameData implements Data {
 
     private String nickname;
 

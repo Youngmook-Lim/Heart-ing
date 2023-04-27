@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-public class InboxDetailData extends Data {
+public class InboxDetailData implements Data {
     private Long messageId;
     private Long heartId;
     private String heartName;
