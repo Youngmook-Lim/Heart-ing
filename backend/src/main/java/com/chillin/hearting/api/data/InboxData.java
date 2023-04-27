@@ -19,7 +19,7 @@ public class InboxData {
     private String messageTitle;
     private String messageContent;
     private Long heartId;
-    private String heartImage;
+    private String heartUrl;
     private String emojiName;
     private String emojiUrl;
     private LocalDateTime createdDate;
@@ -32,7 +32,7 @@ public class InboxData {
                 .messageTitle(message.getTitle())
                 .messageContent(message.getContent())
                 .heartId(heart.getId())
-                .heartImage(heart.getImageUrl())
+                .heartUrl(heart.getImageUrl())
                 .emojiName((emoji != null) ? emoji.getName() : null)
                 .emojiUrl((emoji != null) ? emoji.getImageUrl() : null)
                 .createdDate(message.getCreatedDate())
