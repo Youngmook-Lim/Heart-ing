@@ -39,7 +39,7 @@ public class MessageInboxService {
     public List<InboxData> findInboxMessages(String userId) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Message> findMessages = inboxRepository.findAllByReceiverIdAndIsStored(userId, true);
-        return findMessages.stream().map(message -> InboxData.of(message)).collect(Collectors.toList());
+        return findMessages.stream().map(InboxData::of).collect(Collectors.toList());
     }
 
     @Transactional
