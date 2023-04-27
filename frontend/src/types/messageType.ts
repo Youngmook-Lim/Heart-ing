@@ -15,6 +15,7 @@ export interface IMessageInfoTypes {
 export interface IMessageDetailTypes {
   messageId: number;
   title: string;
+  messageTitle?: string;
   heartId: number;
   heartName: string;
   heartUrl: string;
