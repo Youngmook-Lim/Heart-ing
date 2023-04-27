@@ -14,7 +14,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class MessageRepositoryTest {
+class MessageRepositoryTest {
 
     @Autowired
     private MessageRepository messageRepository;
@@ -31,12 +31,12 @@ public class MessageRepositoryTest {
     private final Emoji emoji = Emoji.builder().name("emoji").imageUrl("emojiUrl").build();
 
     @Test
-    public void messageRepositoryIsNotNull() {
+    void messageRepositoryIsNotNull() {
         assertThat(messageRepository).isNotNull();
     }
 
     @Test
-    public void successSendMessage() {
+    void successSendMessage() {
         // given
 
 //        Heart heart = new Heart(null, "testHeart", "testHeartUrl", "short", "long", "type", "acq");
@@ -62,7 +62,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
-    public void successUpdateUserMessageTotal() {
+    void successUpdateUserMessageTotal() {
         // given
         Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
 
@@ -89,7 +89,7 @@ public class MessageRepositoryTest {
     }
 
     @Test
-    public void successDeleteMessage() {
+    void successDeleteMessage() {
         // given
         Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
 
