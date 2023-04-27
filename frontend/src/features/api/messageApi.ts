@@ -22,3 +22,14 @@ export async function sendMessage(body: IMessageSendTypes) {
     return null;
   }
 }
+
+export async function name(messageId: number) {
+  try {
+    const res = await axios.post(`api/v1/messages/inbox/${messageId}`)
+    const status = res.data.status
+    return status
+  } catch (err) {
+    console.log('저장 못함ㅠ')
+    return null
+  }
+}
