@@ -7,6 +7,8 @@ import {
   selectedMessageIdAtom,
 } from "../../atoms/messageAtoms";
 
+import HeartItemIcon from "./HeartItemIcon";
+
 function HeartItem({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const setSelectedMessgeIdAtom = useSetRecoilState(selectedMessageIdAtom);
@@ -21,17 +23,24 @@ function HeartItem({ ...props }) {
   };
 
   return (
-    <div>
+    <div className="place-content-center py-2">
       {isMyBoard ? (
-        <button onClick={() => readMessage(props.messageId)}>
-          메시지 id : {props.messageId} / 하트 정보 : {props.heartId} / 메시지
-          읽음 상태 : {isRead}
-        </button>
+        <div
+          className="flex justify-center relative "
+          onClick={() => readMessage(props.messageId)}
+        >
+          <HeartItemIcon id={props.heartId} />
+          {props.isRead ? null : (
+            <div className="bg-hrtColorNewRed w-4	h-4	mx-4 my-3 rounded-full border-2	border-white absolute left-1/2 bottom-1/2	"></div>
+          )}
+        </div>
       ) : (
-        props.heartId
+        <div className="flex justify-center">
+          <HeartItemIcon id={props.heartId} />
+        </div>
       )}
 
-      <div> 제목 : {props.context} </div>
+      <div> {props.context} </div>
     </div>
   );
 }

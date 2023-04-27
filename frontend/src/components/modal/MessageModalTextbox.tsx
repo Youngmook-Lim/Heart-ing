@@ -2,9 +2,9 @@ import React from "react";
 
 function MessageModalTextbox({ ...props }) {
   return (
-    <div>
-      <div>{props.title}</div>
-      <div>{props.content}</div>
+    <div className="bg-hrtColorLightPurple p-4 mt-2 text-start rounded-sm">
+      <div className="text-xl pb-2">{props.title}</div>
+      <div className="text-base	leading-5	">{props.content}</div>
     </div>
   );
 }

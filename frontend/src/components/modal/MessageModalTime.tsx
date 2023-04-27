@@ -15,7 +15,7 @@ function MessageModalTime({ ...props }) {
           <MessageModalTimeTimer remainTime={18000} />
         </div>
       ) : (
-        <div>{props.createdDate}</div>
+        <div className="text-2xl">{props.createdDate}</div>
       )}
     </div>
   );
