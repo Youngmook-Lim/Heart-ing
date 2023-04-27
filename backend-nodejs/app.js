@@ -8,7 +8,7 @@ const app = express();
 // Enable CORS
 app.use(
   cors({
-    origin: true,
+    origin: ["http://127.0.0.1:5500", "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true,
@@ -41,7 +41,7 @@ const { Server } = require("socket.io");
 // const io = new Server(server);
 const io = new Server(server, {
   cors: {
-    origin: "http://127.0.0.1:5500/public/",
+    origin: ["http://127.0.0.1:5500", "http://localhost:3000"],
     methods: ["GET", "POST"],
     allowedHeaders: ["X-Requested-With", "content-type"],
     credentials: true,
