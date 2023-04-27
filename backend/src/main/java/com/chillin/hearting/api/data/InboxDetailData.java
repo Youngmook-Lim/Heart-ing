@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @ToString
 public class InboxDetailData implements Data {
     private Long messageId;
+    private String messageContent;
     private Long heartId;
     private String heartName;
     private String heartUrl;
-    private String content;
-    private LocalDateTime createdDate;
     private String emojiUrl;
     private String emojiName;
+    private LocalDateTime createdDate;
 
     @Builder
     public InboxDetailData(Message message) {
@@ -29,7 +29,7 @@ public class InboxDetailData implements Data {
         this.heartId = heart.getId();
         this.heartName = heart.getName();
         this.heartUrl = heart.getImageUrl();
-        this.content = message.getContent();
+        this.messageContent = message.getContent();
         this.createdDate = message.getCreatedDate();
 
         Emoji emoji = message.getEmoji();

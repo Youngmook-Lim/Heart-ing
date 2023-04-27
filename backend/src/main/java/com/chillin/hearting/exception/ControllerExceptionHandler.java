@@ -216,7 +216,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MessageAlreadyExpiredException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ResponseDTO handleMessageAlreadyExpiredException(MessageNotFoundException e) {
+    public ResponseDTO handleMessageAlreadyExpiredException(MessageAlreadyExpiredException e) {
         log.error(e.getMessage());
         return ResponseDTO.builder()
                 .status(FAIL)
