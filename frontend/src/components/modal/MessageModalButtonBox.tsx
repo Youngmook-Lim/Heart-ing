@@ -18,11 +18,11 @@ function MessageModalButtonBox({ mode, isExpired }: IMessageModalTypes) {
       {mode === "send" || mode === "save" ? (
         <MessageModalButtonBoxClose />
       ) : null}
-      {mode === "recent" ? <MessageModalButtonBoxDelete mode={mode}/> : null}
-      {(mode === "recent" || mode === "save") && !isExpired ? (
-        <MessageModalButtonBoxSave />
+      {mode === "recent" || mode === "save" ? (
+        <MessageModalButtonBoxDelete mode={mode} />
       ) : null}
-      {mode === "save" || mode === "recent" ? (
+      {mode === "recent" ? <MessageModalButtonBoxSave /> : null}
+      {(mode === "save" || mode === "recent") && !isExpired ? (
         <MessageModalButtonBoxEmoji />
       ) : null}
     </div>
