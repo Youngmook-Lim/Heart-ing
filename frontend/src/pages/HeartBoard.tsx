@@ -4,11 +4,15 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
 import { readMessageAtom, isMyBoardAtom } from "../atoms/messageAtoms";
 
+import { getUserInfo } from "../features/userInfo";
+import { getProfile } from "../features/api/userApi";
+import { getReceived, sendMessage } from "../features/api/messageApi";
+
 import HeartBoardList from "../components/heartBoard/HeartBoardList";
 import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton";
 import MessageModal from "../components/modal/MessageModal";
-import { getUserInfo } from "../features/userInfo";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
+<<<<<<< HEAD
 import { getProfile } from "../features/api/userApi";
 import { useNavigate } from "react-router-dom";
 
@@ -17,12 +21,30 @@ function HeartBoard() {
   // 로그인 유무 확인
   const isLogin = useRecoilValue(isLoginAtom);
   // const isLogin = true;
+=======
+import { IMessageSendTypes } from "../types/messageType";
+
+function HeartBoard() {
+  const [userProfile, setUserProfile] = useState({});
+  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom); // 나의 하트판인지 확인
+  const [receivedList, setReceivedList] = useState({});
+
+  const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
+  const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
+>>>>>>> afe2fe86c1ed20d230ed21605ed40236fe9ff98c
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
-  const [userProfile, setUserProfile] = useState({})
+  async function getUserProfile(userId: string | null) {
+    if (!userId) return;
+    const data = await getProfile(userId);
+    if (data.status === "success") {
+      setUserProfile(data.data);
+    }
+  }
 
+<<<<<<< HEAD
   async function getUserProfile(userId: string|null) {
     if (!userId) return
     const data = await getProfile(userId)
@@ -31,43 +53,63 @@ function HeartBoard() {
     } else {
       console.log('에러났당')
       navigate('/notfound')
+=======
+  // useerId로 최근 메시지 리스트 가져오기
+  async function getRecivedMessages(userId: string | null) {
+    if (!userId) return;
+    console.log(userId);
+    console.log("최근 메시지 리스트 가져올거야");
+    const data = await getReceived(userId);
+    if (data.status === "success") {
+      console.log(data.data);
+      console.log(data.data.messageList);
+      setReceivedList(data.data.messageList);
+>>>>>>> afe2fe86c1ed20d230ed21605ed40236fe9ff98c
     }
   }
 
   // 내 userId localStorage에서 가져오기
-  const myId = getUserInfo().userId
-
-
-  
+  const myId = getUserInfo().userId;
   const userNickname = useRecoilValue(userNicknameAtom);
-  // const userNickname = "1";
-
-  // 메시지 읽는 모달
-  const readMessage = useRecoilValue(readMessageAtom);
-
-  // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
-  // const boardNickname = "1"; // 보드 주인 불러올 부분
-  // const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
-  // const isMyBoard = useRecoilValue(isMyBoardAtom);
-  // 38, 39행을 합쳐서 41행과 같이 쓸 수 있답니다~
-  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom)
 
   useEffect(() => {
+    // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
     setIsMyBoard(isLogin && userId === myId ? true : false);
-    getUserProfile(userId)
+    getUserProfile(userId);
+    getRecivedMessages(userId);
   }, []);
 
+  // 테스트용 메시지 전송
+  // async function postMessages(userId: string | null) {
+  //   if (!userId) return;
+  //   console.log(userId + "가 받는 메시지 테스트 중입니다");
+  //   const body: IMessageSendTypes = {
+  //     heartId: 1,
+  //     senderId: userId,
+  //     receiverId: userId,
+  //     title: "메시지테스트",
+  //     content: "내용이보일까요",
+  //   };
+  //   const data = await sendMessage(body);
+  //   if (data.status === "success") {
+  //     console.log(data);
+  //   }
+  // }
+  // postMessages(myId);
+
   return (
-    <div className="container mx-auto px-8 py-8">
+    <div className="container mx-auto px-6 py-8">
       <div className="modal border-hrtColorPink">
-        <div className="modal-header bg-hrtColorPink">마음 수신함</div>
-        <HeartBoardProfileBox userProfile={userProfile}/>
-        <HeartBoardList />
+        <div className="modal-header bg-hrtColorPink border-hrtColorPink">
+          마음 수신함
+        </div>
+        <HeartBoardProfileBox userProfile={userProfile} />
         {isMyBoard ? (
           <HeartBoardMainButton context={"공유하기"} />
         ) : (
           <HeartBoardMainButton context={"마음 보내기"} />
         )}
+        <HeartBoardList receivedList={receivedList} />
       </div>
       {isLogin ? null : <button>나의 마음 수신함 만들러가기</button>}
       {readMessage ? <MessageModal mode={"recent"} /> : null}

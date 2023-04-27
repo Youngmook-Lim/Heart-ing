@@ -15,6 +15,28 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControllerExceptionHandler {
     private static final String FAIL = "fail";
 
+    @ExceptionHandler(MessageDetailFailException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResponseDTO handleMessageDetailFailException(MessageDetailFailException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(ReceivedMessagesListFailException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResponseDTO handleReceivedMessagesListFailException(ReceivedMessagesListFailException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler(EmojiFailException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -191,5 +213,14 @@ public class ControllerExceptionHandler {
                 .build();
     }
 
-
+    @ExceptionHandler(MessageAlreadyExpiredException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleMessageAlreadyExpiredException(MessageNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 }

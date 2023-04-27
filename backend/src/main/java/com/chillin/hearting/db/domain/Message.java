@@ -76,7 +76,7 @@ public class Message implements Serializable {
     }
 
     @Builder
-    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp, boolean isActive) {
+    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
         this.id = id;
         this.heart = heart;
         this.emoji = emoji;
@@ -85,11 +85,14 @@ public class Message implements Serializable {
         this.title = title;
         this.content = content;
         this.senderIp = senderIp;
-        this.isActive = isActive;
     }
 
     public void deleteMessage() {
         this.isActive = false;
+    }
+
+    public void undeleteMessage() {
+        this.isActive = true;
     }
 
     public void reportMessage() {
@@ -102,6 +105,14 @@ public class Message implements Serializable {
 
     public void toInbox() {
         this.isStored = true;
+    }
+
+    public void readMessage() {
+        this.isRead = true;
+    }
+
+    public void deleteInbox() {
+        this.isStored = false;
     }
 
 }

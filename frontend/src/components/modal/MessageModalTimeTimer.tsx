@@ -43,11 +43,11 @@ function MessageModalTimeTimer({ remainTime }: propType) {
 
   return (
     <div>
-      <div>
+      <div className="text-4xl">
         <span>{getHours(time)}</span>
-        <span> : </span>
+        <span>:</span>
         <span>{getMinutes(time)}</span>
-        <span> : </span>
+        <span>:</span>
         <span>{getSeconds(time)}</span>
       </div>
     </div>

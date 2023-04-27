@@ -1,7 +1,6 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.MessageData;
-import com.chillin.hearting.api.data.TotalMessageCountData;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.*;
@@ -24,7 +23,7 @@ public class MessageService {
     private final EmojiRepository emojiRepository;
 
     @Transactional
-    public MessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
+    public SendMessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
 
         // Check if receiver exists
         User receiver = userRepository.findById(receiverId).orElseThrow(UserNotFoundException::new);
@@ -42,7 +41,7 @@ public class MessageService {
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
         message = messageRepository.save(message);
 
-        return MessageData.builder()
+        return SendMessageData.builder()
                 .messageId(message.getId())
                 .heartId(message.getHeart().getId())
                 .heartName(message.getHeart().getName())
@@ -145,18 +144,6 @@ public class MessageService {
         return message.getId();
     }
 
-    // 홈 화면 - 서비스 전체 누적 메시지 수
-    public TotalMessageCountData totalMessageCount() {
-
-        Long count = messageRepository.count();
-
-        log.debug("서비스 누적 메시지 수 {}", count);
-
-        TotalMessageCountData totalMessageCountData = TotalMessageCountData.builder().totalHeartCount(count).build();
-
-        return totalMessageCountData;
-
-    }
 
 }
 
