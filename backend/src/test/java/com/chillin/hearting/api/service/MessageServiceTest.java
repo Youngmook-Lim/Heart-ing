@@ -97,7 +97,7 @@ class MessageServiceTest {
     }
 
     @Test
-    public void successSendMessage() {
+    void successSendMessage() {
         // given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(receiver).when(userRepository).save(receiver);
