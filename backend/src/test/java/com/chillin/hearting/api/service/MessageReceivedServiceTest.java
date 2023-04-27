@@ -1,12 +1,13 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.MessageData;
 import com.chillin.hearting.api.data.ReceivedMessageData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
-import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.MessageRepository;
 import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.exception.UnAuthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +19,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,9 +34,6 @@ class MessageReceivedServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private HeartRepository heartRepository;
 
     @Mock
     private MessageRepository messageRepository;
@@ -56,9 +57,8 @@ class MessageReceivedServiceTest {
 
 
     // getReceivedMessages
-
     @Test
-    void successGetReceivedMessage() {
+    void successGetReceivedMessages() {
         // given
 
         List<Message> messageList = new ArrayList<>();
@@ -89,6 +89,41 @@ class MessageReceivedServiceTest {
         // verify
         verify(messageRepository, times(1)).findByReceiverIdAndIsActiveTrue(receiverId);
         verify(messageRepository, times(2)).save(any(Message.class));
+    }
+
+    // getMessageDetail
+    @Test
+    void failGetMessageDetail_DifferentUser() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+
+        // when
+        UnAuthorizedException exception = assertThrows(UnAuthorizedException.class, () -> messageReceivedService.getMessageDetail(messageId, senderId));
+
+        // then
+        assertEquals("본인의 메시지만 상세열람할 수 있습니다.", exception.getMessage());
+    }
+
+    @Test
+    void successGetMessageDetail() {
+        // given
+        Message message1 = Message.builder().id(0L).heart(heart).receiver(receiver).build();
+        Message message2 = Message.builder().isRead(true).id(0L).heart(heart).receiver(receiver).build();
+
+        doReturn(Optional.of(message1)).when(messageRepository).findById(0L);
+        doReturn(message2).when(messageRepository).save(message1);
+
+        // when
+        final MessageData data = messageReceivedService.getMessageDetail(0L, receiverId);
+
+
+        // then
+        assertThat(data.getMessageId()).isEqualTo(0L);
+        assertThat(data.isRead()).isTrue();
+
+        // verify
+        verify(messageRepository, times(1)).findById(0L);
+        verify(messageRepository, times(1)).save(any(Message.class));
     }
 
 }
