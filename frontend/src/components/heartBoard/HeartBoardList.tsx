@@ -8,12 +8,12 @@ import HeartItem from "../common/HeartItem";
 // 더미데이터
 const messageList: IMessageInfoTypes[] = [
   {
-    messageId: "message1",
+    messageId: 1,
     title: "test title1",
     heartId: 0,
     heartName: "heartname1",
     heartUrl: "url1",
-    emojiId: "emoji1",
+    emojiId: 1,
     emojiName: "emoji1",
     emojiUrl: "url1",
     isRead: false,
@@ -21,12 +21,12 @@ const messageList: IMessageInfoTypes[] = [
     expiredDate: "00000",
   },
   {
-    messageId: "message2",
+    messageId: 2,
     title: "test title2",
     heartId: 1,
     heartName: "heartname2",
     heartUrl: "url2",
-    emojiId: "emoji2",
+    emojiId: 2,
     emojiName: "emoji2",
     emojiUrl: "url2",
     isRead: false,

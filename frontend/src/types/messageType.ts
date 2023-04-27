@@ -1,10 +1,10 @@
 export interface IMessageInfoTypes {
-  messageId: string;
+  messageId: number;
   title: string;
   heartId: number;
   heartName: string;
   heartUrl: string;
-  emojiId: string;
+  emojiId: number;
   emojiName: string;
   emojiUrl: string;
   createdDate: string;
@@ -13,12 +13,12 @@ export interface IMessageInfoTypes {
 }
 
 export interface IMessageDetailTypes {
-  messageId: string;
+  messageId: number;
   title: string;
   heartId: number;
   heartName: string;
   heartUrl: string;
-  emojiId: string;
+  emojiId: number;
   emojiName: string;
   emojiUrl: string;
   createdDate: string;
@@ -32,7 +32,7 @@ export interface IMessageDetailTypes {
 
 export interface IMessageSendTypes {
   heartId: number;
-  senderId: string|null;
+  senderId: string | null;
   receiverId: string;
   title: string;
   content: string;

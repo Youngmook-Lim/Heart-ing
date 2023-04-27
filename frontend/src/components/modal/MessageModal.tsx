@@ -17,15 +17,16 @@ import MessageModalHeart from "./MessageModalHeart";
 import MessageModalTextbox from "./MessageModalTextbox";
 import MessageModalTime from "./MessageModalTime";
 import ButtonIcon from "../common/ButtonIcon";
+import { getMessageDetail } from "../../features/api/messageApi";
 
 // 더미데이터
 const messageExample: IMessageDetailTypes = {
-  messageId: "message id",
+  messageId: 1,
   title: "메시지 제목입니다",
   heartId: 1,
   heartName: "heart name",
   heartUrl: "url",
-  emojiId: "emoji id",
+  emojiId: 1,
   emojiName: "emoji name",
   emojiUrl: "emoji url",
   isRead: false,
@@ -33,8 +34,7 @@ const messageExample: IMessageDetailTypes = {
   createdDate: "00000",
   expiredDate: "00000",
   isReported: false,
-  content:
-    "100자를 채우기 위한 여정... 쉽지 않다; 하지만 최대 길이에 맞춰서 레이아웃을 짜야하니까 어쩔 수 없어! 꽉 찼을 때랑 널널하게 찼을 때를 모두 고려해서 예쁜 높이 찾자~!",
+  content: "content",
   shortDescription: "하트 짧은 한줄 설명",
 };
 
@@ -44,10 +44,20 @@ function MessageModal({ mode }: IMessageModalTypes) {
 
   const [messageData, setMessageData] = useState(messageExample);
 
+  // selectedMessageId로 상세 메시지 정보 가져오기
+  async function getRecivedMessages(selectedMessageId: number | null) {
+    if (!selectedMessageId) return;
+    const data = await getMessageDetail(selectedMessageId);
+    if (data.status === "success") {
+      console.log(data.data);
+      setMessageData(data.data);
+    }
+  }
+
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
-    setMessageData(messageExample);
-  }, []);
+    getRecivedMessages(selectedMessageId);
+  }, [mode]);
 
   // 메시지 모달을 닫습니다
   const closeModal = () => {

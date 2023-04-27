@@ -5,6 +5,9 @@
 // 독립성을 가지는 모듈로 만들어 주는 듯 하다.
 
 // .svg 확장자의 파일에서 ReactComponent의 존재를 인식시켜 주는 부분
+declare module "*.png";
+declare module "*.jpg";
+declare module "*.webp";
 declare module "*.svg" {
   import React = require("react");
 
