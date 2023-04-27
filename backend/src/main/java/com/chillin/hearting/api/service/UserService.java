@@ -44,6 +44,7 @@ public class UserService {
 
     private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
+    private static final String ROLE = "ROLE_USER";
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
@@ -58,12 +59,16 @@ public class UserService {
     private String KAKAO_TOKEN_URI;
 
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
-    private String KAKO_USER_INFO_URI;
+    private String KAKAO_USER_INFO_URI;
 
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
+
+    @Value("${app.auth.refresh-token-expiry}")
+    private long refreshTokenExpiry;
+
 
     @Transactional
     public SocialLoginData kakaoLogin(String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
@@ -81,19 +86,9 @@ public class UserService {
                 throw new NotFoundException("카카오로부터 user 정보를 가져오지 못했습니다.");
             }
 
-            Date now = new Date();
+            AuthToken accessToken = makeAccessToken(kakaoUser.getId());
 
-            AuthToken accessToken = tokenProvider.createAuthToken(
-                    kakaoUser.getId(),
-                    "ROLE_USER",
-                    new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-            );
-
-            long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
-
-            AuthToken refreshToken = tokenProvider.createAuthToken(
-                    new Date(now.getTime() + refreshTokenExpiry)
-            );
+            AuthToken refreshToken = makeRefreshToken();
 
             log.debug("accessToken : {}", accessToken.getToken());
             log.debug("refreshToken : {}", refreshToken.getToken());
@@ -117,6 +112,8 @@ public class UserService {
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
             throw new IllegalArgumentException("카카오로부터 user 정보를 가져오지 못했습니다.");
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
         }
         return socialLoginData;
 
@@ -174,7 +171,7 @@ public class UserService {
         User user = null;
 
         try {
-            URL url = new URL(KAKO_USER_INFO_URI);
+            URL url = new URL(KAKAO_USER_INFO_URI);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
@@ -248,9 +245,9 @@ public class UserService {
 
         user.updateNickname(nickname);
 
-        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(user.getNickname()).build();
-
-        return updateNicknameData;
+        return UpdateNicknameData.builder()
+                .nickname(user.getNickname())
+                .build();
 
     }
 
@@ -260,9 +257,9 @@ public class UserService {
 
         user.updateStatusMessage(statusMessage);
 
-        UpdateStatusMessageData updateStatusMessageData = UpdateStatusMessageData.builder().statusMessage(user.getStatusMessage()).build();
-
-        return updateStatusMessageData;
+        return UpdateStatusMessageData.builder()
+                .statusMessage(user.getStatusMessage())
+                .build();
 
     }
 
@@ -280,13 +277,11 @@ public class UserService {
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        HeartBoardOwnerData heartBoardOwnerData = HeartBoardOwnerData.builder()
+        return HeartBoardOwnerData.builder()
                 .nickname(user.getNickname())
                 .statusMessage(user.getStatusMessage())
                 .messageTotal(user.getMessageTotal())
                 .build();
-
-        return heartBoardOwnerData;
     }
 
     // access token 재발급
@@ -319,19 +314,36 @@ public class UserService {
             throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
         }
 
-        Date now = new Date();
-
-        AuthToken accessToken = tokenProvider.createAuthToken(
-                user.getId(),
-                "ROLE_USER",
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-        );
+        AuthToken accessToken = makeAccessToken(user.getId());
 
         log.debug("정상적으로 액세스토큰 재발급!!!");
 
-        ReissuedAccessTokenData reissuedAccessTokenData = ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
 
-        return reissuedAccessTokenData;
+        return ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
+    }
+
+    public AuthToken makeAccessToken(String userId) {
+
+        Date now = new Date();
+
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                userId,
+                ROLE,
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        return accessToken;
+    }
+
+    public AuthToken makeRefreshToken() {
+
+        Date now = new Date();
+
+        AuthToken refreshToken = tokenProvider.createAuthToken(
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
+
+        return refreshToken;
     }
 
 
