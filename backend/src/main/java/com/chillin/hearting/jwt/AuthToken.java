@@ -1,5 +1,6 @@
 package com.chillin.hearting.jwt;
 
+import com.chillin.hearting.exception.JwtExpiredException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.Getter;
@@ -71,30 +72,32 @@ public class AuthToken {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SecurityException e) {
-            log.info("Invalid JWT signature.");
+            log.info("Invalid JWT signature - 시그니처 검증에 실패한 토큰입니다. jwt secret 키가 정상이 아닐 가능성이 높습니다.");
         } catch (MalformedJwtException e) {
-            log.info("Invalid JWT token.");
+            log.info("Invalid JWT token - 손상된 토큰입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
+            log.info("Expired JWT token - 유효기간이 만료된 토큰입니다.");
+            throw new JwtExpiredException();
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token.");
+            log.info("Unsupported JWT token - 지원하지 않는 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
             log.debug(e.getMessage());
+            log.error("아마도 JWT가 헤더에 안 담겼을지도?");
         }
         return null;
     }
 
     public Claims getExpiredTokenClaims() {
         try {
-            Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token");
-            return e.getClaims();
+//            return e.getClaims();
         }
         return null;
 

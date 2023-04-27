@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
+import { currentUserIdAtom, isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
 import { readMessageAtom, isMyBoardAtom } from "../atoms/messageAtoms";
 
 import { getUserInfo } from "../features/userInfo";
@@ -18,14 +18,14 @@ import { modifyNickname } from "../features/api/userApi";
 
 function HeartBoard() {
   const navigate = useNavigate()
-  // 로그인 유무 확인
-  const isLogin = useRecoilValue(isLoginAtom);
   // const isLogin = true;
 
   const [userProfile, setUserProfile] = useState({})
   const [receivedList, setReceivedList] = useState({})
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom)
-  const readMessage = useRecoilValue(readMessageAtom);
+  const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
+  const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
+  const setCurrentUserId = useSetRecoilState(currentUserIdAtom)
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -44,6 +44,7 @@ function HeartBoard() {
   // useerId로 최근 메시지 리스트 가져오기
   async function getRecivedMessages(userId: string | null) {
     if (!userId) return;
+    setCurrentUserId(userId)
     console.log(userId);
     console.log("최근 메시지 리스트 가져올거야");
     const data = await getReceived(userId);

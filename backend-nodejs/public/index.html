@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소켓통신 FE 샘플코드</title>
+  </head>
+  <body>
+    <h3>
+      웹소켓: <span id="connection-status" style="color: red">연결 안됨</span>
+    </h3>
+    <hr />
+
+    <label for="my-user-id">내 유저 ID:</label>
+    <input type="text" id="my-user-id" />
+    <button id="connect-btn">연결</button>
+    <h4>내 아이디: <span id="display-user-id">N/A</span></h4>
+    <br /><br />
+
+    <label for="receiver-id">메시지 받는 유저 ID:</label>
+    <input type="text" id="receiver-id" />
+    <br /><br />
+    <label for="data-input">보낼 데이터:</label>
+    <input type="text" id="data-input" />
+    <button id="send-message-btn">데이터 전송</button>
+    <br /><br />
+
+    <div id="notification"></div>
+
+    <!-- <script src="http://localhost:8000/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

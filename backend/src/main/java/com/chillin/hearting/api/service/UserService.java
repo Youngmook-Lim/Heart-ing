@@ -5,6 +5,7 @@ import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
 import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.exception.JwtNotExpiredException;
 import com.chillin.hearting.exception.NotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
@@ -13,10 +14,12 @@ import com.chillin.hearting.jwt.AuthTokenProvider;
 import com.chillin.hearting.oauth.domain.AppProperties;
 import com.chillin.hearting.oauth.domain.ProviderType;
 import com.chillin.hearting.util.CookieUtil;
+import com.chillin.hearting.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,13 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class UserService {
 
     private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
+    private static final String ROLE = "ROLE_USER";
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String KAKAO_CLIENT_ID;
@@ -58,12 +60,16 @@ public class UserService {
     private String KAKAO_TOKEN_URI;
 
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
-    private String KAKO_USER_INFO_URI;
+    private String KAKAO_USER_INFO_URI;
 
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
+
+    @Value("${app.auth.refresh-token-expiry}")
+    private long refreshTokenExpiry;
+
 
     @Transactional
     public SocialLoginData kakaoLogin(String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
@@ -81,19 +87,9 @@ public class UserService {
                 throw new NotFoundException("카카오로부터 user 정보를 가져오지 못했습니다.");
             }
 
-            Date now = new Date();
+            AuthToken accessToken = makeAccessToken(kakaoUser.getId());
 
-            AuthToken accessToken = tokenProvider.createAuthToken(
-                    kakaoUser.getId(),
-                    "ROLE_USER",
-                    new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-            );
-
-            long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
-
-            AuthToken refreshToken = tokenProvider.createAuthToken(
-                    new Date(now.getTime() + refreshTokenExpiry)
-            );
+            AuthToken refreshToken = makeRefreshToken();
 
             log.debug("accessToken : {}", accessToken.getToken());
             log.debug("refreshToken : {}", refreshToken.getToken());
@@ -117,6 +113,8 @@ public class UserService {
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
             throw new IllegalArgumentException("카카오로부터 user 정보를 가져오지 못했습니다.");
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
         }
         return socialLoginData;
 
@@ -174,7 +172,7 @@ public class UserService {
         User user = null;
 
         try {
-            URL url = new URL(KAKO_USER_INFO_URI);
+            URL url = new URL(KAKAO_USER_INFO_URI);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
@@ -209,10 +207,10 @@ public class UserService {
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
                     BlockedUser blockedUser = blockedUserRepository.findByUserId(user.getId()).orElseThrow(UserNotFoundException::new);
-                    LocalDateTime localDateTime = LocalDateTime.now();
+                    LocalDateTime locaDateTimeNow = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
                     // 계정 정지 기간이 이미 기간이 지난 경우
-                    if (!localDateTime.isBefore(blockedUser.getEndDate())) {
+                    if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {
                         user.updateUserStatusToActive();
                         log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
                         return userRepository.saveAndFlush(user);
@@ -233,8 +231,11 @@ public class UserService {
                 user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(email).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
-        } catch (Exception e) {
-            log.debug(e.getMessage());
+        } catch (UnAuthorizedException e) {
+            log.error("로그인 한 회원 status : {}", e.getMessage());
+            throw new UnAuthorizedException(e.getMessage());
+        } catch (IOException | ParseException e) {
+            log.error(e.getMessage());
         }
         return user;
     }
@@ -245,9 +246,9 @@ public class UserService {
 
         user.updateNickname(nickname);
 
-        UpdateNicknameData updateNicknameData = UpdateNicknameData.builder().nickname(user.getNickname()).build();
-
-        return updateNicknameData;
+        return UpdateNicknameData.builder()
+                .nickname(user.getNickname())
+                .build();
 
     }
 
@@ -257,9 +258,9 @@ public class UserService {
 
         user.updateStatusMessage(statusMessage);
 
-        UpdateStatusMessageData updateStatusMessageData = UpdateStatusMessageData.builder().statusMessage(user.getStatusMessage()).build();
-
-        return updateStatusMessageData;
+        return UpdateStatusMessageData.builder()
+                .statusMessage(user.getStatusMessage())
+                .build();
 
     }
 
@@ -277,22 +278,33 @@ public class UserService {
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        HeartBoardOwnerData heartBoardOwnerData = HeartBoardOwnerData.builder()
+        return HeartBoardOwnerData.builder()
                 .nickname(user.getNickname())
                 .statusMessage(user.getStatusMessage())
                 .messageTotal(user.getMessageTotal())
                 .build();
-
-        return heartBoardOwnerData;
     }
 
     // access token 재발급
     public ReissuedAccessTokenData reissueAccessToken(String userId, HttpServletRequest httpServletRequest) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
+        String headerAccessToken = HeaderUtil.getAccessToken(httpServletRequest);
+
+        AuthToken authHeaderAccessToken = tokenProvider.convertAuthToken(headerAccessToken);
+
+        if (authHeaderAccessToken.getExpiredTokenClaims() != null) {
+            log.debug("access token 유효기간이 남아있습니다.");
+            throw new JwtNotExpiredException();
+        }
+
         String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElseThrow(() -> new UnAuthorizedException("쿠키에 refresh token이 없습니다. 다시 로그인 해주세요."));
+
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new UnAuthorizedException("DB에 저장되어 있는 refreshToken과 다릅니다. 다시 로그인 해주세요.");
+        }
 
         log.debug("쿠키에 담긴 refreshToken : {}", refreshToken);
 
@@ -303,20 +315,36 @@ public class UserService {
             throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
         }
 
-        Date now = new Date();
-
-
-        AuthToken accessToken = tokenProvider.createAuthToken(
-                user.getId(),
-                "ROLE_USER",
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-        );
+        AuthToken accessToken = makeAccessToken(user.getId());
 
         log.debug("정상적으로 액세스토큰 재발급!!!");
 
-        ReissuedAccessTokenData reissuedAccessTokenData = ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
 
-        return reissuedAccessTokenData;
+        return ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
+    }
+
+    public AuthToken makeAccessToken(String userId) {
+
+        Date now = new Date();
+
+        AuthToken accessToken = tokenProvider.createAuthToken(
+                userId,
+                ROLE,
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        return accessToken;
+    }
+
+    public AuthToken makeRefreshToken() {
+
+        Date now = new Date();
+
+        AuthToken refreshToken = tokenProvider.createAuthToken(
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
+
+        return refreshToken;
     }
 
 

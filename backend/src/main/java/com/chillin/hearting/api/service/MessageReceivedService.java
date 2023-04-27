@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MessageReceivedService {
                 .messageList(new ArrayList<>()).build();
 
         for (Message m : initialList) {
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
             LocalDateTime expiredDate = m.getExpiredDate();
             if (expiredDate.isAfter(now)) {
                 // Not yet expired

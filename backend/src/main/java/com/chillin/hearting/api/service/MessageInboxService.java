@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,8 @@ public class MessageInboxService {
     @Transactional
     public void storeMessage(Long messageId) {
         Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
-        if (findMessage.getExpiredDate().isBefore(LocalDateTime.now())) throw new MessageAlreadyExpiredException();
+        if (findMessage.getExpiredDate().isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul"))))
+            throw new MessageAlreadyExpiredException();
         findMessage.toInbox();
     }
 
