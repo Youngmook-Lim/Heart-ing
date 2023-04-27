@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-public class SocialLoginData extends Data {
+public class SocialLoginData implements Data {
 
     // user 고유 코드
     private String userId;

@@ -9,8 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ReceivedMessageData extends Data {
+public class ReceivedMessageData implements Data {
 
     private List<MessageData> messageList;
-    
+
 }

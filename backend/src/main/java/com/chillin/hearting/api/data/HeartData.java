@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class HeartData extends Data {
+public class HeartData implements Data {
 
     private Long id;
     private String name;

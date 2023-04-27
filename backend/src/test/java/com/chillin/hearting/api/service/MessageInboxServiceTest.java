@@ -22,7 +22,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageInboxServiceTest {
+class MessageInboxServiceTest {
 
     @InjectMocks
     private MessageInboxService messageInboxService;

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MessageData extends Data {
+public class MessageData implements Data {
 
     private long messageId;
     private String title;

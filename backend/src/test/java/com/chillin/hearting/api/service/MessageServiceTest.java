@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageServiceTest {
+class MessageServiceTest {
 
     @InjectMocks
     private MessageService messageService;
@@ -58,7 +58,7 @@ public class MessageServiceTest {
 
     // sendMessage
     @Test
-    public void failSendMessage_NoReceiver() {
+    void failSendMessage_NoReceiver() {
         //given
         doReturn(Optional.empty()).when(userRepository).findById(receiverId);
 
@@ -66,11 +66,11 @@ public class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(UserNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
-    public void failSendMessage_NoSender() {
+    void failSendMessage_NoSender() {
         //given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(Optional.empty()).when(userRepository).findById(senderId);
@@ -79,11 +79,11 @@ public class MessageServiceTest {
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), UserNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(UserNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
-    public void failSendMessage_NoHeart() {
+    void failSendMessage_NoHeart() {
         //given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
@@ -93,11 +93,11 @@ public class MessageServiceTest {
         HeartNotFoundException exception = assertThrows(HeartNotFoundException.class, () -> messageService.sendMessage(heartId, senderId, receiverId, title, content, senderIp));
 
         // then
-        assertEquals(exception.getMessage(), HeartNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(HeartNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
-    public void successSendMessage() {
+    void successSendMessage() {
         // given
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
         doReturn(receiver).when(userRepository).save(receiver);
@@ -120,7 +120,7 @@ public class MessageServiceTest {
 
     // deleteMessage
     @Test
-    public void failDeleteMessage_NoMessage() {
+    void failDeleteMessage_NoMessage() {
         //given
         doReturn(Optional.empty()).when(messageRepository).findById(messageId);
 
@@ -128,11 +128,11 @@ public class MessageServiceTest {
         MessageNotFoundException exception = assertThrows(MessageNotFoundException.class, () -> messageService.deleteMessage(messageId, receiverId));
 
         // then
-        assertEquals(exception.getMessage(), MessageNotFoundException.DEFAULT_MESSAGE);
+        assertEquals(MessageNotFoundException.DEFAULT_MESSAGE, exception.getMessage());
     }
 
     @Test
-    public void successDeleteMessage() {
+    void successDeleteMessage() {
         //given
         doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
         doReturn(Message.builder().id(0L).receiver(receiver).build()).when(messageRepository).save(any(Message.class));

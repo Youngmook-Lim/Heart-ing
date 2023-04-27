@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateStatusMessageData extends Data {
+public class UpdateStatusMessageData implements Data {
 
     private String statusMessage;
 }

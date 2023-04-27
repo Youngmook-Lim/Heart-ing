@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
 
     @InjectMocks
@@ -69,7 +69,7 @@ public class UserServiceTest {
     public void successUpdateNickname() {
         // given
         doReturn(Optional.of(user)).when(userRepository).findById(userId);
-        
+
         // when
         final UpdateNicknameData updateNicknameData = userService.updateNickname(userId, nickname);
 
