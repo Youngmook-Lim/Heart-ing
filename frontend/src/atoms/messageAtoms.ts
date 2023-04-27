@@ -9,9 +9,9 @@ export const readMessageAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const selectedMessageIdAtom = atom<string>({
+export const selectedMessageIdAtom = atom<number>({
   key: "selectedMessageId",
-  default: "",
+  default: -1,
   effects_UNSTABLE: [persistAtom],
 });
 
