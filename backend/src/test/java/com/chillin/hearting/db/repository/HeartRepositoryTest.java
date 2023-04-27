@@ -24,6 +24,8 @@ public class HeartRepositoryTest {
     private Heart savedSpecialHeart;
     private User savedUser;
 
+    private final static String DEFAULT_TYPE = "DEFAULT";
+
     @BeforeEach
     public void 데이터생성() {
         Heart defaultHeart = createDefaultHeart();
@@ -49,6 +51,20 @@ public class HeartRepositoryTest {
 
         assertThat(heartList).extracting("type")
                 .containsOnly("DEFAULT", "SPECIAL");
+    }
+
+    @Test
+    public void 기본하트조회() {
+        // when
+        List<Heart> heartList = heartRepository.findAllByType("SPECIAL");
+
+        // then
+        System.out.println(heartList.size());
+        assertThat(heartList)
+                .allSatisfy(heart -> {
+                    assertThat(heart.getType().equals(DEFAULT_TYPE));
+                    System.out.println(heart.getName());
+                });
     }
 
     public Heart createDefaultHeart() {
