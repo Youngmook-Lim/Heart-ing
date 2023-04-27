@@ -24,6 +24,12 @@ const { Server } = require("socket.io");
 // const io = new Server(server);
 const io = new Server(server, {
   path: "/ws",
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["X-Requested-With", "content-type"],
+    credentials: true,
+  },
 });
 
 // app.get("/socket.io.js", (req, res) => {
