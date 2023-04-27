@@ -32,7 +32,7 @@ export interface IMessageDetailTypes {
 
 export interface IMessageSendTypes {
   heartId: number;
-  senderId: string;
+  senderId: string|null;
   receiverId: string;
   title: string;
   content: string;
