@@ -36,7 +36,7 @@ export async function getMessageDetail(messageId: number) {
   }
 }
 
-export async function name(messageId: number) {
+export async function saveMessageApi(messageId: number) {
   try {
     const res = await axios.post(`api/v1/messages/inbox/${messageId}`)
     const status = res.data.status
