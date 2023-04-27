@@ -25,7 +25,7 @@ export async function modifyNickname(nickname: object) {
 
 export async function modifyStatusMessage(statusMessage: object) {
   try{
-    const res = await axios.patch('api/v1/auth/users/nickname', statusMessage)
+    const res = await axios.patch('api/v1/auth/users/status-message', statusMessage)
     const status = res.data.status
     return status
   } catch(err) {

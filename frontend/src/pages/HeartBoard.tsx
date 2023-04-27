@@ -5,7 +5,7 @@ import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
 import { readMessageAtom, isMyBoardAtom } from "../atoms/messageAtoms";
 
 import { getUserInfo } from "../features/userInfo";
-import { getProfile } from "../features/api/userApi";
+import { getProfile, modifyStatusMessage } from "../features/api/userApi";
 import { getReceived, sendMessage } from "../features/api/messageApi";
 
 import HeartBoardList from "../components/heartBoard/HeartBoardList";
@@ -13,6 +13,8 @@ import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton"
 import MessageModal from "../components/modal/MessageModal";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
 import { useNavigate } from "react-router-dom";
+import { IUpdateProfileTypes } from "../types/userType";
+import { modifyNickname } from "../features/api/userApi";
 
 function HeartBoard() {
   const navigate = useNavigate()
@@ -52,6 +54,16 @@ function HeartBoard() {
     }
   }
 
+  async function updateProfile(profileInfo:IUpdateProfileTypes) {
+    const nicknameBody = {nickname : profileInfo.nickname}
+    const statusBody = {statusMessage : profileInfo.statusMessage}
+    const nicknameStatus = await modifyNickname(nicknameBody)
+    const statusMessageStatus = await modifyStatusMessage(statusBody)
+
+    if (nicknameStatus === 'success' && statusMessageStatus === 'success') {
+      getUserProfile(userId)
+    }
+  }
   // 내 userId localStorage에서 가져오기
   const myId = getUserInfo().userId;
 
@@ -86,7 +98,7 @@ function HeartBoard() {
         <div className="modal-header bg-hrtColorPink border-hrtColorPink">
           마음 수신함
         </div>
-        <HeartBoardProfileBox userProfile={userProfile} />
+        <HeartBoardProfileBox onChangeProfile={updateProfile} userProfile={userProfile} />
         {isMyBoard ? (
           <HeartBoardMainButton context={"공유하기"} />
         ) : (

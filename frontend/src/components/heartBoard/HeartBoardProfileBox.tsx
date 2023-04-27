@@ -1,19 +1,58 @@
-import React from 'react'
+import React, { useState } from "react";
 import { useRecoilValue } from 'recoil'
 import { isMyBoardAtom } from '../../atoms/messageAtoms'
+import { IUpdateProfileTypes } from "../../types/userType";
 
 function HeartBoardProfileBox({ ...props }) {
   console.log('내가 프롭', props)
   const isMyBoard = useRecoilValue(isMyBoardAtom)
+  const [isSetting, setIsSetting] = useState(false)
+  const [newNickname, setNewNickname] = useState(props.userProfile.nickname)
+  const [newStatusMessage, setNewStatusMessage] = useState(props.userProfile.statusMessage)
 
   const onStateHandler = (e:React.MouseEvent<HTMLButtonElement>) => {
-    
+    setIsSetting(true)
+  }
+
+  const onSubmitHandler = async(e: React.FocusEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const messageInfo: IUpdateProfileTypes = {
+      nickname: newNickname,
+      statusMessage: newStatusMessage,
+    }
+
+    props.onChangeProfile(messageInfo)
+    setIsSetting(false)
+  }
+
+
+  const onNicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const currentNickname = e.currentTarget.value
+    setNewNickname(currentNickname)
+  }
+
+  const onStatusMessageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const currentStatusMessage = e.currentTarget.value
+    setNewStatusMessage(currentStatusMessage)
   }
   
   return (
+    <div>
+    {isSetting? 
+      <form onSubmit={onSubmitHandler}>
+        <label>닉네임 :</label>
+        <input type="text" onChange={onNicknameHandler}/>
+        <br/>
+        <label>상태메세지 :</label>
+        <input type="text" onChange={onStatusMessageHandler}/>
+        <br/>
+        <button>수정완료</button>
+      </form>
+    :
     <div className='flex flex-col items-center'>
       <div className='flex align-middle'>
-        <span>닉네임 : {props.userProfile.nickname}</span>
+        <span>{props.userProfile.nickname}</span>
         {isMyBoard ? 
           <button onClick={onStateHandler}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
@@ -25,7 +64,9 @@ function HeartBoardProfileBox({ ...props }) {
           null
         }
       </div>
-      <p>상태메세지 : {props.userProfile.statusMessage}</p>
+      <p>{props.userProfile.statusMessage}</p>
+      </div>
+      }
     </div>
   )
 }
