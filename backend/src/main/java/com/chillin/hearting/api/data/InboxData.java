@@ -16,10 +16,11 @@ import java.time.LocalDateTime;
 @Builder
 public class InboxData {
     private Long messageId;
-    private String messageTitle;
+    private String title;
     private String messageContent;
     private Long heartId;
     private String heartUrl;
+    private Long emojiId;
     private String emojiName;
     private String emojiUrl;
     private LocalDateTime createdDate;
@@ -29,10 +30,11 @@ public class InboxData {
         Emoji emoji = message.getEmoji();
         return InboxData.builder()
                 .messageId(message.getId())
-                .messageTitle(message.getTitle())
+                .title(message.getTitle())
                 .messageContent(message.getContent())
                 .heartId(heart.getId())
                 .heartUrl(heart.getImageUrl())
+                .emojiId((emoji != null) ? emoji.getId() : null)
                 .emojiName((emoji != null) ? emoji.getName() : null)
                 .emojiUrl((emoji != null) ? emoji.getImageUrl() : null)
                 .createdDate(message.getCreatedDate())
