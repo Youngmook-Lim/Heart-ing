@@ -18,6 +18,7 @@ export async function sendMessage(body: IMessageSendTypes) {
     const data = res.data;
     return data;
   } catch (err) {
+    console.log(err)
     return null;
   }
 }
