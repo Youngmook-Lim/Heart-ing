@@ -5,6 +5,8 @@ import { getUserInfo } from '../features/userInfo';
 import { useRecoilValue } from 'recoil';
 import { currentUserIdAtom } from '../atoms/userAtoms';
 import { sendMessage } from '../features/api/messageApi';
+import HeartwritingChoosingHeart from '../components/heartwrting/HeartwritingChoosingHeart';
+import HeartwritingMessage from '../components/heartwrting/HeartwritingMessage';
 
 function Heartwriting() {
   const navigate = useNavigate();
@@ -51,6 +53,8 @@ function Heartwriting() {
 
   return (
     <div>
+      <HeartwritingChoosingHeart />
+      <HeartwritingMessage />
       <form onSubmit={onSubmitHandler}>
         <label>하트번호</label>
         <input type="number" onChange={onHeartNumberHandler}/>
