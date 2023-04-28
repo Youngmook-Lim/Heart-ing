@@ -20,7 +20,7 @@ function HeartwritingSelectHeart({...props}) {
   return (
     <div>
         {selectedHeartId ? <div className="my-5 text-xl text-hrtColorPink">선택 완료</div> : <div className="my-5 text-xl">하트를 선택해주세요</div>}
-      <div className="grid grid-cols-3 p-2">
+      <div className="grid grid-cols-3 p-2 mb-32">
         {props.heartList.map((heart: IHeartInfoTypes) => (
           <div>
           {heart.isLocked ? 
@@ -33,7 +33,7 @@ function HeartwritingSelectHeart({...props}) {
               <HeartItem heartId={heart.heartId} context={heart.name}/>
             </div>
             {String(heart.heartId) === selectedHeartId ? 
-              <div className="absolute top-2 left-4"><SelectedHeart /></div> : null
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2/3"><SelectedHeart /></div> : null
             }
           </div>
           }
