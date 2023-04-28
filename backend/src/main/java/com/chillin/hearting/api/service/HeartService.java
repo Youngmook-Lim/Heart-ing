@@ -53,7 +53,7 @@ public class HeartService {
 
         List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : allHearts) {
-            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType()) || hashSet.contains(heart.getId())) ? false : true));
+            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType()) || hashSet.contains(heart.getId()))));
         }
         return resHearts;
     }
