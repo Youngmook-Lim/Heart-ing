@@ -21,10 +21,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +42,7 @@ class MessageControllerTest {
 
     private final Long messageId = 0L;
     private final Long reportId = 0L;
+    private final Long emojiId = 0L;
     private final String content = "Test content";
 
     @BeforeEach
@@ -55,7 +55,7 @@ class MessageControllerTest {
     public void failSendMessage_InvalidUser() throws Exception {
         // given
         final String url = "/api/v1/messages";
-        HttpServletRequest req = mock(HttpServletRequest.class);
+//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("otherSender").build();
 
         // when
@@ -78,7 +78,7 @@ class MessageControllerTest {
     public void failSendMessage_ServiceError() throws Exception {
         // given
         final String url = "/api/v1/messages/";
-        HttpServletRequest req = mock(HttpServletRequest.class);
+//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         SendMessageReq sendMessageReq = SendMessageReq.builder()
@@ -90,7 +90,7 @@ class MessageControllerTest {
 
         // Mock the behavior of messageService to throw a UserNotFoundException using doThrow().when()
         doThrow(new UserNotFoundException()).when(messageService)
-                .sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), null, null);
+                .sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), "127.0.0.1");
 
         // when
         final ResultActions resultActions = mockMvc.perform(
@@ -112,7 +112,7 @@ class MessageControllerTest {
     public void successSendMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/";
-        HttpServletRequest req = mock(HttpServletRequest.class);
+//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         SendMessageReq sendMessageReq = SendMessageReq.builder()
@@ -127,7 +127,7 @@ class MessageControllerTest {
                 .heartId(sendMessageReq.getHeartId())
                 .build();
 
-        doReturn(expectedResponse).when(messageService).sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), null, null);
+        doReturn(expectedResponse).when(messageService).sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), "127.0.0.1");
 
 
         // when
@@ -152,11 +152,10 @@ class MessageControllerTest {
     public void successDeleteMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/" + messageId;
-        HttpServletRequest req = mock(HttpServletRequest.class);
+//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
-        boolean expectedResponse = false;
-        doReturn(expectedResponse).when(messageService).deleteMessage(messageId, user.getId());
+        doReturn(false).when(messageService).deleteMessage(messageId, user.getId());
 
 
         // when
@@ -179,15 +178,14 @@ class MessageControllerTest {
     public void successReportMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/" + messageId + "/reports";
-        HttpServletRequest req = mock(HttpServletRequest.class);
+//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         ReportReq reportReq = ReportReq.builder()
                 .content(content)
                 .build();
 
-        Long expectedResponse = 0L;
-        doReturn(expectedResponse).when(messageService).reportMessage(messageId, user.getId(), reportReq.getContent());
+        doReturn(reportId).when(messageService).reportMessage(messageId, user.getId(), reportReq.getContent());
 
 
         // when
@@ -204,6 +202,31 @@ class MessageControllerTest {
         // then
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is("메시지가 성공적으로 신고되었습니다.")))
+                .andExpect(jsonPath("$.status", is("success")));
+    }
+
+    @Test
+    public void successAddEmoji() throws Exception {
+        // given
+        final String url = "/api/v1/messages/" + messageId + "/emojis/" + emojiId;
+//        HttpServletRequest req = mock(HttpServletRequest.class);
+        User user = User.builder().id("sender").build();
+
+        doReturn(emojiId).when(messageService).addEmoji(messageId, user.getId(), emojiId);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is("이모지가 성공적으로 변경되었습니다.")))
                 .andExpect(jsonPath("$.status", is("success")));
     }
 
