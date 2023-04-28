@@ -4,7 +4,6 @@ import com.chillin.hearting.api.data.HeartData;
 import com.chillin.hearting.api.data.HeartListData;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.HeartService;
-import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,30 +24,24 @@ import java.util.List;
 public class HeartController {
 
     private final HeartService heartService;
-    private final static String MESSAGE_SUCCESS = "success";
-    private final static String FIND_ALLHEARTS_SUCCESS = "도감용 하트 리스트 조회에 성공했습니다.";
-    private final static String FIND_MSGHEARTS_SUCCESS = "메시지용 하트 리스트 조회에 성공했습니다.";
+    private static final String MESSAGE_SUCCESS = "success";
+    private static final String FIND_ALLHEARTS_SUCCESS = "도감용 하트 리스트 조회에 성공했습니다.";
+    private static final String FIND_MSGHEARTS_SUCCESS = "메시지용 하트 리스트 조회에 성공했습니다.";
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<ResponseDTO> findAllHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         List<HeartData> allHearts = heartService.findAllHearts(user);
-        System.out.println(allHearts.size());
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_ALLHEARTS_SUCCESS).data(HeartListData.builder().hearts(allHearts).build()).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/message")
-    public ResponseEntity<ResponseDTO> findMessageHearts(HttpServletRequest httpServletRequest) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseDTO> findUserHearts(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        List<HeartData> messageHearts = heartService.findMessageHearts(user);
+        List<HeartData> messageHearts = heartService.findMessageHearts("-1".equals(userId) ? null : user);
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(HeartListData.builder().hearts(messageHearts).build()).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{heartId}")
-    public ResponseEntity<ResponseDTO> findMessageHearts(@PathVariable Long heartId) {
-        Heart findHeart = heartService.findDetailHeart(heartId);
-        return null;
-    }
 }
