@@ -30,7 +30,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     if (!selectedMessageId) return;
     const data = await getMessageDetail(selectedMessageId);
     if (data.status === "success") {
-      console.log(data.data);
+      console.log(data);
       setMessageData(data.data);
     }
   }
@@ -38,45 +38,56 @@ function MessageModal({ mode }: IMessageModalTypes) {
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
     getRecivedMessages(selectedMessageId);
-  }, [mode]);
+  }, [mode, selectedMessageId]);
 
   // 메시지 모달을 닫습니다
   const closeModal = () => {
     setReadMessageAtom(false);
   };
 
+  const curr = new Date();
+  console.log("현재시간(Locale) : " + curr + "<br>"); // 현재시간(Locale)
+  const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000; //한국 시간(KST)은 UTC시간보다 9시간 더 빠름
+  const kr_curr = new Date(utc + KR_TIME_DIFF); //utc 밀리초 값에 9시간을 더함
+  console.log("한국시간 : " + kr_curr); // 한국시간 GMT+0900 (한국 표준시)
+
   if (messageData) {
+    const expiredDate = new Date(messageData.expiredDate);
+    const isExpired = kr_curr > expiredDate; // 현재 시간보다 만료 시간이 더 과거이면 만료됨
     return (
-      <div className="modal border-hrtColorOutline">
-        <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
-          <div className="flex-auto">마음 읽기</div>
-          <button onClick={() => closeModal()} className="flex-none">
-            <ButtonIcon id={0} />
-          </button>
-        </div>
-        {/* <p>{selectedMessageId} 메시지 / 지금은 더미데이터</p> */}
-        <div className="mx-6">
-          <MessageModalHeart
-            heartId={messageData.heartId}
-            heartUrl={messageData.heartUrl}
-            heartName={messageData.heartName}
-            heartContext={messageData.shortDescription}
-            emojiUrl={messageData.emojiUrl}
-          />
-          <MessageModalTime
-            createdDate={messageData.createdDate}
-            expiredDate={messageData.expiredDate}
-            mode={mode}
-          />
-          <MessageModalTextbox
-            title={messageData.title}
-            content={messageData.content}
-          />
-          <MessageModalButtonBox
-            mode={mode}
-            isExpired={false}
-            isStored={messageData.isStored}
-          />
+      <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-70 text-center flex  items-center justify-center ">
+        <div className="container modal border-hrtColorOutline m-6 w-full">
+          <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
+            <div className="flex-auto">마음 읽기</div>
+            <button onClick={() => closeModal()} className="flex-none">
+              <ButtonIcon id={0} />
+            </button>
+          </div>
+          {/* <p>{selectedMessageId} 메시지 / 지금은 더미데이터</p> */}
+          <div className="mx-6">
+            <MessageModalHeart
+              heartId={messageData.heartId}
+              heartUrl={messageData.heartUrl}
+              heartName={messageData.heartName}
+              heartContext={messageData.shortDescription}
+              emojiUrl={messageData.emojiUrl}
+            />
+            <MessageModalTime
+              kr_curr={kr_curr}
+              expiredDate={messageData.expiredDate}
+              mode={mode}
+            />
+            <MessageModalTextbox
+              title={messageData.title}
+              content={messageData.content}
+            />
+            <MessageModalButtonBox
+              mode={mode}
+              isExpired={isExpired}
+              isStored={messageData.isStored}
+            />
+          </div>
         </div>
       </div>
     );

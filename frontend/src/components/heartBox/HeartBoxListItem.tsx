@@ -1,9 +1,6 @@
-import React from "react";
-
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import {
   readMessageAtom,
-  isMyBoardAtom,
   selectedMessageIdAtom,
 } from "../../atoms/messageAtoms";
 
@@ -22,7 +19,7 @@ function HeartBoxListItem({ ...props }) {
 
   return (
     <div
-      className="modal flex items-center border-2 border-hrtColorPink rounded-lg p-2 m-2"
+      className="modal flex items-center border-2 border-hrtColorPink rounded-lg p-2 m-2 my-4 relative"
       onClick={() => readMessage(props.messageId)}
     >
       <div className="flex-none">
@@ -30,6 +27,10 @@ function HeartBoxListItem({ ...props }) {
       </div>
       <div className="flex-auto text-xl">{props.context}</div>
       <div className="flex-none">{props.emojiId}</div>
+      <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute left-1 top-1"></div>
+      <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute right-1 top-1"></div>
+      <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute left-1 bottom-1"></div>
+      <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute right-1 bottom-1"></div>
     </div>
   );
 }

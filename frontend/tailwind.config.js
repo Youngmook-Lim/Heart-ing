@@ -36,7 +36,7 @@ module.exports = {
         ".modal": {
           borderWidth: "4px",
           borderRadius: "0.125rem",
-          backgroundColor: "rgba(255,255,255,0.8)",
+          backgroundColor: "#fff",
         },
         ".modal-header": {
           color: "#fff",
