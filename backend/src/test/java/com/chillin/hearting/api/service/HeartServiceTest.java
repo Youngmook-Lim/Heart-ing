@@ -77,7 +77,7 @@ public class HeartServiceTest {
 
         // mocking
         when(heartRepository.findAll()).thenReturn(findHearts);
-        when(userHeartRepository.findByUser(fakeUser)).thenReturn(userHearts);
+        when(userHeartRepository.findAllByUserId(fakeUser.getId())).thenReturn(userHearts);
 
         // when
         List<HeartData> allHearts = heartService.findAllHearts(fakeUser);

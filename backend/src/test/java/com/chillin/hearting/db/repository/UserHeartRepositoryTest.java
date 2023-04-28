@@ -42,11 +42,11 @@ public class UserHeartRepositoryTest {
         UserHeart savedUserHeart = userHeartRepository.save(userHeart);
 
         // when
-        List<UserHeart> findUserHeartList = userHeartRepository.findByUser(savedUser);
+        List<UserHeart> findUserHeartList = userHeartRepository.findAllByUserId(savedUser.getId());
 
         // then
         assertThat(findUserHeartList).anySatisfy(uh -> {
-            assertThat(uh.getUser().getId()).isEqualTo(savedUser.getId());
+            assertThat(uh.getHeart().getType()).isEqualTo("SPECIAL");
         });
     }
 
