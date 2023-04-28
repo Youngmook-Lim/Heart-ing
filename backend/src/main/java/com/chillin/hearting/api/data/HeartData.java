@@ -24,7 +24,7 @@ public class HeartData implements Data {
         return HeartData.builder()
                 .heartId(heart.getId())
                 .name(heart.getName())
-                .heartUrl(heart.getImageUrl())
+                .heartUrl((isLocked) ? getLockedUrl() : heart.getImageUrl())
                 .type(heart.getType())
                 .isLocked(isLocked)
                 .build();
@@ -35,6 +35,11 @@ public class HeartData implements Data {
     }
 
     public void setLock() {
+        this.heartUrl = getLockedUrl();
         this.isLocked = true;
+    }
+
+    private static String getLockedUrl() {
+        return "https://heart-ing.s3.ap-northeast-2.amazonaws.com/heart/heart_lock_1.svg";
     }
 }

@@ -2,12 +2,10 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.db.domain.Message;
-import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.InboxRepository;
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.MessageAlreadyExpiredException;
 import com.chillin.hearting.exception.MessageNotFoundException;
-import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,16 +35,13 @@ public class MessageInboxService {
 
     @Transactional
     public List<InboxData> findInboxMessages(String userId) {
-        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Message> findMessages = inboxRepository.findAllByReceiverIdAndIsStored(userId, true);
         return findMessages.stream().map(InboxData::of).collect(Collectors.toList());
     }
 
     @Transactional
     public Message findInboxDetailMessage(String userId, Long messageId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Message findMessage = inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
-        return findMessage;
+        return inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
     }
 
     @Transactional

@@ -14,7 +14,7 @@ public class InboxListData implements Data {
     private List<InboxData> inboxList;
 
     @Builder
-    public InboxListData(List inboxList) {
+    public InboxListData(List<InboxData> inboxList) {
         this.inboxList = inboxList;
     }
 }
