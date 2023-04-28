@@ -4,7 +4,6 @@ import { IMessageInfoTypes } from "../../types/messageType";
 
 import HeartBoxListItem from "./HeartBoxListItem";
 import HeartBoxListTimeline from "./HeartBoxListTimeline";
-import HeartItemIcon from "../common/HeartItemIcon";
 
 function HeartBoxList({ ...props }) {
   const [inboxMessageList, setInboxMessageList] = useState(props.inboxList);
@@ -29,17 +28,15 @@ function HeartBoxList({ ...props }) {
             emojiUrl,
             createdDate,
           }: IMessageInfoTypes) => (
-            <>
-              <HeartBoxListItem
-                key={messageId}
-                messageId={messageId}
-                heartId={heartId}
-                context={title}
-                emojiId={emojiId}
-                emojiUrl={emojiUrl}
-                createdDate={createdDate}
-              />
-            </>
+            <HeartBoxListItem
+              key={messageId}
+              messageId={messageId}
+              heartId={heartId}
+              context={title}
+              emojiId={emojiId}
+              emojiUrl={emojiUrl}
+              createdDate={createdDate}
+            />
           )
         )}
       </div>
