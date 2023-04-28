@@ -1,7 +1,7 @@
 export interface IHeartInfoTypes {
     heartId : number,
     name : string,
-    imageUrl : string,
+    heartUrl : string,
     type: string,
     isLocked: boolean,
 }
