@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { getAllHeartInfo, getHeartDetailInfo } from '../features/api/guide'
 import { useRecoilValue } from 'recoil'
 import { openDetailInfoAtom } from '../atoms/guideAtoms'
-import { IHeartDetailInfoTypes } from '../types/guideType'
+import { IHeartInfoTypes, IHeartDetailInfoTypes } from '../types/guideType'
 import HeartGuideList from '../components/heartGuide/HeartGuideList'
 import HeartGuideDetailInfo from '../components/heartGuide/HeartGuideDetailInfo'
 
 function HeartGuide() {
 
-  const [allHeartInfoList, setAllHeartInfoList] = useState([])
+  const [allHeartInfoList, setAllHeartInfoList] = useState<IHeartInfoTypes[]>([])
   const [heartDetailInfo, setHeartDetailInfo] = useState<IHeartDetailInfoTypes | null>(null)
   const openDetailInfo = useRecoilValue(openDetailInfoAtom)
 
@@ -29,10 +29,17 @@ function HeartGuide() {
   
 
   return (
-    <div>
-      <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo}/>
-      {openDetailInfo ? <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
-    </div>
+    <>
+      <h1>마음 도감</h1>
+      <div className="container mx-auto px-6 py-8">
+      <div className="modal border-hrtColorPink">
+        {allHeartInfoList ?
+          <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo} />
+          : []}
+        {openDetailInfo ? <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
+        </div>
+      </div>
+    </>
   )
 }
 
