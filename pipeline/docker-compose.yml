@@ -23,11 +23,3 @@ services:
       context: ../backend-nodejs
     ports:
       - "8000:8000"
-#  hearting-front:
-#    container_name: sgr-front
-#    image: sgr-frontend:0.1
-#    build:
-#      context: ../frontend
-#    ports:
-#      - "3000:80"
-

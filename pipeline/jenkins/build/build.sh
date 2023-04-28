@@ -7,7 +7,7 @@ echo "*******************************"
 # frontend build
 cd /var/jenkins_home/workspace/hearting-pipeline-docker/frontend
 npm install --legacy-peer-deps
-npm run build
+CI=false npm run build
 
 echo "********************************"
 echo "********Building BACKEND********"
