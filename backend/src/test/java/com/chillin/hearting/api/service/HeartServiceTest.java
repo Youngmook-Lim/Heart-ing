@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,9 +34,13 @@ class HeartServiceTest {
 
     private List<Heart> findHearts;
     private List<UserHeart> userHearts;
+    private User fakeUser;
     private Heart defaultHeart;
     private Heart specialHeart;
     private Heart notMyHeart;
+
+    private static final String DEFAULT_TYPE = "DEFAULT";
+    private static final String SPECIAL_TYPE = "SPECIAL";
 
     @BeforeEach
     public void 데이터생성() {
@@ -49,35 +54,38 @@ class HeartServiceTest {
     }
 
     @Test
-    void 비로그인유저도감조회() {
+    void 도감조회_비로그인() {
 
         // given
-        User fakeUser = null;
+        fakeUser = null;
 
         // moking
         when(heartRepository.findAll()).thenReturn(findHearts);
 
         // when
-        List<Heart> savedHearts = heartRepository.findAll();
         List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
 
         // then
         for (HeartData heartData : allHearts) {
-            assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() == "DEFAULT") ? false : true);
+            if (heartData.getType().equals(DEFAULT_TYPE)) {
+                assertThat(heartData.getIsLocked()).isEqualTo(false);
+            } else if (heartData.getType().equals(SPECIAL_TYPE)) {
+                assertThat(heartData.getIsLocked()).isEqualTo(true);
+            }
         }
     }
 
     @Test
-    void 로그인유저도감조회() {
+    void 도감조회_로그인() {
 
         // given
-        User fakeUser = createUser();
+        fakeUser = createUser();
         userHearts = new ArrayList<>();
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
         when(heartRepository.findAll()).thenReturn(findHearts);
-        when(userHeartRepository.findAllByUserId(fakeUser.getId())).thenReturn(userHearts);
+        when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
 
         // when
         List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
@@ -86,6 +94,24 @@ class HeartServiceTest {
         for (HeartData heartData : allHearts) {
             assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getHeartId() == notMyHeart.getId()) ? true : false);
         }
+    }
+
+    @Test
+    void 유저하트조회_비로그인() {
+
+        // given
+        fakeUser = null;
+
+        // mocking
+
+        // when
+
+        // then
+    }
+
+    @Test
+    void 유저하트조회_로그인() {
+
     }
 
     public User createUser() {
