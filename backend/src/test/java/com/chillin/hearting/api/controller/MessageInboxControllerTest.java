@@ -34,7 +34,7 @@ class MessageInboxControllerTest {
     }
 
     @Test
-    public void 메시지영구저장() throws Exception {
+    void 메시지영구저장() throws Exception {
 
         // given
         final String url = "/api/v1/messages/inbox/1";
@@ -51,7 +51,7 @@ class MessageInboxControllerTest {
     }
 
     @Test
-    public void 영구보관메시지조회() throws Exception {
+    void 영구보관메시지조회() throws Exception {
 
         // given
         final String url = "/api/v1/messages/inbox";
@@ -73,7 +73,7 @@ class MessageInboxControllerTest {
     }
 
     @Test
-    public void 영구보관메시지상세조회() throws Exception {
+    void 영구보관메시지상세조회() throws Exception {
         // given
         final String url = "/api/v1/messages/inbox/1";
         User user = User.builder().id("otherSender").build();
@@ -94,7 +94,7 @@ class MessageInboxControllerTest {
     }
 
     @Test
-    public void 메시지영구삭제() throws Exception {
+    void 메시지영구삭제() throws Exception {
 
         // given
         final String url = "/api/v1/messages/inbox/1";

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class HeartServiceTest {
+class HeartServiceTest {
 
     @InjectMocks
     private HeartService heartService;
@@ -49,7 +49,7 @@ public class HeartServiceTest {
     }
 
     @Test
-    public void 비로그인유저도감조회() {
+    void 비로그인유저도감조회() {
 
         // given
         User fakeUser = null;
@@ -68,7 +68,7 @@ public class HeartServiceTest {
     }
 
     @Test
-    public void 로그인유저도감조회() {
+    void 로그인유저도감조회() {
 
         // given
         User fakeUser = createUser();

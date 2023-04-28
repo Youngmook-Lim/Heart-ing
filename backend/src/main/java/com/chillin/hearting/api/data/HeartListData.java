@@ -14,7 +14,7 @@ public class HeartListData implements Data {
     private List<HeartData> heartList;
 
     @Builder
-    public HeartListData(List hearts) {
+    public HeartListData(List<HeartData> hearts) {
         this.heartList = hearts;
     }
 }
