@@ -41,7 +41,16 @@ public class MessageController {
             throw new WrongUserException("본인에게 메시지를 보냈습니다.");
         }
 
-        Data data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), null);
+        // Get client IP
+        String clientIp = httpServletRequest.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.isEmpty()) {
+            clientIp = httpServletRequest.getRemoteAddr();
+        } else {
+            clientIp = clientIp.split(",")[0];
+        }
+        log.debug("Client request from : " + clientIp);
+
+        Data data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), clientIp);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
@@ -106,8 +115,8 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedMessageId = messageService.addEmoji(messageId, user.getId(), emojiId);
-        if (returnedMessageId == null) {
+        Long returnedEmojiId = messageService.addEmoji(messageId, user.getId(), emojiId);
+        if (returnedEmojiId == null) {
             throw new EmojiFailException();
         }
 

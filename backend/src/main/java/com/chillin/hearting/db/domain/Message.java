@@ -77,17 +77,6 @@ public class Message implements Serializable {
         this.isActive = true;
     }
 
-//    @Builder
-//    public Message(Long id, Heart heart, Emoji emoji, User sender, User receiver, String title, String content, String senderIp) {
-//        this.id = id;
-//        this.heart = heart;
-//        this.emoji = emoji;
-//        this.sender = sender;
-//        this.receiver = receiver;
-//        this.title = title;
-//        this.content = content;
-//        this.senderIp = senderIp;
-//    }
 
     public void deleteMessage() {
         this.isActive = false;

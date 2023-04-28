@@ -141,7 +141,7 @@ public class MessageService {
 
         message = messageRepository.save(message);
 
-        return message.getId();
+        return message.getEmoji().getId();
     }
 
 
