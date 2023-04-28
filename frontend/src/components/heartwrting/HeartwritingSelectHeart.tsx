@@ -19,6 +19,7 @@ function HeartwritingSelectHeart({...props}) {
 
   return (
     <div>
+        {selectedHeartId ? <div>선택 완료</div> : <div className="my-5">하트를 선택해주세요</div>}
       <div className="grid grid-cols-3 p-2">
         {props.heartList.map((heart: IHeartInfoTypes) => (
           <div>
@@ -39,9 +40,6 @@ function HeartwritingSelectHeart({...props}) {
         </div>
         ))}        
       </div>
-      <button onClick={props.onSettingMode} className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]" disabled={selectedHeartId ? false : true}>
-        <div className="text-2xl">다음</div>
-      </button>
     </div>
   )
 }
