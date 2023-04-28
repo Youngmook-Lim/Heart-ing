@@ -35,7 +35,7 @@ public class HeartController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/userhearts")
+    @GetMapping("/user-hearts")
     public ResponseEntity<ResponseDTO> findUserHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         List<HeartData> messageHearts = heartService.findMessageHearts(user);
