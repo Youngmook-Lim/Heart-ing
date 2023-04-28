@@ -1,15 +1,9 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SendMessageData;
-import com.chillin.hearting.db.domain.Heart;
-import com.chillin.hearting.db.domain.Message;
-import com.chillin.hearting.db.domain.User;
-import com.chillin.hearting.db.repository.HeartRepository;
-import com.chillin.hearting.db.repository.MessageRepository;
-import com.chillin.hearting.db.repository.UserRepository;
-import com.chillin.hearting.exception.HeartNotFoundException;
-import com.chillin.hearting.exception.MessageNotFoundException;
-import com.chillin.hearting.exception.UserNotFoundException;
+import com.chillin.hearting.db.domain.*;
+import com.chillin.hearting.db.repository.*;
+import com.chillin.hearting.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +33,12 @@ class MessageServiceTest {
     @Mock
     private MessageRepository messageRepository;
 
+    @Mock
+    private ReportRepository reportRepository;
+
+    @Mock
+    private EmojiRepository emojiRepository;
+
     private final long heartId = 0L;
     private final String senderId = "senderId";
     private final String receiverId = "receiverId";
@@ -46,10 +46,13 @@ class MessageServiceTest {
     private final String content = "content";
     private final String senderIp = "senderIp";
     private final long messageId = 0L;
+    private final long emojiId = 0L;
+
     private final User receiver = User.builder().id(receiverId).messageTotal(0L).build();
     private final User sender = User.builder().id(senderId).build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
-    private final Message message = Message.builder().id(0L).receiver(receiver).build();
+    private final Message message = Message.builder().id(0L).sender(sender).receiver(receiver).build();
+    private final Emoji emoji = Emoji.builder().id(0L).build();
 
     @BeforeEach
     public void setupIsActive() {
@@ -143,4 +146,98 @@ class MessageServiceTest {
         // then
         assertFalse(result);
     }
+
+    @Test
+    void successReportMessage() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
+        doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
+        doReturn(message).when(messageRepository).save(any(Message.class));
+        doReturn(sender).when(userRepository).save(any(User.class));
+        doReturn(Report.builder().id(1L).build()).when(reportRepository).save(any(Report.class));
+
+        // when
+        Long reportId = messageService.reportMessage(messageId, receiverId, content);
+
+        // then
+        assertNotNull(reportId);
+        assertEquals(1L, reportId);
+
+        // verify
+        verify(messageRepository, times(1)).findById(messageId);
+        verify(userRepository, times(1)).findById(senderId);
+        verify(userRepository, times(1)).findById(receiverId);
+        verify(messageRepository, times(1)).save(any(Message.class));
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(reportRepository, times(1)).save(any(Report.class));
+    }
+
+    @Test
+    void failReportMessage_NoAuthorization() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
+        doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
+        String differentId = "differentId";
+
+        // when
+        UnAuthorizedException exception = assertThrows(UnAuthorizedException.class, () -> messageService.reportMessage(messageId, differentId, content));
+
+        // then
+        assertEquals(exception.getMessage(), "본인이 받은 메시지만 신고할 수 있습니다.");
+    }
+
+    @Test
+    void failReportMessage_AlreadyReported() {
+        //given
+        message.reportMessage();
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
+        doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
+
+
+        // when
+        MessageAlreadyReportedException exception = assertThrows(MessageAlreadyReportedException.class, () -> messageService.reportMessage(messageId, receiverId, content));
+
+
+        // then
+        assertEquals(exception.getMessage(), MessageAlreadyReportedException.DEFAULT_MESSAGE);
+    }
+
+    @Test
+    void successAddEmoji() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Optional.of(emoji)).when(emojiRepository).findById(emojiId);
+        message.updateEmoji(emoji);
+        doReturn(message).when(messageRepository).save(any(Message.class));
+
+        // when
+        Long emojiId = messageService.addEmoji(messageId, receiverId, MessageServiceTest.this.emojiId);
+
+        // then
+        assertNotNull(emojiId);
+        assertEquals(MessageServiceTest.this.emojiId, emojiId);
+
+        // verify
+        verify(messageRepository, times(1)).findById(messageId);
+        verify(emojiRepository, times(1)).findById(MessageServiceTest.this.emojiId);
+        verify(messageRepository, times(1)).save(any(Message.class));
+    }
+
+    @Test
+    void failAddEmoji_NoAuthorization() {
+        //given
+        doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
+        doReturn(Optional.of(emoji)).when(emojiRepository).findById(emojiId);
+        String differentId = "differentId";
+
+        // when
+        UnAuthorizedException exception = assertThrows(UnAuthorizedException.class, () -> messageService.addEmoji(messageId, differentId, emojiId));
+
+        // then
+        assertEquals(exception.getMessage(), "본인이 받은 메시지에만 이모지를 달 수 있습니다.");
+    }
+
 }

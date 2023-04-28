@@ -106,8 +106,8 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedMessageId = messageService.addEmoji(messageId, user.getId(), emojiId);
-        if (returnedMessageId == null) {
+        Long returnedEmojiId = messageService.addEmoji(messageId, user.getId(), emojiId);
+        if (returnedEmojiId == null) {
             throw new EmojiFailException();
         }
 
