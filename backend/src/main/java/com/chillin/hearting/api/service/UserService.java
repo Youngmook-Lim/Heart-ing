@@ -21,7 +21,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +75,6 @@ public class UserService {
 
         String kakaoAccessToken = getKakaoAccessToken(code);
 
-        HttpStatus status = null;
         SocialLoginData socialLoginData = null;
 
         try {
@@ -108,7 +106,6 @@ public class UserService {
 
             CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
             CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
-            status = HttpStatus.ACCEPTED;
 
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
@@ -327,24 +324,18 @@ public class UserService {
 
         Date now = new Date();
 
-        AuthToken accessToken = tokenProvider.createAuthToken(
+        return tokenProvider.createAuthToken(
                 userId,
                 ROLE,
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
-
-        return accessToken;
     }
 
     public AuthToken makeRefreshToken() {
 
         Date now = new Date();
 
-        AuthToken refreshToken = tokenProvider.createAuthToken(
-                new Date(now.getTime() + refreshTokenExpiry)
-        );
-
-        return refreshToken;
+        return tokenProvider.createAuthToken(new Date(now.getTime() + refreshTokenExpiry));
     }
 
 

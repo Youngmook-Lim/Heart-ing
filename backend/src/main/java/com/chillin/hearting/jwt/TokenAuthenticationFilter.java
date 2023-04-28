@@ -53,11 +53,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             ObjectMapper objectMapper = new ObjectMapper();
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status("fail")
-                    .message("토큰 재발급하세요")
+                    .message("reissue")
                     .build();
             response.setCharacterEncoding("utf-8");
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             // writeValueAsString() : Object to JSON in String
             response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
             return;
