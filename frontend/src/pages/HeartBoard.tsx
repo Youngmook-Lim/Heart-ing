@@ -13,7 +13,7 @@ import { IUpdateProfileTypes } from "../types/userType";
 
 import { getUserInfo } from "../features/userInfo";
 import { getProfile, modifyStatusMessage } from "../features/api/userApi";
-import { getReceived, sendMessage } from "../features/api/messageApi";
+import { getReceived } from "../features/api/messageApi";
 import { modifyNickname } from "../features/api/userApi";
 
 import HeartBoardList from "../components/heartBoard/HeartBoardList";
@@ -43,7 +43,7 @@ function HeartBoard() {
     if (data.status === "success") {
       setUserProfile(data.data);
     } else {
-      console.log("에러났당");
+      console.log("에러났당"); 
       navigate("/notfound");
     }
   }

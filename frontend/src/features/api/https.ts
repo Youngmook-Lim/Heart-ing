@@ -1,5 +1,5 @@
 import baseAxios from "axios";
-import { deleteUserInfo, getUserInfo, savingUserInfo } from "../userInfo";
+import { deleteUserInfo, getUserInfo } from "../userInfo";
 import { reissueTokenApi } from "./userApi";
 
 export const axios = baseAxios.create({

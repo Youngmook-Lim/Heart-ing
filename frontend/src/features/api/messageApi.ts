@@ -13,11 +13,11 @@ export async function getReceived(userId: string) {
   }
 }
 
-export async function sendMessage(body: IMessageSendTypes) {
+export async function sendMessageApi(body: IMessageSendTypes) {
   try {
     const res = await axios.post(`api/v1/messages`, body);
-    const data = res.data;
-    return data;
+    const status = res.data.status
+    return status;
   } catch (err) {
     console.log(err);
     return null;
@@ -79,4 +79,17 @@ export async function getInbox() {
     console.log(err);
     return null;
   }
+}
+
+export async function getMessageHeartApi() {
+  try {
+    const res = await axios.get('api/v1/hearts/user-hearts')
+    const data = res.data
+    return data
+  } catch (err) {
+    console.log("하트리스트 못 뽑았다여");
+    console.log(err);
+    return null;
+  }
+  
 }

@@ -1,72 +1,61 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IMessageSendTypes } from '../types/messageType';
 import { getUserInfo } from '../features/userInfo';
 import { useRecoilValue } from 'recoil';
 import { currentUserIdAtom } from '../atoms/userAtoms';
-import { sendMessage } from '../features/api/messageApi';
-import HeartwritingChoosingHeart from '../components/heartwrting/HeartwritingChoosingHeart';
-import HeartwritingMessage from '../components/heartwrting/HeartwritingMessage';
+import { getMessageHeartApi, sendMessageApi } from '../features/api/messageApi';
+import HeartwritingSelectHeart from '../components/heartwrting/HeartwritingSelectHeart';
+import HeartwritingMessageForm from '../components/heartwrting/HeartwritingMessageForm';
 
 function Heartwriting() {
   const navigate = useNavigate();
-
-  const [heartNumber, setHeartNumber] = useState(0)
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
   const currenUserId = useRecoilValue(currentUserIdAtom)
+  const [heartList, setHeartList] = useState([])
+  const [isSelected, setIsSelected] = useState(false)
+  const [selectedHeartId, setSelectedHeartId] = useState('')
 
-  const onSubmitHandler = async(e: React.FocusEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const messageInfo: IMessageSendTypes = {
-      heartId: heartNumber,
-      senderId: getUserInfo().userId,
-      receiverId: currenUserId,
-      title: title,
-      content: content,
-    }
-
-    const data = await sendMessage(messageInfo)
-    console.log(data)
-
-    if (data.status === 'success') {
+  async function sendMessage(messageInfo: IMessageSendTypes) {
+    const status = await sendMessageApi(messageInfo)
+    if (status === 'success') {
       alert('메세지 성공!')
       navigate(`/heartboard/user?id=${currenUserId}`)
-    } 
+    }
   }
 
-  const onHeartNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentNumber = Number(e.currentTarget.value)
-    setHeartNumber(currentNumber)
+  async function getHeartList() {
+    const data = await getMessageHeartApi()
+    if (data.status === 'success') {
+      setHeartList(data.data.heartList)
+    }
   }
 
-  const onTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentTitle = e.currentTarget.value
-    setTitle(currentTitle)
+  function setHeartNumber(heartId:string) {
+    setSelectedHeartId(heartId)
+  } 
+
+  function setMode() {
+    setIsSelected(!isSelected)
   }
 
-  const onContentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentContent = e.currentTarget.value
-    setContent(currentContent)
-  }
+  useEffect(() => {
+    getHeartList()
+    setIsSelected(false)
+  }, [])
 
   return (
     <div>
-      <HeartwritingChoosingHeart />
-      <HeartwritingMessage />
-      <form onSubmit={onSubmitHandler}>
-        <label>하트번호</label>
-        <input type="number" onChange={onHeartNumberHandler}/>
-        <br/>
-        <label>제목</label>
-        <input type="text" onChange={onTitleHandler}/>
-        <br/>
-        <label>내용</label>
-        <input type="text" onChange={onContentHandler}/>
-        <br/>
-        <button>하트보내기</button>
-      </form>
+      <div>로고</div>
+      {isSelected ?
+        <div>
+          <HeartwritingMessageForm onSendingHandler={sendMessage} onSettingMode={setMode} selectedHeart={selectedHeartId}/>
+        </div>
+        :
+        <div>  
+          <HeartwritingSelectHeart onHeartNumberHandler={setHeartNumber} onSettingMode={setMode} heartList={heartList}/>
+        </div>
+        
+      }
     </div>
   )
 }

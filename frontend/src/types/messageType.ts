@@ -33,7 +33,7 @@ export interface IMessageDetailTypes {
 
 export interface IMessageSendTypes {
   heartId: number;
-  senderId: string | null;
+  senderId: string|null;
   receiverId: string;
   title: string;
   content: string;
@@ -43,4 +43,12 @@ export interface IMessageModalTypes {
   mode: string;
   isExpired?: boolean;
   isStored?: boolean;
+}
+
+export interface IHeartInfoTypes {
+  heartId: number,
+  name: string,
+  heartUrl: string,
+  type: string,
+  isLocked: string,
 }
