@@ -5,11 +5,13 @@ import { getUserInfo } from '../features/userInfo';
 import { useRecoilValue } from 'recoil';
 import { getMessageHeartApi, sendMessageApi } from '../features/api/messageApi';
 import HeartwritingSelectHeart from '../components/heartwrting/HeartwritingSelectHeart';
-import HeartwritingMessageForm from '../components/heartwrting/HeartwritingMessageForm';
+import HeartwritingMessage from '../components/heartwrting/HeartwritingMessage';
 import { getProfile } from "../features/api/userApi";
+import LogoEffect from "../assets/images/logo/logo_effect.png";
 
 function Heartwriting() {
   const navigate = useNavigate();
+
   const [heartList, setHeartList] = useState([])
   const [isSelected, setIsSelected] = useState(false)
   const [selectedHeartId, setSelectedHeartId] = useState('')
@@ -62,17 +64,27 @@ function Heartwriting() {
   }, [])
 
   return (
-    <div>
-      <div>로고</div>
+      <div className="container mx-auto px-6 py-8">
+        <img src={LogoEffect} alt="test" className="w-full px-14 my-5" />
+        <div className="modal border-hrtColorPink">
+          <div className="modal-header bg-hrtColorPink border-hrtColorPink">
+            마음 보내기
+          </div>
+          {isSelected ?
+            <HeartwritingMessage onSendingHandler={sendMessage} onSettingMode={setMode} selectedHeart={selectedHeartId} userId={userId}/>
+            : 
+            <HeartwritingSelectHeart onHeartNumberHandler={setHeartNumber} onSettingMode={setMode} heartList={heartList}/>
+          }
+        </div>
       {isSelected ?
-        <div>
-          <HeartwritingMessageForm onSendingHandler={sendMessage} onSettingMode={setMode} selectedHeart={selectedHeartId} userId={userId}/>
-        </div>
+        // <button className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5">
+        //   <div className="text-2xl">전달하기</div>
+        // </button>
+        null
         :
-        <div>  
-          <HeartwritingSelectHeart onHeartNumberHandler={setHeartNumber} onSettingMode={setMode} heartList={heartList}/>
-        </div>
-        
+        <button onClick={setMode} className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5" disabled={selectedHeartId ? false : true}>
+          <div className="text-2xl">다음</div>
+        </button>
       }
     </div>
   )
