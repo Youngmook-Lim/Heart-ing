@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from 'recoil';
 import { loginKakao } from "../features/api/userApi";
 import { isLoginAtom, userNicknameAtom, userStautsMessageAtom } from "../atoms/userAtoms";
-import { savingAccessToken } from "../features/userInfo";
+import { savingUserInfo } from "../features/userInfo";
 
 function Kakao() {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ function Kakao() {
           userId : data.data.userId,
           accessToken: data.data.accessToken,
         }
-        savingAccessToken(userInfo)
+        savingUserInfo(userInfo)
         setIsLogin(true)
         if (data.data.nickname === '') {
           navigate('/setting')
