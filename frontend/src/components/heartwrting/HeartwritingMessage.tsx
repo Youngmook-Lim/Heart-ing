@@ -2,11 +2,11 @@ import React from 'react'
 import HeartwritingMessageHeart from './HeartwritingMessageHeart'
 import HeartwritingMessageForm from './HeartwritingMessageForm'
 
-function HeartwritingMessage() {
+function HeartwritingMessage({...props}) {
   return (
     <div>
       <HeartwritingMessageHeart />
-      <HeartwritingMessageForm />
+      <HeartwritingMessageForm {...props}/>
     </div>
   )
 }
