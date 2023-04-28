@@ -20,9 +20,3 @@ export const userNicknameAtom = atom<string>({
   default: '',
   effects_UNSTABLE: [persistAtom],
 });
-
-export const currentUserIdAtom = atom<string>({
-  key: 'currentUserId',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-})
