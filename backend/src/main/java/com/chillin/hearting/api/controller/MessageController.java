@@ -31,7 +31,7 @@ public class MessageController {
 
         User user = (User) httpServletRequest.getAttribute("user");
 
-        // Check if logged in user is same as sender
+        // Check if logged-in user is same as sender
         if (user != null && !user.getId().equals(sendMessageReq.getSenderId())) {
             throw new WrongUserException();
         }

@@ -6,7 +6,6 @@ import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.MessageRepository;
-import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,20 +32,12 @@ class MessageReceivedServiceTest {
     private MessageReceivedService messageReceivedService;
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private MessageRepository messageRepository;
 
-    private final long heartId = 0L;
     private final String senderId = "senderId";
     private final String receiverId = "receiverId";
-    private final String title = "title";
-    private final String content = "content";
-    private final String senderIp = "senderIp";
     private final long messageId = 0L;
     private final User receiver = User.builder().id(receiverId).messageTotal(0L).build();
-    private final User sender = User.builder().id(senderId).build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
     private final Message message = Message.builder().id(0L).receiver(receiver).build();
 
