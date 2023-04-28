@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
-import { readMessageAtom } from "../atoms/messageAtoms";
+import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 
 import { IUpdateProfileTypes } from "../types/userType";
 
@@ -23,7 +23,7 @@ function HeartBoard() {
 
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
-  const [isMyBoard, setIsMyBoard] = useState(false);
+  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);
