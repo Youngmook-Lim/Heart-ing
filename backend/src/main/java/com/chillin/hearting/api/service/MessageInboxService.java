@@ -2,7 +2,6 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.InboxData;
 import com.chillin.hearting.db.domain.Message;
-import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.InboxRepository;
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.MessageAlreadyExpiredException;
@@ -44,7 +43,7 @@ public class MessageInboxService {
 
     @Transactional
     public Message findInboxDetailMessage(String userId, Long messageId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         Message findMessage = inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
         return findMessage;
     }
