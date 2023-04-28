@@ -40,9 +40,10 @@ class MessageControllerTest {
     private MockMvc mockMvc;
     private Gson gson;
 
-    private final Long messageId = 0L;
-    private final Long reportId = 0L;
-    private final Long emojiId = 0L;
+    private final long messageId = 0L;
+    private final long heartId = 0L;
+    private final long reportId = 0L;
+    private final long emojiId = 0L;
     private final String content = "Test content";
 
     @BeforeEach
@@ -55,7 +56,6 @@ class MessageControllerTest {
     public void failSendMessage_InvalidUser() throws Exception {
         // given
         final String url = "/api/v1/messages";
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("otherSender").build();
 
         // when
@@ -78,11 +78,10 @@ class MessageControllerTest {
     public void failSendMessage_ServiceError() throws Exception {
         // given
         final String url = "/api/v1/messages/";
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         SendMessageReq sendMessageReq = SendMessageReq.builder()
-                .heartId(0L)
+                .heartId(heartId)
                 .senderId("sender")
                 .receiverId("receiver")
                 .title("title")
@@ -112,18 +111,17 @@ class MessageControllerTest {
     public void successSendMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/";
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         SendMessageReq sendMessageReq = SendMessageReq.builder()
-                .heartId(0L)
+                .heartId(heartId)
                 .senderId("sender")
                 .receiverId("receiver")
                 .title("title")
                 .build();
 
         SendMessageData expectedResponse = SendMessageData.builder()
-                .messageId(0L)
+                .messageId(messageId)
                 .heartId(sendMessageReq.getHeartId())
                 .build();
 
@@ -143,8 +141,8 @@ class MessageControllerTest {
 
         // then
         resultActions.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.messageId", is(0)))
-                .andExpect(jsonPath("$.data.heartId", is(0)))
+                .andExpect(jsonPath("$.data.messageId", is((int) messageId)))
+                .andExpect(jsonPath("$.data.heartId", is((int) heartId)))
                 .andExpect(jsonPath("$.status", is("success")));
     }
 
@@ -152,7 +150,6 @@ class MessageControllerTest {
     public void successDeleteMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/" + messageId;
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         doReturn(false).when(messageService).deleteMessage(messageId, user.getId());
@@ -178,7 +175,6 @@ class MessageControllerTest {
     public void successReportMessage() throws Exception {
         // given
         final String url = "/api/v1/messages/" + messageId + "/reports";
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         ReportReq reportReq = ReportReq.builder()
@@ -209,7 +205,6 @@ class MessageControllerTest {
     public void successAddEmoji() throws Exception {
         // given
         final String url = "/api/v1/messages/" + messageId + "/emojis/" + emojiId;
-//        HttpServletRequest req = mock(HttpServletRequest.class);
         User user = User.builder().id("sender").build();
 
         doReturn(emojiId).when(messageService).addEmoji(messageId, user.getId(), emojiId);
