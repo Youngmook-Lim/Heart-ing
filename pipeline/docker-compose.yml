@@ -1,5 +1,12 @@
 version: "3"
 services:
+  hearting-front:
+    container_name: hearting-front
+    image: hearting-frontend:v1
+    build:
+      context: ../frontend
+    ports:
+      - "3000:80"
   hearting-back:
     container_name: hearting-back
     image: hearting-backend:v1
@@ -16,11 +23,3 @@ services:
       context: ../backend-nodejs
     ports:
       - "8000:8000"
-#  hearting-front:
-#    container_name: sgr-front
-#    image: sgr-frontend:0.1
-#    build:
-#      context: ../frontend
-#    ports:
-#      - "3000:80"
-

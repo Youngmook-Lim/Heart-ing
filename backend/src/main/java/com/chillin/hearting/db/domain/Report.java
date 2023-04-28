@@ -49,10 +49,11 @@ public class Report implements Serializable {
     }
 
     @Builder
-    public Report(Message message, User reporter, User reportedUser, String content) {
+    public Report(Message message, User reporter, User reportedUser, String content, Long id) {
         this.message = message;
         this.reporter = reporter;
         this.reportedUser = reportedUser;
         this.content = content;
+        this.id = id;
     }
 }

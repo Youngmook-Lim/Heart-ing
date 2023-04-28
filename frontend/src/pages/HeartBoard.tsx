@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -28,7 +28,7 @@ function HeartBoard() {
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
-  const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
+  const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setCurrentUserId = useSetRecoilState(currentUserIdAtom);
   const setUserNickname = useSetRecoilState(userNicknameAtom);
@@ -36,27 +36,33 @@ function HeartBoard() {
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
+  const getUserProfile = useCallback(
+    async (userId: string | null) => {
+      if (!userId) return;
+      const data = await getProfile(userId);
+      if (data.status === "success") {
+        setUserProfile(data.data);
+      } else {
+        console.log("에러났당");
+        navigate("/notfound");
+      }
+    },
+    [navigate]
+  );
 
-  async function getUserProfile(userId: string | null) {
-    if (!userId) return;
-    const data = await getProfile(userId);
-    if (data.status === "success") {
-      setUserProfile(data.data);
-    } else {
-      console.log("에러났당"); 
-      navigate("/notfound");
-    }
-  }
-  // useerId로 최근 메시지 리스트 가져오기
-  async function getRecivedMessages(userId: string | null) {
-    if (!userId) return;
-    setCurrentUserId(userId);
-    console.log(userId);
-    const data = await getReceived(userId);
-    if (data.status === "success") {
-      setReceivedList(data.data.messageList);
-    }
-  }
+  // userId로 최근 메시지 리스트 가져오기
+  const getRecivedMessages = useCallback(
+    async (userId: string | null) => {
+      if (!userId) return;
+      setCurrentUserId(userId);
+      console.log(userId);
+      const data = await getReceived(userId);
+      if (data.status === "success") {
+        setReceivedList(data.data.messageList);
+      }
+    },
+    [setCurrentUserId]
+  );
 
   async function updateProfile(profileInfo: IUpdateProfileTypes) {
     const nicknameBody = { nickname: profileInfo.nickname };
@@ -77,7 +83,19 @@ function HeartBoard() {
     setIsMyBoard(isLogin && userId === myId ? true : false);
     getUserProfile(userId);
     getRecivedMessages(userId);
-  }, []);
+    setReadMessage(false);
+    return () => {
+      setReadMessage(false);
+    };
+  }, [
+    isLogin,
+    myId,
+    userId,
+    setIsMyBoard,
+    getUserProfile,
+    setReadMessage,
+    getRecivedMessages,
+  ]);
 
   return (
     <div className="container mx-auto px-6 py-8">
@@ -107,7 +125,7 @@ function HeartBoard() {
         </div>
         <HeartBoardList receivedList={receivedList} />
       </div>
-      {isLogin ? null : <button>나의 마음 수신함 만들러가기</button>}
+      {/* {isLogin ? null : <button>나의 마음 수신함 만들러가기</button>} */}
       {readMessage ? <MessageModal mode={"recent"} /> : null}
     </div>
   );

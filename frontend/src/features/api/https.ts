@@ -21,16 +21,16 @@ axios.interceptors.response.use(
   function (error) {
     if (error.response && error.response.status) {
       if (error.response.status === 401) {
-        if (error.response.data.message === 'reissue') {
-          const reissueToken = async function() {
-            const data = await reissueTokenApi()
-            if (data.status === 'success') {
-              window.localStorage.setItem('accessToken', data.data.accessToken)
+        if (error.response.data.message === "reissue") {
+          const reissueToken = async function () {
+            const data = await reissueTokenApi();
+            if (data.status === "success") {
+              window.localStorage.setItem("accessToken", data.data.accessToken);
             }
-          }
-          reissueToken()
+          };
+          reissueToken();
         } else {
-          deleteUserInfo()
+          deleteUserInfo();
           alert("다시 로그인해주세요");
           window.location.replace("/manual");
         }

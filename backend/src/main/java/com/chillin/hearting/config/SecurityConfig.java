@@ -48,9 +48,9 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-//                .antMatchers("/api/auth/users/**", "/api/notes/list", "/api/notes/detail", "api/notes").authenticated()
-//                .anyRequest().permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/api/v1/auth/users/**", "/api/v1/messages/inbox/**", "/api/v1/messages/sent/**").authenticated()
+                .anyRequest().permitAll()
+//                .antMatchers("/**").permitAll()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
@@ -67,7 +67,7 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {

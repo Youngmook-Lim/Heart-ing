@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { isMyBoardAtom } from "../../atoms/messageAtoms";
 
