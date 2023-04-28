@@ -16,7 +16,7 @@ import Navbar from "./components/navbar/Navbar";
 
 function App() {
   return (
-    <div className="App bg-hrtColorBackground text-hrtColorOutline">
+    <div className="App bg-hrtColorBackground text-hrtColorOutline h-full min-h-screen">
       <BrowserRouter>
         <Navbar />
         <Routes>
