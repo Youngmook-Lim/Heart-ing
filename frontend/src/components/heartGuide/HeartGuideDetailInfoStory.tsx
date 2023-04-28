@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 interface HeartGuideDetailInfoStoryProps {
   heartStory: string;
 }
