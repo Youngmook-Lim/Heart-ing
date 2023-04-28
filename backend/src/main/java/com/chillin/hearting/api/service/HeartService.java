@@ -26,8 +26,8 @@ public class HeartService {
 
     private final UserHeartRepository userHeartRepository;
 
-    private final String DEFAULT_TYPE = "DEFAULT";
-    private final static HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
+    private static final String DEFAULT_TYPE = "DEFAULT";
+    private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
 
     /**
      * 모든 도감 리스트를 반환합니다.
