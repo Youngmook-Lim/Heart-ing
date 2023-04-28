@@ -40,7 +40,6 @@ public class HeartRepositoryTest {
         assertThat(heartList)
                 .allSatisfy(heart -> {
                     assertThat(heart.getType().equals(DEFAULT_TYPE));
-                    System.out.println(heart.getName());
                 });
     }
 
