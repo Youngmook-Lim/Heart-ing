@@ -1,5 +1,4 @@
 import { IHeartInfoTypes } from '../../types/guideType'
-import HeartItemIcon from "../common/HeartItem"
 
 import { useSetRecoilState } from "recoil";
 import { openDetailInfoAtom } from "../../atoms/guideAtoms"
