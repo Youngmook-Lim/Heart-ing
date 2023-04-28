@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,21 +38,26 @@ class HeartServiceTest {
     private List<UserHeart> userHearts;
     private User fakeUser;
     private Heart defaultHeart;
+    private Heart defaultAndLockedHeart;
     private Heart specialHeart;
     private Heart notMyHeart;
 
     private static final String DEFAULT_TYPE = "DEFAULT";
     private static final String SPECIAL_TYPE = "SPECIAL";
+    private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
 
     @BeforeEach
     public void 데이터생성() {
         findHearts = new ArrayList<>();
         defaultHeart = createDefaultHeart(1L);
-        specialHeart = createSpecialHeart(2L);
-        notMyHeart = createNotMySpecialHeart(3L);
+        defaultAndLockedHeart = createDefaultHeart(4L);
+        specialHeart = createSpecialHeart(6L);
+        notMyHeart = createNotMySpecialHeart(7L);
         findHearts.add(defaultHeart);
         findHearts.add(specialHeart);
         findHearts.add(notMyHeart);
+
+        userHearts = new ArrayList<>();
     }
 
     @Test
@@ -80,7 +87,6 @@ class HeartServiceTest {
 
         // given
         fakeUser = createUser();
-        userHearts = new ArrayList<>();
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
@@ -100,18 +106,43 @@ class HeartServiceTest {
     void 유저하트조회_비로그인() {
 
         // given
-        fakeUser = null;
+        fakeUser = createUser();
+        List<Heart> defaultHearts = new ArrayList<>();
+        defaultHearts.add(defaultHeart);
+        defaultHearts.add(defaultAndLockedHeart);
+
+        userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
+        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
 
         // when
+        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
 
         // then
+        for (HeartData heartData : heartDataList) {
+            if (lockedHeartSet.contains(heartData.getHeartId())) {
+                assertThat(heartData.getIsLocked()).isTrue();
+            }
+        }
+
     }
 
     @Test
     void 유저하트조회_로그인() {
+        // given
+        fakeUser = null;
+        List<Heart> defaultHearts = new ArrayList<>();
+        defaultHearts.add(defaultHeart);
+        defaultHearts.add(defaultAndLockedHeart);
 
+        userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
+
+        // mocking
+        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
+
+        // when
+        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
     }
 
     public User createUser() {
