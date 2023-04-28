@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import { useRecoilValue } from 'recoil';
-import { currentUserIdAtom } from '../../atoms/userAtoms';
 import { IMessageSendTypes } from '../../types/messageType';
 import { getUserInfo } from '../../features/userInfo';
 
 function HeartwritingMessageForm({...props}) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const currenUserId = useRecoilValue(currentUserIdAtom)
 
   const onSubmitHandler = async(e: React.FocusEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,7 +12,7 @@ function HeartwritingMessageForm({...props}) {
     const messageInfo: IMessageSendTypes = {
       heartId: Number(props.selectedHeart),
       senderId: getUserInfo().userId,
-      receiverId: currenUserId,
+      receiverId: props.userId,
       title: title,
       content: content,
     }

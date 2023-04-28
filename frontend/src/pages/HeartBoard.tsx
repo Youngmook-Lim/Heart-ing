@@ -2,12 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentUserIdAtom,
-  isLoginAtom,
-  userNicknameAtom,
-} from "../atoms/userAtoms";
-import { readMessageAtom, isMyBoardAtom } from "../atoms/messageAtoms";
+import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
+import { readMessageAtom } from "../atoms/messageAtoms";
 
 import { IUpdateProfileTypes } from "../types/userType";
 
@@ -27,10 +23,9 @@ function HeartBoard() {
 
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
-  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
+  const [isMyBoard, setIsMyBoard] = useState(false);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
-  const setCurrentUserId = useSetRecoilState(currentUserIdAtom);
   const setUserNickname = useSetRecoilState(userNicknameAtom);
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
@@ -54,14 +49,13 @@ function HeartBoard() {
   const getRecivedMessages = useCallback(
     async (userId: string | null) => {
       if (!userId) return;
-      setCurrentUserId(userId);
       console.log(userId);
       const data = await getReceived(userId);
       if (data.status === "success") {
         setReceivedList(data.data.messageList);
       }
     },
-    [setCurrentUserId]
+    []
   );
 
   async function updateProfile(profileInfo: IUpdateProfileTypes) {
@@ -110,17 +104,10 @@ function HeartBoard() {
         <div className="relative flex justify-center">
           <img src={BackgroundHeart} alt="test" className="max-h-60" />
           <div className="absolute inset-x-px top-1/3">
-            {isMyBoard ? (
-              <HeartBoardMainButton
-                userProfile={userProfile}
-                isMyboard={true}
-              />
-            ) : (
-              <HeartBoardMainButton
-                userProfile={userProfile}
-                isMyboard={false}
-              />
-            )}
+          <HeartBoardMainButton
+            userProfile={userProfile}
+            userId={userId}
+          />
           </div>
         </div>
         <HeartBoardList receivedList={receivedList} />

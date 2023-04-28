@@ -18,5 +18,4 @@ export const selectedMessageIdAtom = atom<number>({
 export const isMyBoardAtom = atom<boolean>({
   key: "isMyBoard",
   default: false,
-  effects_UNSTABLE: [persistAtom],
 });
