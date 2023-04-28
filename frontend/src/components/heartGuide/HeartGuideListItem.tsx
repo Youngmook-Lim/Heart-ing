@@ -10,7 +10,6 @@ interface HeartGuideListItemProps {
 }
 
 function HeartGuideListItem({ heartInfo, onGetHeartDetailData }: HeartGuideListItemProps) {
-
     const setOpenDetailInfoAtom = useSetRecoilState(openDetailInfoAtom)
     
     const openDetailInfo = () => {
@@ -19,10 +18,10 @@ function HeartGuideListItem({ heartInfo, onGetHeartDetailData }: HeartGuideListI
     }
 
     return (
-        <>
-            <HeartItemIcon id={heartInfo.heartId} onClick={openDetailInfo} />
-            <div>{heartInfo.name}</div>
-        </>
+        <div onClick={() => openDetailInfo()}>
+            <img className='mx-auto my-auto' src={heartInfo.heartUrl} alt='heartIcon' />
+            {heartInfo.isLocked ? <div>??</div> : <div>{heartInfo.name}</div>}
+        </div>
     )
 }
 
