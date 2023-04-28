@@ -11,7 +11,7 @@ spring:
             client-secret:
             client-name: kakao
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:3000/oauth2/code/kakao
+            redirect-uri: https://heart-ing.com/oauth2/code/kakao
             client-authentication-method: POST
             scope:
               - profile_nickname
@@ -41,7 +41,7 @@ app:
     token-expiry: 86400000 # 24시간
     refresh-token-expiry: 1209600000 # 7일
   oauth2:
-    authorized-redirect-uris: http://localhost:3000/oauth2/code/kakao
+    authorized-redirect-uris: https://heart-ing.com/oauth2/code/kakao
 
 # S3 Setting
 cloud:
