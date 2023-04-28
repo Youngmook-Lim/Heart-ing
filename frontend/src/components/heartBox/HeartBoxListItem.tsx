@@ -19,7 +19,7 @@ function HeartBoxListItem({ ...props }) {
 
   return (
     <div
-      className="modal flex items-center border-2 border-hrtColorPink rounded-lg p-2 m-2 my-4 relative"
+      className="bg-hrtColorWhiteTrans flex items-center border-2 border-hrtColorPink rounded-lg p-2 m-2 my-4 relative"
       onClick={() => readMessage(props.messageId)}
     >
       <div className="flex-none">

@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.textShadow p {
+  text-shadow: -2px 0 #fb8bb0, 0 2px #fb8bb0, 2px 0 #fb8bb0, 0 -2px #fb8bb0;
+}
+
+.textShadow .purple {
+  text-shadow: -2px 0 #d5a7ea, 0 2px #d5a7ea, 2px 0 #d5a7ea, 0 -2px #d5a7ea;
+}

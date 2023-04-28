@@ -40,7 +40,7 @@ function HeartBoardProfileBox({ ...props }) {
   };
 
   return (
-    <div>
+    <div className="pt-3">
       {isSetting ? (
         <form onSubmit={onSubmitHandler} className="mx-2 my-4">
           <div className="flex flex-wrap">

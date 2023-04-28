@@ -31,7 +31,9 @@ function MessageModalHeart({ ...props }) {
         </button>
       ) : (
         <button onClick={() => switchInfoMode()} className="h-24">
-          <div className="text-4xl">{props.heartName}</div>
+          <div className="text-4xl textShadow text-white">
+            <p className="text-hrtColorYellow">{props.heartName}</p>
+          </div>
           <div>{props.heartContext}</div>
         </button>
       )}
