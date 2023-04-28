@@ -3,13 +3,27 @@ import NavbarSide from "./NavbarSide";
 import NavbarSideContext from "./NavbarSideContext";
 
 import Logo from "../../assets/images/logo/logo_line.png";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { isLoginAtom } from "../../atoms/userAtoms";
+import { getUserInfo } from "../../features/userInfo";
 
 function Navbar() {
+  const navigate = useNavigate()
+  const isLogin = useRecoilValue(isLoginAtom)
+
+  const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+    {isLogin ? 
+      navigate(`/heartboard/user?id=${getUserInfo().userId}`)
+      :
+      navigate('/manual')
+  }
+  }
   return (
     <div>
       <nav className="">
         <div className={`flex justify-between w-[calc(100%-2.7rem)]`}>
-          <div>
+          <div onClick={onNavigateHandler}>
             <img src={Logo} alt="test" className="w-16 m-2" />
           </div>
           <div className="w-6 m-2 my-4 flex-none">
