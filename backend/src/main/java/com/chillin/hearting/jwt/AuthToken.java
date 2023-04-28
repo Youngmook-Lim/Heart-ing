@@ -83,7 +83,7 @@ public class AuthToken {
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
             log.debug(e.getMessage());
-            log.error("아마도 JWT가 헤더에 안 담겼을지도?");
+            log.debug("아마도 JWT가 헤더에 안 담겼을지도?");
         }
         return null;
     }
