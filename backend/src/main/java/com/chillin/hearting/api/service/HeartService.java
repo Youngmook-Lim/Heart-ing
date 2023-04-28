@@ -40,10 +40,6 @@ public class HeartService {
     public List<HeartData> findAllHearts(User user) {
         log.debug("도감 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
         List<Heart> allHearts = heartRepository.findAll();
-        List<HeartData> resHearts = new ArrayList<>();
-        for (Heart heart : allHearts) {
-            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType())) ? false : true));
-        }
 
         HashSet<Long> hashSet = new HashSet<>();
         if (user != null) {
@@ -53,14 +49,12 @@ public class HeartService {
             for (UserHeart myHeart : userHearts) {
                 hashSet.add(myHeart.getHeart().getId());
             }
-
-            for (HeartData heartData : resHearts) {
-                if (!DEFAULT_TYPE.equals(heartData.getType()) && hashSet.contains(heartData.getHeartId())) {
-                    heartData.unLock();
-                }
-            }
         }
 
+        List<HeartData> resHearts = new ArrayList<>();
+        for (Heart heart : allHearts) {
+            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType()) || hashSet.contains(heart.getId())) ? false : true));
+        }
         return resHearts;
     }
 
@@ -91,6 +85,4 @@ public class HeartService {
         return resHearts;
     }
 
-    public HeartDetailData findDetailHeart(Long heartId) {
-    }
 }
