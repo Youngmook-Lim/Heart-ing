@@ -44,8 +44,7 @@ public class MessageInboxService {
     @Transactional
     public Message findInboxDetailMessage(String userId, Long messageId) {
         userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Message findMessage = inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
-        return findMessage;
+        return inboxRepository.findByIdAndReceiverIdAndIsStored(messageId, userId, true).orElseThrow(MessageNotFoundException::new);
     }
 
     @Transactional
