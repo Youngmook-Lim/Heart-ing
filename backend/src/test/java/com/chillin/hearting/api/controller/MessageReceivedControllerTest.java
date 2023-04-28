@@ -1,9 +1,11 @@
 package com.chillin.hearting.api.controller;
 
+import com.chillin.hearting.api.data.MessageData;
 import com.chillin.hearting.api.data.ReceivedMessageData;
 import com.chillin.hearting.api.service.MessageReceivedService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.ControllerExceptionHandler;
+import com.chillin.hearting.exception.ReceivedMessagesListFailException;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +55,27 @@ class MessageReceivedControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(messageReceivedController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
+    @Test
+    public void failGetReceivedMessages_ListFail() throws Exception {
+        // given
+        final String url = "/api/v1/messages/received/" + "receiver";
+        User user = User.builder().id("otherSender").build();
+        doReturn(null).when(messageReceivedService).getReceivedMessages("receiver", false);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isInternalServerError()).andExpect(jsonPath("$.message", is(ReceivedMessagesListFailException.DEFAULT_MESSAGE)));
+
+    }
 
     @Test
     public void successGetReceivedMessages() throws Exception {
@@ -81,6 +104,39 @@ class MessageReceivedControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", notNullValue()))
                 .andExpect(jsonPath("$.message", is("받은메시지 리스트가 성공적으로 반환되었습니다.")))
+                .andExpect(jsonPath("$.status", is(SUCCESS)));
+    }
+
+    @Test
+    public void successGetMessageDetail() throws Exception {
+        // given
+        final String url = "/api/v1/messages/received/detail/" + messageId;
+        User user = User.builder().id("receiver").build();
+
+        MessageData expectedResponse = MessageData.builder()
+                .messageId(messageId)
+                .heartId(heartId)
+                .emojiId(emojiId)
+                .build();
+
+        doReturn(expectedResponse).when(messageReceivedService).getMessageDetail(messageId, "receiver");
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.messageId", is((int) messageId)))
+                .andExpect(jsonPath("$.data.heartId", is((int) heartId)))
+                .andExpect(jsonPath("$.data.emojiId", is((int) emojiId)))
+                .andExpect(jsonPath("$.message", is("메시지 상세가 성공적으로 반환되었습니다.")))
                 .andExpect(jsonPath("$.status", is(SUCCESS)));
     }
 
