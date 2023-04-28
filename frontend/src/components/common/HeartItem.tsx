@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -13,13 +13,14 @@ function HeartItem({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const setSelectedMessgeIdAtom = useSetRecoilState(selectedMessageIdAtom);
   const isMyBoard = useRecoilValue(isMyBoardAtom);
-  const isRead = props.isRead ? "true" : "false";
+  const [isRead, setIsRead] = useState(false);
 
   const readMessage = (messageId: number) => {
     console.log(messageId + " 메시지를 읽습니다");
     // messageId의 메시지를 열람합니다
     setReadMessageAtom(true);
     setSelectedMessgeIdAtom(messageId);
+    setIsRead(true);
   };
 
   return (
@@ -30,7 +31,7 @@ function HeartItem({ ...props }) {
           onClick={() => readMessage(props.messageId)}
         >
           <HeartItemIcon id={props.heartId} />
-          {props.isRead ? null : (
+          {props.isRead || isRead ? null : (
             <div className="bg-hrtColorNewRed w-4	h-4	mx-4 my-3 rounded-full border-2	border-white absolute left-1/2 bottom-1/2	"></div>
           )}
         </div>
@@ -40,7 +41,7 @@ function HeartItem({ ...props }) {
         </div>
       )}
 
-      <div> {props.context} </div>
+      <div className="px-2 leading-5 tracking-tight"> {props.context} </div>
     </div>
   );
 }
