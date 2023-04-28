@@ -99,6 +99,32 @@ public class HeartControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Test
+    void 유저메시지조회_로그인() throws Exception {
+
+        // given
+        final String url = "/api/v1/hearts/user-hearts";
+        List<HeartData> heartDataList = new ArrayList<>();
+        heartDataList.add(HeartData.of(createDefaultHeart(1L), false));
+        heartDataList.add(HeartData.of(createSpecialHeart(6L), false));
+
+        // mocking
+        when(heartService.findUserHearts(any())).thenReturn(heartDataList);
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.status", is("success")))
+                .andExpect(jsonPath("$.data.heartList[0].isLocked", is(false)))
+                .andExpect(jsonPath("$.data.heartList[1].isLocked", is(false)));
+    }
+
     public Heart createDefaultHeart(Long id) {
         Heart heart = Heart.builder()
                 .id(id)
