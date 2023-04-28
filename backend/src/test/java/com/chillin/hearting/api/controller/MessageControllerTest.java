@@ -40,6 +40,8 @@ class MessageControllerTest {
     private MockMvc mockMvc;
     private Gson gson;
 
+    private static final String SUCCESS = "success";
+
     private final long messageId = 0L;
     private final long heartId = 0L;
     private final long reportId = 0L;
@@ -143,7 +145,7 @@ class MessageControllerTest {
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.messageId", is((int) messageId)))
                 .andExpect(jsonPath("$.data.heartId", is((int) heartId)))
-                .andExpect(jsonPath("$.status", is("success")));
+                .andExpect(jsonPath("$.status", is(SUCCESS)));
     }
 
     @Test
@@ -168,7 +170,7 @@ class MessageControllerTest {
         // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is("메시지가 성공적으로 삭제되었습니다.")))
-                .andExpect(jsonPath("$.status", is("success")));
+                .andExpect(jsonPath("$.status", is(SUCCESS)));
     }
 
     @Test
@@ -198,7 +200,7 @@ class MessageControllerTest {
         // then
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is("메시지가 성공적으로 신고되었습니다.")))
-                .andExpect(jsonPath("$.status", is("success")));
+                .andExpect(jsonPath("$.status", is(SUCCESS)));
     }
 
     @Test
@@ -222,7 +224,7 @@ class MessageControllerTest {
         // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is("이모지가 성공적으로 변경되었습니다.")))
-                .andExpect(jsonPath("$.status", is("success")));
+                .andExpect(jsonPath("$.status", is(SUCCESS)));
     }
 
 
