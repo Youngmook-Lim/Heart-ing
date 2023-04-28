@@ -34,10 +34,10 @@ function HeartGuide() {
       <div className="container mx-auto px-6 py-8">
       <div className="modal border-hrtColorPink">
         {allHeartInfoList ?
-          <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo} />
-          : []}
-        {openDetailInfo ? <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
+          <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo} /> : null}
         </div>
+        {openDetailInfo ?
+          <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
       </div>
     </>
   )
