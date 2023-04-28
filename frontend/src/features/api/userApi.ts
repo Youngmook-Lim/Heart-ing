@@ -55,3 +55,14 @@ export async function getProfile(userId:string) {
     return err
   }
 }
+
+export async function reissueTokenApi() {
+  try{
+    const res = await axios.get('api/v1/auth/users/access-token')
+    const data = res.data
+    return data
+  } catch(err) {
+    console.log('쫓아낸다ㅋ')
+    return err
+  }
+}

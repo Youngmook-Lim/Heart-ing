@@ -1,7 +1,7 @@
 import React from 'react'
 import { IUserSavingInfoTypes } from './../types/userType'
 
-export const savingAccessToken = (userInfo: IUserSavingInfoTypes) => {
+export const savingUserInfo = (userInfo: IUserSavingInfoTypes) => {
   window.localStorage.setItem('userId', userInfo.userId)
   window.localStorage.setItem('accessToken', userInfo.accessToken)
 };
