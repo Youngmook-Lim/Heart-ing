@@ -26,11 +26,11 @@ function MessageModalButtonBox({
       {mode === "recent" ? (
         <MessageModalButtonBoxSave isStored={isStored} />
       ) : null}
-      {(mode === "save" || mode === "recent") && !isExpired ? (
-        <MessageModalButtonBoxEmoji />
-      ) : null}
       {mode === "sent" || mode === "save" ? (
         <MessageModalButtonBoxClose />
+      ) : null}
+      {(mode === "save" || mode === "recent") && !isExpired ? (
+        <MessageModalButtonBoxEmoji />
       ) : null}
     </div>
   );

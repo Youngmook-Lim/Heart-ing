@@ -5,7 +5,7 @@ import HeartwritingMessageForm from './HeartwritingMessageForm'
 function HeartwritingMessage({...props}) {
   return (
     <div>
-      <HeartwritingMessageHeart />
+      <HeartwritingMessageHeart {...props}/>
       <HeartwritingMessageForm {...props}/>
     </div>
   )
