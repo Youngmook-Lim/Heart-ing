@@ -84,7 +84,7 @@ public class HeartServiceTest {
 
         // then
         for (HeartData heartData : allHearts) {
-            assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getId() == notMyHeart.getId()) ? true : false);
+            assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getHeartId() == notMyHeart.getId()) ? true : false);
         }
     }
 
