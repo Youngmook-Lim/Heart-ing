@@ -9,7 +9,7 @@ interface HeartGuideListProps {
 function HeartGuideList({ allHeartInfoList, onGetHeartDetailData }: HeartGuideListProps) {
     
     return (
-        <div>
+        <div className="grid grid-cols-3 p-3 mx-auto my-auto">
             {allHeartInfoList.map((heartInfo) => (
                 <HeartGuideListItem
                     key={heartInfo.heartId}
