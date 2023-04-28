@@ -34,11 +34,13 @@ class MessageControllerTest {
     @InjectMocks
     private MessageController messageController;
 
+    @Mock
+    private MessageService messageService;
+
     private MockMvc mockMvc;
     private Gson gson;
 
-    @Mock
-    private MessageService messageService;
+    private final Long messageId = 0L;
 
     @BeforeEach
     public void init() {
@@ -140,6 +142,34 @@ class MessageControllerTest {
         resultActions.andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.messageId", is(0)))
                 .andExpect(jsonPath("$.data.heartId", is(0)))
+                .andExpect(jsonPath("$.status", is("success")));
+    }
+
+    @Test
+    public void successDeleteMessage() throws Exception {
+        // given
+        final String url = "/api/v1/messages/" + messageId;
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        User user = User.builder().id("sender").build();
+
+        boolean expectedResponse = false;
+        doReturn(expectedResponse).when(messageService).deleteMessage(messageId, user.getId());
+
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(url)
+                        .content(String.valueOf(messageId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is("메시지가 성공적으로 삭제되었습니다.")))
                 .andExpect(jsonPath("$.status", is("success")));
     }
 
