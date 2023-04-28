@@ -40,12 +40,7 @@ class MessageRepositoryTest {
     @Test
     void successSendMessage() {
         // given
-
-//        Heart heart = new Heart(null, "testHeart", "testHeartUrl", "short", "long", "type", "acq");
-//        User sender = new User("1", "KAKAO", "test1@test.com", "test1", "refresh1", null, null, "status", 0, 'A', "role", 0L);
-//        User receiver = new User("2", "KAKAO", "test2@test.com", "test2", "refresh2", null, null, "status", 0, 'A', "role", 0L);
         Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
-
 
         // when
         heartRepository.save(heart);
@@ -67,8 +62,7 @@ class MessageRepositoryTest {
     void successUpdateUserMessageTotal() {
         // given
         Message message = Message.builder().heart(heart).emoji(emoji).sender(sender).receiver(receiver).title("testTitle").content("message content").senderIp("127.0.0.1").build();
-
-
+        
         // when
         heartRepository.save(heart);
         userRepository.save(sender);

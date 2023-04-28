@@ -196,10 +196,8 @@ class MessageServiceTest {
         doReturn(Optional.of(sender)).when(userRepository).findById(senderId);
         doReturn(Optional.of(receiver)).when(userRepository).findById(receiverId);
 
-
         // when
         MessageAlreadyReportedException exception = assertThrows(MessageAlreadyReportedException.class, () -> messageService.reportMessage(messageId, receiverId, content));
-
 
         // then
         assertEquals(exception.getMessage(), MessageAlreadyReportedException.DEFAULT_MESSAGE);

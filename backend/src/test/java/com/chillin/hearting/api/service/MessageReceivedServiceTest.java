@@ -30,10 +30,16 @@ import static org.mockito.Mockito.*;
 class MessageReceivedServiceTest {
     @InjectMocks
     private MessageReceivedService messageReceivedService;
-
     @Mock
     private MessageRepository messageRepository;
+<<<<<<< Updated upstream
 
+<<<<<<< Updated upstream
+=======
+    private final long heartId = 0L;
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     private final String senderId = "senderId";
     private final String receiverId = "receiverId";
     private final long messageId = 0L;
@@ -73,7 +79,6 @@ class MessageReceivedServiceTest {
         // when
         final ReceivedMessageData data = messageReceivedService.getReceivedMessages(receiverId, true);
 
-
         // then
         assertThat(data.getMessageList().size()).isEqualTo(2);
 
@@ -106,7 +111,6 @@ class MessageReceivedServiceTest {
 
         // when
         final MessageData data = messageReceivedService.getMessageDetail(0L, receiverId);
-
 
         // then
         assertThat(data.getMessageId()).isEqualTo(0L);
