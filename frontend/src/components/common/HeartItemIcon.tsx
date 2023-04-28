@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { ReactComponent as HeartYellow } from "../../assets/images/pixel/heart/heart_yellow_1.svg";
 import { ReactComponent as HeartBlue } from "../../assets/images/pixel/heart/heart_blue_1.svg";
@@ -11,6 +11,7 @@ type propType = { id: number };
 function HeartItemIcon(id: propType) {
   const index = id.id;
   const heartList = [
+    null,
     <HeartYellow />,
     <HeartBlue />,
     <HeartGreen />,

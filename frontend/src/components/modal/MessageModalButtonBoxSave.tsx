@@ -3,20 +3,32 @@ import { saveMessageApi } from "../../features/api/messageApi";
 import { useRecoilValue } from "recoil";
 import { selectedMessageIdAtom } from "../../atoms/messageAtoms";
 
-function MessageModalButtonBoxSave() {
-  const messageId = useRecoilValue(selectedMessageIdAtom)
+function MessageModalButtonBoxSave({ ...props }) {
+  const messageId = useRecoilValue(selectedMessageIdAtom);
+  const isStored = props.isStored;
 
-  const onSaveHandler = async(e: React.MouseEvent<HTMLDivElement>) => {
-    const status = await saveMessageApi(messageId)
-    if (status === 'success') {
-      alert('메세지를 저장했습니다')
+  const onSaveHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const status = await saveMessageApi(messageId);
+    if (status === "success") {
+      alert("메세지를 저장했습니다");
     }
-  }
+  };
 
   return (
-    <div className="modal-button text-hrtColorOutline bg-hrtColorPurple" onClick={onSaveHandler}>
-      저장
-    </div>
+    <>
+      {isStored ? (
+        <div className="modal-button bg-hrtColorLightPurple text-hrtColorOutline700">
+          보관중
+        </div>
+      ) : (
+        <div
+          className="modal-button text-hrtColorOutline bg-hrtColorPurple"
+          onClick={onSaveHandler}
+        >
+          보관
+        </div>
+      )}
+    </>
   );
 }
 

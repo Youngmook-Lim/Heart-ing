@@ -25,6 +25,7 @@ module.exports = {
         hrtColorBackground: "#dbf0ff",
         hrtColorGray: "#dbdbdb",
         hrtColorLightPurple: "#F5F4F7",
+        hrtColorLightPink: "#F9ECF5",
         hrtColorNewRed: "#DB443A",
       },
     },
