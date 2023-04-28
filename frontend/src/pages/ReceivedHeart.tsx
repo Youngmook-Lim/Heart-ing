@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { readMessageAtom } from "../atoms/messageAtoms";
 
