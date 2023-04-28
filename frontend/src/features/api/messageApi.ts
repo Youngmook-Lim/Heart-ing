@@ -16,7 +16,7 @@ export async function getReceived(userId: string) {
 export async function sendMessageApi(body: IMessageSendTypes) {
   try {
     const res = await axios.post(`api/v1/messages`, body);
-    const status = res.data.status
+    const status = res.data.status;
     return status;
   } catch (err) {
     console.log(err);
@@ -69,13 +69,25 @@ export async function deleteTemporaryMessageApi(messageId: number) {
   }
 }
 
-export async function getInbox() {
+export async function getSave() {
   try {
     const res = await axios.get(`api/v1/messages/inbox`);
     const data = res.data;
     return data;
   } catch (err) {
-    console.log("영구 메시지 리스트 조회에 실패했습니다");
+    console.log("영구 보관 메시지 리스트 조회에 실패했습니다");
+    console.log(err);
+    return null;
+  }
+}
+
+export async function getSent() {
+  try {
+    const res = await axios.get(`api/v1/messages/sent`);
+    const data = res.data;
+    return data;
+  } catch (err) {
+    console.log("보낸 메시지 리스트 조회에 실패했습니다");
     console.log(err);
     return null;
   }
@@ -83,13 +95,12 @@ export async function getInbox() {
 
 export async function getMessageHeartApi() {
   try {
-    const res = await axios.get('api/v1/hearts/user-hearts')
-    const data = res.data
-    return data
+    const res = await axios.get("api/v1/hearts/user-hearts");
+    const data = res.data;
+    return data;
   } catch (err) {
     console.log("하트리스트 못 뽑았다여");
     console.log(err);
     return null;
   }
-  
 }

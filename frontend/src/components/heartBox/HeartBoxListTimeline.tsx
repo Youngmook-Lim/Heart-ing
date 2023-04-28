@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function HeartBoxListTimeline() {
-  return (
-    <div>
-      여기에 남은 시간이나 받은 날짜를 적어보세요~
-    </div>
-  )
+  return <div className="py-2 pt-4"></div>;
 }
 
-export default HeartBoxListTimeline
+export default HeartBoxListTimeline;

@@ -6,7 +6,7 @@ import { readMessageAtom } from "../atoms/messageAtoms";
 
 import HeartBoxHeader from "../components/heartBox/HeartBoxHeader";
 import HeartBoxList from "../components/heartBox/HeartBoxList";
-import { getInbox } from "../features/api/messageApi";
+import { getSave } from "../features/api/messageApi";
 import MessageModal from "../components/modal/MessageModal";
 
 function ReceivedHeart() {
@@ -14,7 +14,7 @@ function ReceivedHeart() {
   const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
 
   async function getInboxMessages() {
-    const data = await getInbox();
+    const data = await getSave();
     if (data.status === "success") {
       console.log(data.data.inboxList);
       setInboxList(data.data.inboxList);
@@ -27,7 +27,7 @@ function ReceivedHeart() {
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <HeartBoxHeader />
+      <HeartBoxHeader mode={"received"} />
       <HeartBoxList inboxList={inboxList} />
       {readMessage ? <MessageModal mode={"save"} /> : null}
     </div>
