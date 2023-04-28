@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,10 +35,10 @@ public class HeartController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ResponseDTO> findUserHearts(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
+    @GetMapping("/userhearts")
+    public ResponseEntity<ResponseDTO> findUserHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        List<HeartData> messageHearts = heartService.findMessageHearts("-1".equals(userId) ? null : user);
+        List<HeartData> messageHearts = heartService.findMessageHearts(user);
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(HeartListData.builder().hearts(messageHearts).build()).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
