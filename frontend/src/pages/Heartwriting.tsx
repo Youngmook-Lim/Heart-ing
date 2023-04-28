@@ -65,25 +65,25 @@ function Heartwriting() {
 
   return (
       <div className="container mx-auto px-6 py-8">
-        <img src={LogoEffect} alt="test" className="w-full px-14 my-5" />
+        <img src={LogoEffect} alt="test" className="w-full px-14 mb-10" />
         <div className="modal border-hrtColorPink">
           <div className="modal-header bg-hrtColorPink border-hrtColorPink">
             마음 보내기
           </div>
           {isSelected ?
-            <HeartwritingMessage onSendingHandler={sendMessage} onSettingMode={setMode} selectedHeart={selectedHeartId} userId={userId}/>
+            <HeartwritingMessage onSendingHandler={sendMessage} onSettingMode={setMode} selectedHeartInfo={heartList[Number(selectedHeartId)-1]} userId={userId}/>
             : 
             <HeartwritingSelectHeart onHeartNumberHandler={setHeartNumber} onSettingMode={setMode} heartList={heartList}/>
           }
         </div>
       {isSelected ?
-        // <button className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5">
-        //   <div className="text-2xl">전달하기</div>
-        // </button>
-        null
+        <button className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5">
+          <div className="text-2xl">전달하기</div>
+        </button>
+        // null
         :
-        <button onClick={setMode} className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5" disabled={selectedHeartId ? false : true}>
-          <div className="text-2xl">다음</div>
+        <button onClick={setMode} className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5" disabled={selectedHeartId ? false : true}>
+          <div className="text-2xl">다 음</div>
         </button>
       }
     </div>

@@ -1,9 +1,10 @@
 import React from 'react'
+import HeartItem from '../common/HeartItem'
 
-function HeartwritingMessageHeart() {
+function HeartwritingMessageHeart({...props}) {
   return (
-    <div>
-      하트랑 설명
+    <div className='text-3xl'>
+      <HeartItem heartId={props.selectedHeartInfo.heartId} context={props.selectedHeartInfo.name}/>
     </div>
   )
 }
