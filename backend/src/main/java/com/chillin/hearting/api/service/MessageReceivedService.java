@@ -80,6 +80,7 @@ public class MessageReceivedService {
         }
     }
 
+    @Transactional
     public MessageData getMessageDetail(long messageId, String userId) {
 
         // Check if message belongs to the user
