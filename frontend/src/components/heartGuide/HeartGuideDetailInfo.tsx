@@ -1,6 +1,6 @@
-import HeartItemIcon from "../common/HeartItemIcon"
-import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition"
-import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
+// import HeartItemIcon from "../common/HeartItemIcon"
+// import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition"
+// import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
 import ButtonIcon from "../common/ButtonIcon";
 
 import { useSetRecoilState } from "recoil";

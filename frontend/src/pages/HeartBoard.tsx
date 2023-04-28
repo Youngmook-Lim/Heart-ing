@@ -23,7 +23,7 @@ function HeartBoard() {
 
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
-  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
+  const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getAllHeartInfo, getHeartDetailInfo } from '../features/api/guide'
+import { getAllHeartInfo, getHeartDetailInfo } from '../features/api/guideApi'
 import { useRecoilValue } from 'recoil'
 import { openDetailInfoAtom } from '../atoms/guideAtoms'
 import { IHeartInfoTypes, IHeartDetailInfoTypes } from '../types/guideType'
