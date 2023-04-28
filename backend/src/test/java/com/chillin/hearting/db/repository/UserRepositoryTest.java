@@ -14,12 +14,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // MySQL 사용한다
-public class UserRepositoryTest {
+class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    public void KakaoSignupSuccess() {
+    void KakaoSignupSuccess() {
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         // given
@@ -39,7 +39,7 @@ public class UserRepositoryTest {
         assertThat(result.getType()).isEqualTo("KAKAO");
         assertThat(result.getEmail()).isEqualTo("wjdwn@naver.com");
         assertThat(result.getNickname()).isEqualTo("jj");
-        assertThat(result.getReportedCount()).isEqualTo(0);
+        assertThat(result.getReportedCount()).isZero();
         assertThat(result.getRole()).isEqualTo("ROLE_USER");
 
     }
