@@ -32,14 +32,7 @@ class MessageReceivedServiceTest {
     private MessageReceivedService messageReceivedService;
     @Mock
     private MessageRepository messageRepository;
-<<<<<<< Updated upstream
-
-<<<<<<< Updated upstream
-=======
     private final long heartId = 0L;
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     private final String senderId = "senderId";
     private final String receiverId = "receiverId";
     private final long messageId = 0L;
