@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.SendMessageData;
+import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
@@ -41,6 +42,8 @@ class MessageControllerTest {
     private Gson gson;
 
     private final Long messageId = 0L;
+    private final Long reportId = 0L;
+    private final String content = "Test content";
 
     @BeforeEach
     public void init() {
@@ -159,7 +162,6 @@ class MessageControllerTest {
         // when
         final ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)
-                        .content(String.valueOf(messageId))
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(request -> {
                             request.setAttribute("user", user);
@@ -170,6 +172,38 @@ class MessageControllerTest {
         // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is("메시지가 성공적으로 삭제되었습니다.")))
+                .andExpect(jsonPath("$.status", is("success")));
+    }
+
+    @Test
+    public void successReportMessage() throws Exception {
+        // given
+        final String url = "/api/v1/messages/" + messageId + "/reports";
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        User user = User.builder().id("sender").build();
+
+        ReportReq reportReq = ReportReq.builder()
+                .content(content)
+                .build();
+
+        Long expectedResponse = 0L;
+        doReturn(expectedResponse).when(messageService).reportMessage(messageId, user.getId(), reportReq.getContent());
+
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .content(gson.toJson(reportReq))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setAttribute("user", user);
+                            return request;
+                        })
+        );
+
+        // then
+        resultActions.andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message", is("메시지가 성공적으로 신고되었습니다.")))
                 .andExpect(jsonPath("$.status", is("success")));
     }
 
