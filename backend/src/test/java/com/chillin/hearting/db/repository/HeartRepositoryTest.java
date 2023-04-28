@@ -27,7 +27,7 @@ public class HeartRepositoryTest {
     private final static String DEFAULT_TYPE = "DEFAULT";
 
     @BeforeEach
-    public void 데이터생성() {
+    void 데이터생성() {
         Heart defaultHeart = createDefaultHeart();
         Heart specialHeart = createSpecialHeart();
         User user = createUser();
@@ -39,7 +39,7 @@ public class HeartRepositoryTest {
 
 
     @Test
-    public void 모든도감조회() {
+    void 모든도감조회() {
         // when
         List<Heart> heartList = heartRepository.findAll();
 
@@ -54,7 +54,7 @@ public class HeartRepositoryTest {
     }
 
     @Test
-    public void 기본하트조회() {
+    void 기본하트조회() {
         // when
         List<Heart> heartList = heartRepository.findAllByType("SPECIAL");
 

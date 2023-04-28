@@ -42,7 +42,7 @@ class MessageInboxServiceTest {
 
 
     @Test
-    public void 메시지영구보관() {
+    void 메시지영구보관() {
         // given
         Long fakeId = 1L;
         Message savedMessage = createMessage(fakeId);
@@ -52,16 +52,16 @@ class MessageInboxServiceTest {
         when(inboxRepository.findById(any())).thenReturn(Optional.ofNullable(savedMessage));
 
         // when
-        assertThat(savedMessage.isStored()).isEqualTo(false);
+        assertThat(savedMessage.isStored()).isFalse();
         messageInboxService.storeMessage(fakeId);
 
         // then
         Optional<Message> findMessage = inboxRepository.findById(savedMessage.getId());
-        assertThat(findMessage.get().isStored()).isEqualTo(true);
+        assertThat(findMessage.get().isStored()).isTrue();
     }
 
     @Test
-    public void 영구보관메시지조회() {
+    void 영구보관메시지조회() {
         // given
         Message m1 = createMessage(1L);
         Message m2 = createMessage(2L);
@@ -73,11 +73,10 @@ class MessageInboxServiceTest {
 
         // mocking
         when(inboxRepository.findAllByReceiverIdAndIsStored(any(), any())).thenReturn(inboxList);
-        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user2));
 
         // when
         List<InboxData> findList = messageInboxService.findInboxMessages(getFakeReceiverId);
-        assertThat(findList.size()).isEqualTo(inboxList.size());
+        assertThat(findList).hasSameSizeAs(inboxList);
     }
 
     @Test
@@ -113,7 +112,7 @@ class MessageInboxServiceTest {
 
         // then
         Optional<Message> findMessage = inboxRepository.findById(fakeId);
-        assertThat(findMessage.get().isActive()).isEqualTo(false);
+        assertThat(findMessage.get().isActive()).isFalse();
     }
 
 
