@@ -26,8 +26,7 @@ function ReceivedHeart() {
   }, []);
 
   return (
-    <div>
-      받은하트함
+    <div className="container mx-auto px-6 py-8">
       <HeartBoxHeader />
       <HeartBoxList inboxList={inboxList} />
       {readMessage ? <MessageModal mode={"save"} /> : null}

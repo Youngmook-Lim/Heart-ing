@@ -21,10 +21,15 @@ function HeartBoxListItem({ ...props }) {
   };
 
   return (
-    <div className="flex" onClick={() => readMessage(props.messageId)}>
-      <HeartItemIcon id={props.heartId} />
-      <div>{props.context}</div>
-      <div>{props.emojiId}</div>
+    <div
+      className="modal flex items-center border-2 border-hrtColorPink rounded-lg p-2 m-2"
+      onClick={() => readMessage(props.messageId)}
+    >
+      <div className="flex-none">
+        <HeartItemIcon id={props.heartId} />
+      </div>
+      <div className="flex-auto text-xl">{props.context}</div>
+      <div className="flex-none">{props.emojiId}</div>
     </div>
   );
 }

@@ -30,7 +30,6 @@ function HeartBoxList({ ...props }) {
             createdDate,
           }: IMessageInfoTypes) => (
             <>
-              <HeartItemIcon id={props.heartId} />
               <HeartBoxListItem
                 key={messageId}
                 messageId={messageId}

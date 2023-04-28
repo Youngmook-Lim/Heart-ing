@@ -42,4 +42,5 @@ export interface IMessageSendTypes {
 export interface IMessageModalTypes {
   mode: string;
   isExpired?: boolean;
+  isStored?: boolean;
 }
