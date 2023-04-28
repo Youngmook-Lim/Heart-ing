@@ -106,7 +106,7 @@ class HeartServiceTest {
     void 유저하트조회_비로그인() {
 
         // given
-        fakeUser = createUser();
+        fakeUser = null;
         List<Heart> defaultHearts = new ArrayList<>();
         defaultHearts.add(defaultHeart);
         defaultHearts.add(defaultAndLockedHeart);
@@ -131,7 +131,7 @@ class HeartServiceTest {
     @Test
     void 유저하트조회_로그인() {
         // given
-        fakeUser = null;
+        fakeUser = createUser();
         List<Heart> defaultHearts = new ArrayList<>();
         defaultHearts.add(defaultHeart);
         defaultHearts.add(defaultAndLockedHeart);
@@ -140,9 +140,13 @@ class HeartServiceTest {
 
         // mocking
         when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
+        when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
 
         // when
         List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
+
+        // then
+        assertThat(heartDataList).hasSize(3);
     }
 
     public User createUser() {
