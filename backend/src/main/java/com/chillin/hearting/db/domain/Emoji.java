@@ -15,7 +15,7 @@ public class Emoji implements Serializable {
     // PK
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
-    private long id;
+    private Long id;
 
     @Column(length = 100, name = "name", unique = true)
     private String name;
@@ -24,7 +24,7 @@ public class Emoji implements Serializable {
     private String imageUrl;
 
     @Builder
-    public Emoji(String name, String imageUrl, long id) {
+    public Emoji(String name, String imageUrl, Long id) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.id = id;

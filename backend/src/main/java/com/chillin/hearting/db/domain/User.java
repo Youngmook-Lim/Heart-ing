@@ -78,7 +78,7 @@ public class User implements Serializable {
 
     // 카카오 사용자 회원가입
     @Builder
-    public User(String id, String type, String email, String nickname, long messageTotal) {
+    public User(String id, String type, String email, String nickname, Long messageTotal) {
         this.id = id;
         this.type = type;
         this.email = email;
