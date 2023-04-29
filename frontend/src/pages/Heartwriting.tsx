@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IMessageSendTypes } from '../types/messageType';
 import { getUserInfo } from '../features/userInfo';
-import { useRecoilValue } from 'recoil';
 import { getMessageHeartApi, sendMessageApi } from '../features/api/messageApi';
 import HeartwritingSelectHeart from '../components/heartwrting/HeartwritingSelectHeart';
 import HeartwritingMessage from '../components/heartwrting/HeartwritingMessage';

@@ -5,13 +5,10 @@ import { IUpdateProfileTypes } from "../../types/userType";
 import BubbleArrow from "../../assets/images/png/bubble_arrow.png";
 
 function HeartBoardProfileBox({ ...props }) {
-  console.log("내가 프롭", props);
   const isMyBoard = useRecoilValue(isMyBoardAtom);
   const [isSetting, setIsSetting] = useState(false);
   const [newNickname, setNewNickname] = useState(props.userProfile.nickname);
-  const [newStatusMessage, setNewStatusMessage] = useState(
-    props.userProfile.statusMessage
-  );
+  const [newStatusMessage, setNewStatusMessage] = useState(props.userProfile.statusMessage);
 
   const onStateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsSetting(true);
@@ -30,8 +27,13 @@ function HeartBoardProfileBox({ ...props }) {
   };
 
   const onNicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentNickname = e.currentTarget.value;
-    setNewNickname(currentNickname);
+    if (e.currentTarget.value.length > 8) {
+      const currentNickname = e.currentTarget.value.substr(0, 8)
+      setNewNickname(currentNickname);
+    } else {
+      const currentNickname = e.currentTarget.value;
+      setNewNickname(currentNickname);
+    }
   };
 
   const onStatusMessageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +49,7 @@ function HeartBoardProfileBox({ ...props }) {
             <div className="w-11 text-sm leading-10 my-1 ml-2">닉네임</div>
             <input
               type="text"
-              value={newNickname}
+              defaultValue={props.userProfile.nickname}
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
@@ -63,7 +65,7 @@ function HeartBoardProfileBox({ ...props }) {
 
             <input
               type="text"
-              value={newStatusMessage}
+              defaultValue={props.userProfile.statusMessage}
               onChange={onStatusMessageHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
