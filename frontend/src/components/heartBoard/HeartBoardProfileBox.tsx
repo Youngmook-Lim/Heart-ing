@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isMyBoardAtom } from "../../atoms/messageAtoms";
 import { IUpdateProfileTypes } from "../../types/userType";
@@ -41,6 +41,12 @@ function HeartBoardProfileBox({ ...props }) {
     setNewStatusMessage(currentStatusMessage);
   };
 
+  useEffect(() => {
+    console.log('닉네임', newNickname)
+    console.log(newStatusMessage)
+    console.log(props)
+  }, [props])
+
   return (
     <div className="pt-3">
       {isSetting ? (
@@ -49,7 +55,7 @@ function HeartBoardProfileBox({ ...props }) {
             <div className="w-11 text-sm leading-10 my-1 ml-2">닉네임</div>
             <input
               type="text"
-              defaultValue={props.userProfile.nickname}
+              defaultValue={newNickname}
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
@@ -65,7 +71,7 @@ function HeartBoardProfileBox({ ...props }) {
 
             <input
               type="text"
-              defaultValue={props.userProfile.statusMessage}
+              defaultValue={newStatusMessage}
               onChange={onStatusMessageHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
