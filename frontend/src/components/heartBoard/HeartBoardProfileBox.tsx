@@ -50,7 +50,6 @@ function HeartBoardProfileBox({ ...props }) {
             <input
               type="text"
               defaultValue={props.userProfile.nickname}
-              value={newNickname}
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />

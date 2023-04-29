@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
+import { isLoginAtom, userNicknameAtom, userStautsMessageAtom } from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 
 import { IUpdateProfileTypes } from "../types/userType";
@@ -27,6 +27,7 @@ function HeartBoard() {
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);
+  const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom)
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -36,6 +37,7 @@ function HeartBoard() {
       if (!userId) return;
       const data = await getProfile(userId);
       if (data.status === "success") {
+        setUserNickname(data.data.nickname)
         setUserProfile(data.data);
       } else {
         console.log("에러났당");
