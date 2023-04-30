@@ -17,5 +17,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     show-sql: true
   profiles:
-    include: oauth
+    include:
+      - oauth
+      - hearting
 
