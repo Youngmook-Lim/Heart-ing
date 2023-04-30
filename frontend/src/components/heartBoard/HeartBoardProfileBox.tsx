@@ -55,7 +55,8 @@ function HeartBoardProfileBox({ ...props }) {
             <div className="w-11 text-sm leading-10 my-1 ml-2">닉네임</div>
             <input
               type="text"
-              defaultValue={newNickname}
+              defaultValue={props.userProfile.nickname}
+              value={newNickname}
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
@@ -68,10 +69,10 @@ function HeartBoardProfileBox({ ...props }) {
                 메세지
               </div>
             </div>
-
             <input
               type="text"
-              defaultValue={newStatusMessage}
+              defaultValue={props.userProfile.statusMessage}
+              value={newStatusMessage}
               onChange={onStatusMessageHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
