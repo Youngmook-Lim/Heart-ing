@@ -20,7 +20,7 @@ public class HeartDetailData implements Data {
     private String longDescription;
     private String type;
     private String acqCondition;
-    private String isLocked;
+    private Boolean isLocked;
 
     public static HeartDetailData of(Heart heart) {
         return HeartDetailData.builder()
