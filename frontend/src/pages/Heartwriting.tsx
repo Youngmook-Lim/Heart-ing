@@ -91,7 +91,6 @@ function Heartwriting() {
         <button onClick={onSendHandler} className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5">
           <div className="text-2xl">전달하기</div>
         </button>
-        // null
         :
         <button onClick={setMode} className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5" disabled={selectedHeartId ? false : true}>
           <div className="text-2xl">다 음</div>
