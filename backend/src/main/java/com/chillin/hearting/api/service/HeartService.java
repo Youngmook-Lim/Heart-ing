@@ -1,11 +1,14 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.data.HeartData;
+import com.chillin.hearting.api.data.HeartDetailData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
 import com.chillin.hearting.db.repository.HeartRepository;
 import com.chillin.hearting.db.repository.UserHeartRepository;
+import com.chillin.hearting.exception.HeartNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -85,4 +88,22 @@ public class HeartService {
         return resHearts;
     }
 
+    public Data findHeartDetail(User user, Long heartId) {
+        Heart findHeart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
+        HeartDetailData heartDetailData = HeartDetailData.of(findHeart);
+
+        if (DEFAULT_TYPE.equals(findHeart.getType())) {
+            heartDetailData.setIsLocked(false);
+        } else {
+            if (user != null) {
+                String userId = user.getId();
+                List<UserHeart> findUserHeart = userHeartRepository.findByHeartIdAndUserId(heartId, userId);
+                if (findUserHeart.size() > 0) {
+                    heartDetailData.setIsLocked(false);
+                }
+            }
+        }
+
+        return heartDetailData;
+    }
 }
