@@ -52,3 +52,7 @@ export interface IHeartInfoTypes {
   type: string,
   isLocked: string,
 }
+
+export interface ITotalHeartType {
+  totalHeartCnt: number;
+}

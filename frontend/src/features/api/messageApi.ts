@@ -104,3 +104,16 @@ export async function getMessageHeartApi() {
     return null;
   }
 }
+
+export async function getTotalHeartApi() {
+  try {
+    const res = await axios.get("api/v1/home/total-count");
+    const data = res.data;
+    console.log("이 만큼~", data.data.totalHeartCount)
+    return data.data.totalHeartCount;
+  } catch (err) {
+    console.log("오 토탈 하트 갯수 안왔는뎅~");
+    console.log(err);
+    return null;
+  }
+}

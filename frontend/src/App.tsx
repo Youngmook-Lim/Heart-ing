@@ -13,6 +13,7 @@ import ReceivedHeart from "./pages/ReceivedHeart";
 import SentHeart from "./pages/SentHeart";
 import Setting from "./pages/Setting";
 import Navbar from "./components/navbar/Navbar";
+import ManualSection from "./components/manual/ManualSection"
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/heartwriting" element={<Heartwriting />} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
           <Route path="/manual" element={<Manual />} />
+          <Route path="/manual2" element={<ManualSection />} />
           <Route path="/receivedheart" element={<ReceivedHeart />} />
           <Route path="/sentheart" element={<SentHeart />} />
           <Route path="/setting" element={<Setting />} />
