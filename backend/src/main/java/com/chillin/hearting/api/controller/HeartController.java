@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.controller;
 
+import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.data.HeartData;
 import com.chillin.hearting.api.data.HeartListData;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,4 +45,11 @@ public class HeartController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/{heartId}")
+    public ResponseEntity<ResponseDTO> findHeartDetail(@PathVariable("heartId") Long heartId, HttpServletRequest httpServletRequest) {
+        User user = (User) httpServletRequest.getAttribute("user");
+        Data data = heartService.findHeartDetail(user, heartId);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(data).build();
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 }
