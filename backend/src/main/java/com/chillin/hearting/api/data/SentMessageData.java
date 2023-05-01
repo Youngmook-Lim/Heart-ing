@@ -26,7 +26,9 @@ public class SentMessageData {
     private LocalDateTime createdDate;
     private LocalDateTime expiredDate;
 
-    public static SentMessageData of(Message message, Heart heart, Emoji emoji) {
+    public static SentMessageData of(Message message) {
+        Emoji emoji = message.getEmoji();
+        Heart heart = message.getHeart();
         return SentMessageData.builder()
                 .messageId(message.getId())
                 .title(message.getTitle())
