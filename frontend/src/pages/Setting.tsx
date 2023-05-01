@@ -24,7 +24,6 @@ function Setting() {
   };
 
   const onSaveNicknameHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('닉네임은 이겁니다', Nickname)
     const body = { nickname: Nickname };
     const message = await modifyNickname(body);
 
@@ -38,15 +37,23 @@ function Setting() {
   };
 
   return (
-    <div>
-      닉네임 세팅
-      <input
-        type='text'
-        onChange={onNicknameHandler} />
-      {nicknameFormError}
-      <button
-        onClick={onSaveNicknameHandler}
-        disabled={nicknameFormError ? true : false}>수정</button>
+    <div className="container mx-auto px-6 py-8">
+      <div className="modal border-hrtColorPink pb-10">
+        <div className="modal-header bg-hrtColorPink border-hrtColorPink">
+          닉네임 설정
+        </div>
+        <input
+        className="w-72 mt-10 mb-2 text-center border-b-2 border-hrtColorPink outline-none"
+          type='text'
+          placeholder='닉네임을 입력해주세요'
+          onChange={onNicknameHandler} />
+          <br/>
+        {nicknameFormError}
+        </div>
+        <button
+          className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)] my-5"
+          onClick={onSaveNicknameHandler}
+          disabled={nicknameFormError ? true : false}>설정하기</button>
     </div>
   )
 }
