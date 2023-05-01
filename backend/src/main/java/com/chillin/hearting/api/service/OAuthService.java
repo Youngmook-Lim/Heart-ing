@@ -10,7 +10,7 @@ import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import com.chillin.hearting.jwt.AuthToken;
 import com.chillin.hearting.oauth.domain.ProviderType;
-import com.chillin.hearting.oauth.service.OAuth2Attribute;
+import com.chillin.hearting.oauth.info.OAuth2Attribute;
 import com.chillin.hearting.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

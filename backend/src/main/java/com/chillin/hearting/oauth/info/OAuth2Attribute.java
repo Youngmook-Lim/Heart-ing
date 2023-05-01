@@ -1,4 +1,4 @@
-package com.chillin.hearting.oauth.service;
+package com.chillin.hearting.oauth.info;
 
 
 import lombok.AccessLevel;
