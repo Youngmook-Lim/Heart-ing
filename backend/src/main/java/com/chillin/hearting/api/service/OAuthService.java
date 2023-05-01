@@ -40,6 +40,8 @@ public class OAuthService {
     private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ROLE = "ROLE_USER";
+    private static final String CLIENT_PROVIDER = "spring.security.oauth2.client.provider.";
+    private static final String CLIENT_REGISTRATION = "spring.security.oauth2.client.registration.";
 
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
@@ -103,15 +105,15 @@ public class OAuthService {
 
         String socialAccessToken = "";
         try {
-            String tokenUri = environment.getProperty("spring.security.oauth2.client.provider." + provider + ".token-uri");
+            String tokenUri = environment.getProperty(CLIENT_PROVIDER + provider + ".token-uri");
             URL url = new URL(tokenUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
-            String clientId = environment.getProperty("spring.security.oauth2.client.registration." + provider + ".client-id");
-            String clientSecret = environment.getProperty("spring.security.oauth2.client.registration." + provider + ".client-secret");
-            String redirectUri = environment.getProperty("spring.security.oauth2.client.registration." + provider + ".redirect-uri");
+            String clientId = environment.getProperty(CLIENT_REGISTRATION + provider + ".client-id");
+            String clientSecret = environment.getProperty(CLIENT_REGISTRATION + provider + ".client-secret");
+            String redirectUri = environment.getProperty(CLIENT_REGISTRATION + provider + ".redirect-uri");
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
@@ -156,7 +158,7 @@ public class OAuthService {
         User user = null;
 
         try {
-            String userInfoUri = environment.getProperty("spring.security.oauth2.client.provider." + provider + ".user-info-uri");
+            String userInfoUri = environment.getProperty(CLIENT_PROVIDER + provider + ".user-info-uri");
             URL url = new URL(userInfoUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
