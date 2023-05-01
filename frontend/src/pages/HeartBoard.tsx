@@ -31,6 +31,8 @@ function HeartBoard() {
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const [spaceSize, setSpaceSize] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);
   const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom);
@@ -45,6 +47,7 @@ function HeartBoard() {
       if (data.status === "success") {
         setUserNickname(data.data.nickname);
         setUserProfile(data.data);
+        setTotalCount(data.data.messageTotal);
       } else {
         console.log("에러났당");
         navigate("/notfound");
@@ -103,8 +106,20 @@ function HeartBoard() {
       <div
         className={`heartBoard border-hrtColorPink h-[calc(100vh-${spaceSize}px)]`}
       >
-        <div className="heartBoard-header bg-hrtColorPink border-hrtColorPink">
-          마음 수신함
+        <div className="heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between">
+          <div>마음 수신함</div>
+          <div className="flex mt-0.5">
+            <svg
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              className="h-6 my-2 mx-1 pb-1"
+            >
+              <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z"></path>
+            </svg>
+            {totalCount}
+          </div>
         </div>
         <div className="pb-4">
           <HeartBoardProfileBox

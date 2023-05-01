@@ -49,7 +49,7 @@ module.exports = {
           lineHeight: "2.5rem",
           textAlign: "left",
           paddingLeft: "0.5rem",
-          // paddingRight: "0.125rem",
+          paddingRight: "0.125rem",
           // borderBottomWidth: "0.25rem",
           // outlineStyle: "solid",
           // boxSizing: "border-box",
@@ -76,6 +76,7 @@ module.exports = {
           lineHeight: "2.5rem",
           textAlign: "left",
           paddingLeft: "0.5rem",
+          paddingRight: "0.5rem",
           boxShadow: "0 0 0 0.25rem #fb8bb0",
         },
       });
