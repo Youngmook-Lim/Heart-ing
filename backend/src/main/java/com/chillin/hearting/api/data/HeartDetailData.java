@@ -31,6 +31,7 @@ public class HeartDetailData implements Data {
                 .longDescription(heart.getLongDescription())
                 .type(heart.getType())
                 .acqCondition(heart.getAcqCondition())
+                .isLocked(true)
                 .build();
     }
 }
