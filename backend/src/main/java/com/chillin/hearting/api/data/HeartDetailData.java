@@ -16,6 +16,4 @@ public class HeartDetailData implements Data {
     private String type;
     private String acqCondition;
     private String isLocked;
-    private String sendCnt;
-    private String receivedCnt;
 }
