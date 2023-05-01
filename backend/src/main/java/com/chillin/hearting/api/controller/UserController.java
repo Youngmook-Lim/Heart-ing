@@ -5,6 +5,7 @@ import com.chillin.hearting.api.request.LoginTestReq;
 import com.chillin.hearting.api.request.UpdateNicknameReq;
 import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
+import com.chillin.hearting.api.service.OAuthService;
 import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
@@ -32,11 +33,13 @@ public class UserController {
     // 테스트용 service
     private final UserTestService userTestService;
 
+    private final OAuthService oAuthService;
+
 
     @GetMapping("/guests/social/{code}")
     public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
-        Data socialLoginData = userService.kakaoLogin(code, httpServletRequest, httpServletResponse);
+        Data socialLoginData = oAuthService.kakaoLogin(code, "kakao", httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
