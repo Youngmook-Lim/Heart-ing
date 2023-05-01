@@ -9,7 +9,6 @@ import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
-import com.chillin.hearting.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -97,9 +96,8 @@ public class UserController {
     public ResponseEntity<ResponseDTO> logoutUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         User user = (User) httpServletRequest.getAttribute("user");
 
-        userService.deleteRefreshToken(user.getId());
+        userService.deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
 
-        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
@@ -126,9 +124,8 @@ public class UserController {
 
     // access token 재발급
     @GetMapping("/users/access-token")
-    public ResponseEntity<ResponseDTO> reissueAccessToken(HttpServletRequest httpServletRequest) {
-        User user = (User) httpServletRequest.getAttribute("user");
-        Data data = userService.reissueAccessToken(user.getId(), httpServletRequest);
+    public ResponseEntity<ResponseDTO> reissueAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        Data data = userService.reissueAccessToken(httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
