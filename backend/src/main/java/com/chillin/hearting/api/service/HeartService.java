@@ -58,7 +58,7 @@ public class HeartService {
         return resHearts;
     }
 
-    public List<HeartData> findMessageHearts(User user) {
+    public List<HeartData> findUserHearts(User user) {
         log.debug("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
         List<Heart> findHearts = heartRepository.findAllByType(DEFAULT_TYPE);
