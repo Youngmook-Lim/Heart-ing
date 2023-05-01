@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class SentMessageListData implements Data {
-    private List<SentMessageData> sentMessageDataList;
+    private List<SentMessageData> sentMessageList;
 }
