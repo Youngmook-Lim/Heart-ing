@@ -161,7 +161,7 @@ public class OAuthService {
             String userInfoUri = environment.getProperty(CLIENT_PROVIDER + provider + ".user-info-uri");
             URL url = new URL(userInfoUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
             int responseCode = conn.getResponseCode();
             log.debug("responseCode : {} ", responseCode);
