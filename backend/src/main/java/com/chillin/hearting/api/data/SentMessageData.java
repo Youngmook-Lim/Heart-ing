@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-public class SentMessageData {
+public class SentMessageData implements Data {
     private Long messageId;
     private String title;
+    private String content;
     private Long heartId;
     private String heartName;
     private String heartUrl;
