@@ -52,20 +52,30 @@ public class AuthTokenProvider {
 
         log.debug("getAuthentication 메서드로 들어왔당");
         if (authToken.validate()) {
-
             Claims claims = authToken.getTokenClaims();
-            Collection<? extends GrantedAuthority> authorities =
-                    Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
-
-            log.debug("claims subject := [{}]", claims.getSubject());
-
-            PrincipalDetails principalDetails = new PrincipalDetails(userRepository.findById(String.valueOf(claims.get("id"))).orElse(null));
-            return new UsernamePasswordAuthenticationToken(principalDetails, authToken, authorities);
+            return getRealAuthentication(claims, authToken);
         } else {
             throw new TokenValidFailedException();
         }
+    }
+
+    public Authentication getExpiredUser(AuthToken authToken) {
+
+        Claims claims = authToken.getExpiredTokenClaims();
+        return getRealAuthentication(claims, authToken);
+    }
+
+    public Authentication getRealAuthentication(Claims claims, AuthToken authToken) {
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+        log.debug("claims subject := [{}]", claims.getSubject());
+
+        PrincipalDetails principalDetails = new PrincipalDetails(userRepository.findById(String.valueOf(claims.get("id"))).orElse(null));
+        return new UsernamePasswordAuthenticationToken(principalDetails, authToken, authorities);
     }
 
 }

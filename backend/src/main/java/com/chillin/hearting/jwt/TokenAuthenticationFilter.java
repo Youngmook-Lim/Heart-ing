@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,17 +18,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthTokenProvider tokenProvider;
+    private final List<String> excludedUris = Arrays.asList("/api/v1/auth/users/access-token"); // 여기에 건너뛸 URI 추가
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if (skipFilterForUri(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String headerToken = HeaderUtil.getAccessToken(request);
         log.debug("헤더로 넘어온 토큰 : {}", headerToken);
@@ -64,5 +70,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
 
+    }
+
+    private boolean skipFilterForUri(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return excludedUris.stream().anyMatch(requestURI::equals);
     }
 }

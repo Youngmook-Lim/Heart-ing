@@ -5,22 +5,24 @@ import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
 import com.chillin.hearting.db.repository.UserRepository;
-import com.chillin.hearting.exception.JwtNotExpiredException;
 import com.chillin.hearting.exception.NotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import com.chillin.hearting.jwt.AuthToken;
 import com.chillin.hearting.jwt.AuthTokenProvider;
 import com.chillin.hearting.oauth.domain.AppProperties;
+import com.chillin.hearting.oauth.domain.PrincipalDetails;
 import com.chillin.hearting.oauth.domain.ProviderType;
 import com.chillin.hearting.util.CookieUtil;
 import com.chillin.hearting.util.HeaderUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -262,11 +264,15 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteRefreshToken(String userId) {
+    public void deleteRefreshToken(String userId, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         user.deleteRefreshToken();
+
+        userRepository.save(user);
+
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
 
     }
 
@@ -283,23 +289,24 @@ public class UserService {
     }
 
     // access token 재발급
-    public ReissuedAccessTokenData reissueAccessToken(String userId, HttpServletRequest httpServletRequest) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    @Transactional
+    public ReissuedAccessTokenData reissueAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
         String headerAccessToken = HeaderUtil.getAccessToken(httpServletRequest);
 
         AuthToken authHeaderAccessToken = tokenProvider.convertAuthToken(headerAccessToken);
+        Authentication authentication = tokenProvider.getExpiredUser(authHeaderAccessToken);
 
-        if (authHeaderAccessToken.getExpiredTokenClaims() != null) {
-            log.debug("access token 유효기간이 남아있습니다.");
-            throw new JwtNotExpiredException();
-        }
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
+//        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(UserNotFoundException::new);
+        User user = principalDetails.getUser();
         String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new UnAuthorizedException("쿠키에 refresh token이 없습니다. 다시 로그인 해주세요."));
+                .orElse(null);
 
-        if (!refreshToken.equals(user.getRefreshToken())) {
+        if (refreshToken == null || !refreshToken.equals(user.getRefreshToken())) {
+            deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
             throw new UnAuthorizedException("DB에 저장되어 있는 refreshToken과 다릅니다. 다시 로그인 해주세요.");
         }
 
@@ -307,10 +314,18 @@ public class UserService {
 
         AuthToken authTokenRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
-        if (!authTokenRefreshToken.validate() || user.getRefreshToken() == null) {
+        Claims refreshClaims = authTokenRefreshToken.getExpiredTokenClaims();
+
+        long expirationTime = refreshClaims.get("exp", Long.class); // "exp" 필드 값을 가져옵니다.
+        long currentTime = System.currentTimeMillis() / 1000; // 현재 시간을 초 단위로 가져옵니다.
+
+        if (expirationTime < currentTime || user.getRefreshToken() == null) {
             log.debug("유효하지 않은 refresh token 입니다.");
+            deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
+
             throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
         }
+
 
         AuthToken accessToken = makeAccessToken(user.getId());
 
