@@ -9,6 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SentMessageListData {
+public class SentMessageListData implements Data {
     private List<SentMessageData> sentMessageDataList;
 }
