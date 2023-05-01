@@ -26,15 +26,15 @@ public class Heart implements Serializable {
     @Column(name = "image_url", unique = true, nullable = false, length = 200)
     private String imageUrl;
 
-    @Column(name = "short_description", unique = true, nullable = false, length = 500)
+    @Column(name = "short_description", nullable = false, length = 500)
     private String shortDescription;
 
-    @Column(name = "long_description", unique = true, nullable = false, length = 500)
+    @Column(name = "long_description", nullable = false, length = 500)
     private String longDescription;
 
     @Column(name = "type", nullable = false, length = 100)
     private String type;
 
-    @Column(name = "acq_condition", unique = true, nullable = true, length = 500)
+    @Column(name = "acq_condition", nullable = true, length = 500)
     private String acqCondition;
 }

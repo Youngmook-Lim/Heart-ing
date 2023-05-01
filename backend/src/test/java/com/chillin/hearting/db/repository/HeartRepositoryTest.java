@@ -2,7 +2,6 @@ package com.chillin.hearting.db.repository;
 
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,26 +16,8 @@ public class HeartRepositoryTest {
     @Autowired
     private HeartRepository heartRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    private Heart savedDefaultHeart;
-    private Heart savedSpecialHeart;
-    private User savedUser;
-
-    private final static String DEFAULT_TYPE = "DEFAULT";
-
-    @BeforeEach
-    void 데이터생성() {
-        Heart defaultHeart = createDefaultHeart();
-        Heart specialHeart = createSpecialHeart();
-        User user = createUser();
-
-        savedDefaultHeart = heartRepository.save(defaultHeart);
-        savedSpecialHeart = heartRepository.save(specialHeart);
-        savedUser = userRepository.save(user);
-    }
-
+    private static final String DEFAULT_TYPE = "DEFAULT";
+    private static final String SPECIAL_TYPE = "SPECIAL";
 
     @Test
     void 모든도감조회() {
@@ -44,26 +25,21 @@ public class HeartRepositoryTest {
         List<Heart> heartList = heartRepository.findAll();
 
         // then
-        assertThat(heartList)
-                .anySatisfy(heart -> {
-                    assertThat(heart.getName()).isEqualTo(savedDefaultHeart.getName());
-                });
+        assertThat(heartList).hasSize(7);
 
         assertThat(heartList).extracting("type")
-                .containsOnly("DEFAULT", "SPECIAL");
+                .containsOnly(DEFAULT_TYPE, SPECIAL_TYPE);
     }
 
     @Test
     void 기본하트조회() {
         // when
-        List<Heart> heartList = heartRepository.findAllByType("SPECIAL");
+        List<Heart> heartList = heartRepository.findAllByType(DEFAULT_TYPE);
 
         // then
-        System.out.println(heartList.size());
         assertThat(heartList)
                 .allSatisfy(heart -> {
                     assertThat(heart.getType().equals(DEFAULT_TYPE));
-                    System.out.println(heart.getName());
                 });
     }
 
