@@ -13,6 +13,7 @@ import com.chillin.hearting.jwt.AuthTokenProvider;
 import com.chillin.hearting.oauth.domain.AppProperties;
 import com.chillin.hearting.oauth.domain.PrincipalDetails;
 import com.chillin.hearting.oauth.domain.ProviderType;
+import com.chillin.hearting.oauth.service.OAuth2Attribute;
 import com.chillin.hearting.util.CookieUtil;
 import com.chillin.hearting.util.HeaderUtil;
 import io.jsonwebtoken.Claims;
@@ -67,6 +68,7 @@ public class UserService {
     private final BlockedUserRepository blockedUserRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
+
 
     @Value("${app.auth.refresh-token-expiry}")
     private long refreshTokenExpiry;
@@ -193,12 +195,15 @@ public class UserService {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(kakaoResponse.toString());
 
-            Map<String, Object> kakaoAccount = (Map<String, Object>) jsonObject.get("kakao_account");
+            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("kakao", (Map<String, Object>) jsonObject);
 
-            String email = (String) kakaoAccount.get("email");
-            log.debug("kakao에 등록된 이메일 : {}", email);
+//            Map<String, Object> kakaoAccount = (Map<String, Object>) jsonObject.get("kakao_account");
 
-            user = userRepository.findByEmail(email).orElse(null);
+//            String email = (String) kakaoAccount.get("email");
+            log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
+            log.debug("kakao에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
+
+            user = userRepository.findByEmail(oAuth2Attribute.getEmail()).orElse(null);
 
             if (user != null) {
                 log.debug("카카오로 로그인을 한 적이 있는 user입니다.");
@@ -227,7 +232,7 @@ public class UserService {
                 String nickname = "";
 
                 UUID uuid = UUID.randomUUID();
-                user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(email).nickname(nickname).build();
+                user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
         } catch (UnAuthorizedException e) {
