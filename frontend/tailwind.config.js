@@ -35,9 +35,12 @@ module.exports = {
     plugin(function ({ addComponents }) {
       addComponents({
         ".modal": {
-          borderWidth: "4px",
-          borderRadius: "0.125rem",
+          // borderWidth: "0.25rem",
+          // borderRadius: "0.125rem",
           backgroundColor: "#fff",
+          // outlineStyle: "solid",
+          // outlineWidth: "4px",
+          boxShadow: "0 0 0 0.25rem #43316b",
         },
         ".modal-header": {
           color: "#fff",
@@ -46,8 +49,12 @@ module.exports = {
           lineHeight: "2.5rem",
           textAlign: "left",
           paddingLeft: "0.5rem",
-          paddingRight: "0.125rem",
-          borderBottomWidth: "4px",
+          // paddingRight: "0.125rem",
+          // borderBottomWidth: "0.25rem",
+          // outlineStyle: "solid",
+          // boxSizing: "border-box",
+          boxShadow: "0 0 0 0.25rem #43316b",
+          // margin: "-0.25rem",
         },
         ".modal-button": {
           borderWidth: "2px",
@@ -57,6 +64,19 @@ module.exports = {
           height: "2.5rem" /* 40px */,
           lineHeight: "2.25rem",
           fontSize: "1rem" /* 16px */,
+        },
+        ".heartBoard": {
+          backgroundColor: "#fff",
+          boxShadow: "0 0 0 0.25rem #fb8bb0",
+        },
+        ".heartBoard-header": {
+          color: "#fff",
+          height: "2.5rem",
+          fontSize: "1.25rem" /* 16px */,
+          lineHeight: "2.5rem",
+          textAlign: "left",
+          paddingLeft: "0.5rem",
+          boxShadow: "0 0 0 0.25rem #fb8bb0",
         },
       });
     }),
