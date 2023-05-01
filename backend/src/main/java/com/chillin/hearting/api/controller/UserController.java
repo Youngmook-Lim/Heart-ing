@@ -39,7 +39,7 @@ public class UserController {
     @GetMapping("/guests/social/{code}")
     public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
-        Data socialLoginData = oAuthService.kakaoLogin(code, "kakao", httpServletRequest, httpServletResponse);
+        Data socialLoginData = oAuthService.socialLogin(code, "kakao", httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)

@@ -9,7 +9,6 @@ import com.chillin.hearting.exception.NotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import com.chillin.hearting.jwt.AuthToken;
-import com.chillin.hearting.oauth.domain.ProviderType;
 import com.chillin.hearting.oauth.info.OAuth2Attribute;
 import com.chillin.hearting.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -53,34 +52,34 @@ public class OAuthService {
 
 
     @Transactional
-    public SocialLoginData kakaoLogin(String code, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
+    public SocialLoginData socialLogin(String code, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
 
-        String kakaoAccessToken = getKakaoAccessToken(code, provider);
+        String socialAccessToken = getSocialAccessToken(code, provider);
 
         SocialLoginData socialLoginData = null;
 
         try {
-            User kakaoUser = getKakaoInfo(kakaoAccessToken, provider);
-            log.debug("{}", kakaoUser);
+            User socialUser = getSocialUserInfo(socialAccessToken, provider);
+            log.debug("{}", socialUser);
 
-            if (kakaoUser == null) {
-                throw new NotFoundException("카카오로부터 user 정보를 가져오지 못했습니다.");
+            if (socialUser == null) {
+                throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
             }
 
-            AuthToken accessToken = userService.makeAccessToken(kakaoUser.getId());
+            AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
 
             AuthToken refreshToken = userService.makeRefreshToken();
 
             log.debug("accessToken : {}", accessToken.getToken());
             log.debug("refreshToken : {}", refreshToken.getToken());
 
-            kakaoUser.saveRefreshToken(refreshToken.getToken());
-            log.debug("kakaoUser 리프레시 토큰 저장한 후 : {}", kakaoUser.getRefreshToken());
-            userRepository.saveAndFlush(kakaoUser);
+            socialUser.saveRefreshToken(refreshToken.getToken());
+            log.debug(provider + "User 리프레시 토큰 저장한 후 : {}", socialUser.getRefreshToken());
+            userRepository.saveAndFlush(socialUser);
 
             socialLoginData = SocialLoginData.builder()
-                    .userId(kakaoUser.getId())
-                    .nickname(kakaoUser.getNickname())
+                    .userId(socialUser.getId())
+                    .nickname(socialUser.getNickname())
                     .accessToken(accessToken.getToken())
                     .build();
 
@@ -91,7 +90,7 @@ public class OAuthService {
 
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException("카카오로부터 user 정보를 가져오지 못했습니다.");
+            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
         } catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
         }
@@ -100,9 +99,9 @@ public class OAuthService {
     }
 
     // 카카오에서 access token 받아오기
-    public String getKakaoAccessToken(String code, String provider) {
+    public String getSocialAccessToken(String code, String provider) {
 
-        String kakaoAccessToken = "";
+        String socialAccessToken = "";
         try {
             String tokenUri = environment.getProperty("spring.security.oauth2.client.provider." + provider + ".token-uri");
             URL url = new URL(tokenUri);
@@ -126,20 +125,20 @@ public class OAuthService {
             bw.flush();
 
             int responseCode = conn.getResponseCode();
-            log.debug("카카오에서 access token 받아오기 response code : {}  ", responseCode);
+            log.debug(provider + "에서 access token 받아오기 response code : {}  ", responseCode);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
-            StringBuilder kakaoResponse = new StringBuilder();
+            StringBuilder socialResponse = new StringBuilder();
 
             while ((line = br.readLine()) != null) {
-                kakaoResponse.append(line);
+                socialResponse.append(line);
             }
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(kakaoResponse.toString());
+            JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
-            kakaoAccessToken = (String) jsonObject.get("access_token");
+            socialAccessToken = (String) jsonObject.get("access_token");
 
             br.close();
             bw.close();
@@ -147,12 +146,13 @@ public class OAuthService {
             log.error(e.getMessage());
         }
 
-        return kakaoAccessToken;
+        return socialAccessToken;
     }
 
     // 카카오에서 회원정보 받아오기
     @Transactional
-    public User getKakaoInfo(String kakaoAccessToken, String provider) {
+    public User getSocialUserInfo(String kakaoAccessToken, String provider) {
+
         User user = null;
 
         try {
@@ -168,26 +168,26 @@ public class OAuthService {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
-            StringBuilder kakaoResponse = new StringBuilder();
+            StringBuilder socialResponse = new StringBuilder();
 
             while ((line = br.readLine()) != null) {
-                kakaoResponse.append(line);
+                socialResponse.append(line);
             }
 
-            log.debug("카카오에서 사용자 정보 가져오기 response body : {} ", kakaoResponse);
+            log.debug(provider + "에서 사용자 정보 가져오기 response body : {} ", socialResponse);
 
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(kakaoResponse.toString());
+            JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
-            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of("kakao", (Map<String, Object>) jsonObject);
+            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, (Map<String, Object>) jsonObject);
 
             log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
-            log.debug("kakao에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
+            log.debug(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
             user = userRepository.findByEmail(oAuth2Attribute.getEmail()).orElse(null);
 
             if (user != null) {
-                log.debug("카카오로 로그인을 한 적이 있는 user입니다.");
+                log.debug(provider + "로 로그인을 한 적이 있는 user입니다.");
 
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
@@ -208,12 +208,12 @@ public class OAuthService {
                     throw new UnAuthorizedException("out");
                 }
             } else {
-                log.debug("카카오 로그인 최초입니다.");
+                log.debug(provider + " 로그인 최초입니다.");
 
                 String nickname = "";
 
                 UUID uuid = UUID.randomUUID();
-                user = User.builder().id(uuid.toString()).type(ProviderType.KAKAO.toString()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
+                user = User.builder().id(uuid.toString()).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
         } catch (UnAuthorizedException e) {
