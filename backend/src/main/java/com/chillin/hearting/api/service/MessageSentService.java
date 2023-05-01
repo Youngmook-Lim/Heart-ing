@@ -28,6 +28,6 @@ public class MessageSentService {
         for (Message message : findMessages) {
             sendMessageDatas.add(SentMessageData.of(message));
         }
-        return SentMessageListData.builder().sentMessageDataList(sendMessageDatas).build();
+        return SentMessageListData.builder().sentMessageList(sendMessageDatas).build();
     }
 }
