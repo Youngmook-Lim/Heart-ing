@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginAtom, userNicknameAtom, userStautsMessageAtom } from "../atoms/userAtoms";
+import {
+  isLoginAtom,
+  userNicknameAtom,
+  userStautsMessageAtom,
+} from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 
 import { IUpdateProfileTypes } from "../types/userType";
@@ -23,11 +27,13 @@ function HeartBoard() {
 
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
-  const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
+  // const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
+  const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
+  const [spaceSize, setSpaceSize] = useState(0);
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);
-  const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom)
+  const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom);
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -37,7 +43,7 @@ function HeartBoard() {
       if (!userId) return;
       const data = await getProfile(userId);
       if (data.status === "success") {
-        setUserNickname(data.data.nickname)
+        setUserNickname(data.data.nickname);
         setUserProfile(data.data);
       } else {
         console.log("에러났당");
@@ -48,17 +54,14 @@ function HeartBoard() {
   );
 
   // userId로 최근 메시지 리스트 가져오기
-  const getRecivedMessages = useCallback(
-    async (userId: string | null) => {
-      if (!userId) return;
-      console.log(userId);
-      const data = await getReceived(userId);
-      if (data.status === "success") {
-        setReceivedList(data.data.messageList);
-      }
-    },
-    []
-  );
+  const getRecivedMessages = useCallback(async (userId: string | null) => {
+    if (!userId) return;
+    console.log(userId);
+    const data = await getReceived(userId);
+    if (data.status === "success") {
+      setReceivedList(data.data.messageList);
+    }
+  }, []);
 
   async function updateProfile(profileInfo: IUpdateProfileTypes) {
     const nicknameBody = { nickname: profileInfo.nickname };
@@ -77,6 +80,8 @@ function HeartBoard() {
   useEffect(() => {
     // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
     setIsMyBoard(isLogin && userId === myId ? true : false);
+    if (isLogin && userId === myId) setSpaceSize(200);
+    else setSpaceSize(120);
     getUserProfile(userId);
     getRecivedMessages(userId);
     setReadMessage(false);
@@ -94,27 +99,35 @@ function HeartBoard() {
   ]);
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <div className="modal border-hrtColorPink">
-        <div className="modal-header bg-hrtColorPink border-hrtColorPink">
+    <div className="container mx-auto px-6 py-8 h-[calc(100vh-5rem)]">
+      <div
+        className={`heartBoard border-hrtColorPink h-[calc(100vh-${spaceSize}px)]`}
+      >
+        <div className="heartBoard-header bg-hrtColorPink border-hrtColorPink">
           마음 수신함
         </div>
-        <HeartBoardProfileBox
-          onChangeProfile={updateProfile}
-          userProfile={userProfile}
-        />
-        <div className="relative flex justify-center">
-          <img src={BackgroundHeart} alt="test" className="max-h-60" />
-          <div className="absolute inset-x-px top-1/3">
-          <HeartBoardMainButton
+        <div className="pb-4">
+          <HeartBoardProfileBox
+            onChangeProfile={updateProfile}
             userProfile={userProfile}
-            userId={userId}
           />
-          </div>
         </div>
+        {isMyBoard ? null : (
+          <div className="relative flex justify-center">
+            <img src={BackgroundHeart} alt="test" className="" />
+            <div className="absolute inset-x-px top-1/3">
+              <HeartBoardMainButton userProfile={userProfile} userId={userId} />
+            </div>
+          </div>
+        )}
         <HeartBoardList receivedList={receivedList} />
       </div>
-      {/* {isLogin ? null : <button>나의 마음 수신함 만들러가기</button>} */}
+      {isMyBoard ? (
+        <div className="my-4">
+          <HeartBoardMainButton userProfile={userProfile} userId={userId} />
+        </div>
+      ) : null}
+
       {readMessage ? <MessageModal mode={"recent"} /> : null}
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { IMessageInfoTypes } from "../../types/messageType";
 import { isMyBoardAtom } from "../../atoms/messageAtoms";
@@ -8,7 +8,7 @@ import { isMyBoardAtom } from "../../atoms/messageAtoms";
 import HeartItem from "../common/HeartItem";
 
 function HeartBoardList({ ...props }) {
-  const isMyBoard = useRecoilState(isMyBoardAtom);
+  const isMyBoard = useRecoilValue(isMyBoardAtom);
 
   const [recentMessageList, setRecentMessageList] = useState(
     props.receivedList
@@ -26,19 +26,37 @@ function HeartBoardList({ ...props }) {
     // 원본이 reverse되는 것을 막기 위해 복사본을 만듭니다
     const copyRecentMessageList = [...recentMessageList].reverse();
     return (
-      <div className="grid grid-cols-3 p-2">
-        {copyRecentMessageList.map(
-          ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
-            <HeartItem
-              key={messageId}
-              messageId={messageId}
-              heartId={heartId}
-              context={title}
-              isRead={isRead}
-            />
-          )
+      <>
+        {isMyBoard ? (
+          <div className="grid grid-cols-3 p-2 h-[calc(100vh-23rem)] overflow-auto">
+            {copyRecentMessageList.map(
+              ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
+                <HeartItem
+                  key={messageId}
+                  messageId={messageId}
+                  heartId={heartId}
+                  context={title}
+                  isRead={isRead}
+                />
+              )
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 p-2 h-[calc(100vh-38rem)] overflow-auto">
+            {copyRecentMessageList.map(
+              ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
+                <HeartItem
+                  key={messageId}
+                  messageId={messageId}
+                  heartId={heartId}
+                  context={title}
+                  isRead={isRead}
+                />
+              )
+            )}
+          </div>
         )}
-      </div>
+      </>
     );
   } else if (recentMessageList.length === 0) {
     return (
