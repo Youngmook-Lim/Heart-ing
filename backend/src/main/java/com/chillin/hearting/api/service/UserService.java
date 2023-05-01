@@ -23,6 +23,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,25 +50,11 @@ public class UserService {
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ROLE = "ROLE_USER";
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String KAKAO_CLIENT_ID;
-
-    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String KAKAO_CLIENT_SECRET;
-
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String KAKAO_REDIRECT_URI;
-
-    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
-    private String KAKAO_TOKEN_URI;
-
-    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
-    private String KAKAO_USER_INFO_URI;
-
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
+    private final Environment environment;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -126,17 +113,22 @@ public class UserService {
 
         String kakaoAccessToken = "";
         try {
-            URL url = new URL(KAKAO_TOKEN_URI);
+            String tokenUri = environment.getProperty("spring.security.oauth2.client.provider." + "kakao" + ".token-uri");
+            URL url = new URL(tokenUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
+            String clientId = environment.getProperty("spring.security.oauth2.client.registration." + "kakao" + ".client-id");
+            String clientSecret = environment.getProperty("spring.security.oauth2.client.registration." + "kakao" + ".client-secret");
+            String redirectUri = environment.getProperty("spring.security.oauth2.client.registration." + "kakao" + ".redirect-uri");
+
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + KAKAO_CLIENT_ID);
-            sb.append("&client_secret=" + KAKAO_CLIENT_SECRET);
-            sb.append("&redirect_uri=" + KAKAO_REDIRECT_URI);
+            sb.append("&client_id=" + clientId);
+            sb.append("&client_secret=" + clientSecret);
+            sb.append("&redirect_uri=" + redirectUri);
             sb.append("&code=" + code);
 
             bw.write(sb.toString());
@@ -173,7 +165,8 @@ public class UserService {
         User user = null;
 
         try {
-            URL url = new URL(KAKAO_USER_INFO_URI);
+            String userInfoUri = environment.getProperty("spring.security.oauth2.client.provider." + "kakao" + ".user-info-uri");
+            URL url = new URL(userInfoUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
