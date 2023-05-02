@@ -223,11 +223,13 @@ public class OAuthService {
                 String shortUuid = parseToShortUUID(uuid.toString());
                 log.debug("uuid long version : {}", uuid);
                 log.debug("uuid short version : {}", shortUuid);
+
                 if (userRepository.findById(shortUuid).isPresent()) {
                     log.debug("uuid 중복입니다.");
                     uuid = UUID.randomUUID();
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
+
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
