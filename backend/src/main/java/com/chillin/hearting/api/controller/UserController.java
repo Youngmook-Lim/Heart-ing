@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/status-message")
-    public ResponseEntity<ResponseDTO> updateStatusMessage(@RequestBody UpdateStatusMessageReq updateStatusMessageReq, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDTO> updateStatusMessage(@Valid @RequestBody UpdateStatusMessageReq updateStatusMessageReq, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
 
         Data data = userService.updateStatusMessage(user.getId(), updateStatusMessageReq.getStatusMessage());
