@@ -134,7 +134,7 @@ public class HeartService {
                             .heartId(dto.getHeartId())
                             .name(dto.getName())
                             .heartUrl(dto.getHeartUrl())
-                            .currentValue((dto.getCurrentValue() > 1) ? HEART_RAINBOW_MAX_VALUE : dto.getCurrentValue())
+                            .currentValue((dto.getCurrentValue() > HEART_RAINBOW_MAX_VALUE) ? HEART_RAINBOW_MAX_VALUE : dto.getCurrentValue())
                             .maxValue(HEART_RAINBOW_MAX_VALUE)
                             .build();
                     heartConditionList.add(data);
