@@ -42,3 +42,11 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
+export const nonAuthAxios = baseAxios.create({
+  baseURL: process.env.REACT_APP_API,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});

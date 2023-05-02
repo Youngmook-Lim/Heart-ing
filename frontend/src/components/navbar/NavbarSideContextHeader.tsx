@@ -17,7 +17,7 @@ function NavbarSideContextHeader() {
     if (status === "success") {
       setIsLogin(false);
       deleteUserInfo();
-      navigate("/manual");
+      navigate("/");
     }
   };
   const onMyBoardHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
