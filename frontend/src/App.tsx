@@ -8,6 +8,7 @@ import HeartBoard from "./pages/HeartBoard";
 import HeartGuide from "./pages/HeartGuide";
 import Heartwriting from "./pages/Heartwriting";
 import Kakao from "./pages/Kakao";
+import Home from "./pages/Home";
 import Manual from "./pages/Manual";
 import ReceivedHeart from "./pages/ReceivedHeart";
 import SentHeart from "./pages/SentHeart";
@@ -20,7 +21,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route index element={<Manual />} />
+          <Route index element={<Home />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path="/heartboard/user" element={<HeartBoard />} />
           <Route path="/heartguide" element={<HeartGuide />} />

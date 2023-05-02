@@ -52,3 +52,9 @@ export interface IHeartInfoTypes {
   type: string,
   isLocked: string,
 }
+
+export interface ITotalHeartPropsTypes {
+  // totalHeartCnt: number;
+  // onGetTotalHeart: ()
+  onGetTotalHeart: () => Promise<number>;
+}
