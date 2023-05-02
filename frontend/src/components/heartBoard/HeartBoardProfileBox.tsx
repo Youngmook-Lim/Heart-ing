@@ -9,6 +9,8 @@ function HeartBoardProfileBox({ ...props }) {
   const [isSetting, setIsSetting] = useState(false);
   const [newNickname, setNewNickname] = useState(props.userProfile.nickname);
   const [newStatusMessage, setNewStatusMessage] = useState(props.userProfile.statusMessage);
+  const [countNickname, setCountNickname] = useState(0)
+  const [countStatus, setCountStatus] = useState(0)
 
   const onStateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsSetting(true);
@@ -30,15 +32,24 @@ function HeartBoardProfileBox({ ...props }) {
     if (e.currentTarget.value.length > 8) {
       const currentNickname = e.currentTarget.value.substr(0, 8)
       setNewNickname(currentNickname);
+      setCountNickname(8)
     } else {
       const currentNickname = e.currentTarget.value;
       setNewNickname(currentNickname);
+      setCountNickname(e.currentTarget.value.length)
     }
   };
 
   const onStatusMessageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentStatusMessage = e.currentTarget.value;
-    setNewStatusMessage(currentStatusMessage);
+    if (e.currentTarget.value.length > 16) {
+      const currentStatusMessage = e.currentTarget.value.substr(0, 16)
+      setNewStatusMessage(currentStatusMessage);
+      setCountStatus(16)
+    } else {
+      const currentStatusMessage = e.currentTarget.value;
+      setNewStatusMessage(currentStatusMessage);
+      setCountStatus(e.currentTarget.value.length)
+    }
   };
 
   useEffect(() => {
@@ -51,7 +62,7 @@ function HeartBoardProfileBox({ ...props }) {
     <div className="pt-3">
       {isSetting ? (
         <form onSubmit={onSubmitHandler} className="mx-2 my-4">
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap items-center">
             <div className="w-11 text-sm leading-10 my-1 ml-2">닉네임</div>
             <input
               type="text"
@@ -60,8 +71,9 @@ function HeartBoardProfileBox({ ...props }) {
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
+            <span className="text-hrtColorGray">{countNickname}/8</span>
           </div>
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap items-center">
             <div className="w-11 leading-10 my-2 ml-2">
               <div className="text-sm leading-4">
                 상태
@@ -76,12 +88,13 @@ function HeartBoardProfileBox({ ...props }) {
               onChange={onStatusMessageHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
+            <span className="text-hrtColorGray">{countStatus}/16</span>
           </div>
-          <button>수정완료</button>
+          <button>저장</button>
         </form>
       ) : (
         <div className="flex flex-col items-center relative">
-          <div className="text-xl bg-hrtColorYellow my-4 px-4 leading-9 rounded  ">
+          <div className="text-l bg-hrtColorYellow my-4 px-4 leading-9 rounded">
             {props.userProfile.statusMessage}
           </div>
           {props.userProfile.statusMessage &&
