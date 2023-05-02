@@ -127,7 +127,6 @@ public class HeartService {
 
             case 7:
                 log.debug("무지개 하트 획득 조건을 반환합니다.");
-                List<Heart> defaultHearts = heartRepository.findAllByType(DEFAULT_TYPE);
                 List<HeartConditionDTO> resultList = heartRepository.findDefaultHeartSentCount(userId);
 
                 for (HeartConditionDTO dto : resultList) {
