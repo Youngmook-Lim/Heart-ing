@@ -16,8 +16,10 @@ export async function getHeartDetailInfo(heartId:number) {
   try {
     const res = await axios.get(`api/v1/hearts/${heartId}`);
     const data = res.data;
-    return data;
+    console.log("하트 상세정보다 얍", data);
+    return data.data;
   } catch (err) {
+    console.log("안대~상세정보 불러오기 실패자나~", err)
     return null;
   }
 }
