@@ -35,7 +35,7 @@ public class HeartData implements Data {
     }
 
     public void setLock() {
-        this.heartUrl = getLockedUrl();
+//        this.heartUrl = getLockedUrl();
         this.isLocked = true;
     }
 
