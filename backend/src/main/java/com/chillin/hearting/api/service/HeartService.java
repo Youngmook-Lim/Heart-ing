@@ -63,6 +63,14 @@ public class HeartService {
         return resHearts;
     }
 
+    /**
+     * 메시지 전송용 하트 리스트를 조회합니다.
+     * 기본 하트 - 모든 잠금이 해제되어있습니다. 비로그인 유저에 한해 두 개의 하트가 잠겨있습니다.
+     * 스페셜 하트 - 로그인 유저 중 획득한 스페셜 하트가 제공됩니다.
+     *
+     * @param user
+     * @return
+     */
     public List<HeartData> findUserHearts(User user) {
         log.debug("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
@@ -90,6 +98,16 @@ public class HeartService {
         return resHearts;
     }
 
+    /**
+     * 도감 하트 상세보기
+     * 특정 하트에 대해 하트 정보, 획득 조건에 대한 정보를 제공한다.
+     * 기본 하트 - 잠금이 해제되어 있다.
+     * 스페셜 하트 - 로그인 유저가 획득한 하트에 대해 잠금이 해제되어 있다. 획득하지 못한 하트에 대해서는 달성 현황 정보를 제공한다.
+     *
+     * @param user
+     * @param heartId
+     * @return
+     */
     public Data findHeartDetail(User user, Long heartId) {
         Heart findHeart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
         HeartDetailData heartDetailData = HeartDetailData.of(findHeart);
