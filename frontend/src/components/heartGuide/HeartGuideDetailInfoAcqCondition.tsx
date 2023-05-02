@@ -1,16 +1,28 @@
+import { IHeartConditionsTypes } from "../../types/guideType"
+import HeartGuideDetailInfoAcqConditionItem from "./HeartGuideDetailInfoAcqConditionItem"
+
 interface HeartGuideDetailInfoAcqConditionProps {
     acqCondition: string,
-    sendCnt: number,
-    receivedCnt: number,
+    conditions: IHeartConditionsTypes[] | null,
 }
 
-function HeartGuideDetailInfoAcqCondition({ acqCondition, sendCnt, receivedCnt }:HeartGuideDetailInfoAcqConditionProps) {
+function HeartGuideDetailInfoAcqCondition({ acqCondition, conditions }:HeartGuideDetailInfoAcqConditionProps) {
     return (
         <>
-            <div>
-                <p>획득조건</p>
+            <div className="textShadow mt-4">
+                <p className="purple text-white text-left tracking-wider mx-1">획득조건</p>
             </div>
-            <div>{ acqCondition }</div>
+            <div className="border-2 border-hrtColorNewPurple p-4 mt-1 text-start rounded-sm">
+                <p>{ acqCondition }</p>
+                {conditions ? 
+                    conditions.map((condition, index) => (
+                        <HeartGuideDetailInfoAcqConditionItem 
+                            key={index}
+                            condition={condition}
+                        />
+                    ))
+                : null}
+            </div>
         </>
     )
 }
