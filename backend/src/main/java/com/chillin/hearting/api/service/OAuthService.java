@@ -24,8 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
@@ -215,7 +219,15 @@ public class OAuthService {
                 String nickname = "";
 
                 UUID uuid = UUID.randomUUID();
-                user = User.builder().id(uuid.toString()).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
+                String shortUuid = parseToShortUUID(uuid.toString());
+                log.debug("uuid long version : {}", uuid);
+                log.debug("uuid short version : {}", shortUuid);
+                if (userRepository.findById(shortUuid).isPresent()) {
+                    log.debug("uuid 중복입니다.");
+                    uuid = UUID.randomUUID();
+                    shortUuid = parseToShortUUID(uuid.toString());
+                }
+                user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
             }
         } catch (UnAuthorizedException e) {
@@ -225,6 +237,23 @@ public class OAuthService {
             log.error(e.getMessage());
         }
         return user;
+    }
+
+    public static String parseToShortUUID(String uuid) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(uuid.getBytes(StandardCharsets.UTF_8));
+            BigInteger number = new BigInteger(1, digest);
+            StringBuilder sb = new StringBuilder(number.toString(36));
+
+            while (sb.length() < 10) {
+                sb.insert(0, '0');
+            }
+
+            return sb.substring(0, 10);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not found", e);
+        }
     }
 
 }
