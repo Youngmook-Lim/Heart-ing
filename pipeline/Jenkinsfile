@@ -10,9 +10,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './pipeline/jenkins/build/build.sh'
 
+                withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
+                "BACKEND_NODEJS_VERSION=${env.BACKEND_NODEJS_VERSION}",
+                ]) {
+                    sh "chmod +x -R ${env.WORKSPACE}"
+                    sh './pipeline/jenkins/build/build.sh'
+                }
             }
         }
 

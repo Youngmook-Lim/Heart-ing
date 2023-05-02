@@ -23,4 +23,4 @@ echo "********************************"
 
 # docker container build
 cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline
-docker compose build --no-cache
+docker compose build --build-arg FRONTEND_VERSION=$FRONTEND_VERSION --build-arg BACKEND_SPRING_VERSION=$BACKEND_SPRING_VERSION BACKEND_NODEJS_VERSION=$BACKEND_NODEJS_VERSION --no-cache
