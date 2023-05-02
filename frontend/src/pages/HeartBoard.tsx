@@ -101,12 +101,20 @@ function HeartBoard() {
     getRecivedMessages,
   ]);
 
+  const outsideHeightStyle = {
+    height: `calc(100vh - ${isMyBoard ? 12 : 7}rem)`,
+  };
+  const innerHeightStyle = {
+    height: `calc(100vh - ${isMyBoard ? 15 : 10}rem)`,
+  };
+
   return (
-    <div className="container mx-auto px-6 py-8 h-[calc(100vh-5rem)]">
+    <div className="container mx-auto p-6 pb-8 h-[calc(100vh-8rem)]">
       <div
-        className={`heartBoard border-hrtColorPink h-[calc(100vh-${spaceSize}px)]`}
+        className="heartBoard border-hrtColorPink relative"
+        style={outsideHeightStyle}
       >
-        <div className="heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between">
+        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between z-50">
           <div>마음 수신함</div>
           <div className="flex mt-0.5">
             <svg
@@ -121,27 +129,35 @@ function HeartBoard() {
             {totalCount}
           </div>
         </div>
-        <div className="pb-4">
-          <HeartBoardProfileBox
-            onChangeProfile={updateProfile}
-            userProfile={userProfile}
-          />
-        </div>
-        {isMyBoard ? null : (
-          <div className="relative flex justify-center">
-            <img src={BackgroundHeart} alt="test" className="" />
-            <div className="absolute inset-x-px top-1/3">
-              <HeartBoardMainButton userProfile={userProfile} userId={userId} />
-            </div>
+        <div
+          className="whitespace-nowrap overflow-auto scrollbar-hide"
+          style={innerHeightStyle}
+        >
+          <div className="pb-4">
+            <HeartBoardProfileBox
+              onChangeProfile={updateProfile}
+              userProfile={userProfile}
+            />
           </div>
-        )}
-        <HeartBoardList receivedList={receivedList} />
-      </div>
-      {isMyBoard ? (
-        <div className="my-4">
-          <HeartBoardMainButton userProfile={userProfile} userId={userId} />
+          {isMyBoard ? null : (
+            <div className="relative flex justify-center">
+              <img src={BackgroundHeart} alt="test" className="h-60" />
+              <div className="absolute inset-x-px top-1/3">
+                <HeartBoardMainButton
+                  userProfile={userProfile}
+                  userId={userId}
+                />
+              </div>
+            </div>
+          )}
+          <HeartBoardList receivedList={receivedList} />
         </div>
-      ) : null}
+        {isMyBoard ? (
+          <div className="mt-7">
+            <HeartBoardMainButton userProfile={userProfile} userId={userId} />
+          </div>
+        ) : null}
+      </div>
 
       {readMessage ? <MessageModal mode={"recent"} /> : null}
     </div>

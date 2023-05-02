@@ -26,37 +26,19 @@ function HeartBoardList({ ...props }) {
     // 원본이 reverse되는 것을 막기 위해 복사본을 만듭니다
     const copyRecentMessageList = [...recentMessageList].reverse();
     return (
-      <>
-        {isMyBoard ? (
-          <div className="grid grid-cols-3 p-2 h-[calc(100vh-23rem)] overflow-auto">
-            {copyRecentMessageList.map(
-              ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
-                <HeartItem
-                  key={messageId}
-                  messageId={messageId}
-                  heartId={heartId}
-                  context={title}
-                  isRead={isRead}
-                />
-              )
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 p-2 h-[calc(100vh-38rem)] overflow-auto">
-            {copyRecentMessageList.map(
-              ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
-                <HeartItem
-                  key={messageId}
-                  messageId={messageId}
-                  heartId={heartId}
-                  context={title}
-                  isRead={isRead}
-                />
-              )
-            )}
-          </div>
+      <div className="grid grid-cols-3">
+        {copyRecentMessageList.map(
+          ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
+            <HeartItem
+              key={messageId}
+              messageId={messageId}
+              heartId={heartId}
+              context={title}
+              isRead={isRead}
+            />
+          )
         )}
-      </>
+      </div>
     );
   } else if (recentMessageList.length === 0) {
     return (
