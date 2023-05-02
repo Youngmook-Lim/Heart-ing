@@ -28,6 +28,7 @@ public class HeartController {
     private static final String MESSAGE_SUCCESS = "success";
     private static final String FIND_ALLHEARTS_SUCCESS = "도감용 하트 리스트 조회에 성공했습니다.";
     private static final String FIND_MSGHEARTS_SUCCESS = "메시지용 하트 리스트 조회에 성공했습니다.";
+    private static final String FIND_HEART_DETAIL_SUCCESS = "도감 하트 상세 조회에 성공했습니다.";
 
     @GetMapping("")
     public ResponseEntity<ResponseDTO> findAllHearts(HttpServletRequest httpServletRequest) {
@@ -49,7 +50,7 @@ public class HeartController {
     public ResponseEntity<ResponseDTO> findHeartDetail(@PathVariable("heartId") Long heartId, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         Data data = heartService.findHeartDetail(user, heartId);
-        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(data).build();
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_HEART_DETAIL_SUCCESS).data(data).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }
