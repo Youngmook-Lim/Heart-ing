@@ -25,7 +25,6 @@ import java.util.List;
 public class HeartService {
 
     private final HeartRepository heartRepository;
-
     private final UserHeartRepository userHeartRepository;
     private final MessageHeartConditionRepository messageHeartConditionRepository;
 
@@ -123,6 +122,12 @@ public class HeartService {
                     heartDetailData.setIsLocked(false);
                 } else {
                     List<HeartConditionData> conditionList = getHeartCondition(userId, findHeart);
+                    for (HeartConditionData conditionData : conditionList) {
+                        if (conditionData.getCurrentValue() < conditionData.getMaxValue()) {
+                            heartDetailData.setIsAcq(false);
+                            break;
+                        }
+                    }
                     heartDetailData.setConditions(conditionList);
                 }
             }
@@ -161,5 +166,10 @@ public class HeartService {
         }
 
         return heartConditionList;
+    }
+
+    public void getHeartCondition(String userId) {
+        List<Heart> specialHearts = heartRepository.findAllByType(HEART_TYPE_SPECIAL);
+
     }
 }
