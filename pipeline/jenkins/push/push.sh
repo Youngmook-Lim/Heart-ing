@@ -12,10 +12,10 @@ echo "*********Docker login*********"
 
 docker login -u youngmookk -p $PASS
 
+echo "*********Docker tag*********"
+
 docker tag $IMAGE_FRONTEND:$FRONTEND_VERSION youngmookk/$IMAGE_FRONTEND:$FRONTEND_VERSION
 docker tag $IMAGE_FRONTEND:$FRONTEND_VERSION youngmookk/$IMAGE_FRONTEND:latest
-
-echo "*********Docker tag*********"
 
 docker tag $IMAGE_SPRING_BACKEND:$BACKEND_SPRING_VERSION youngmookk/$IMAGE_SPRING_BACKEND:$BACKEND_SPRING_VERSION
 docker tag $IMAGE_SPRING_BACKEND:$BACKEND_SPRING_VERSION youngmookk/$IMAGE_SPRING_BACKEND:latest
