@@ -48,5 +48,6 @@ public class MessageInboxService {
     public void deleteMessage(Long messageId) {
         Message findMessage = inboxRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         findMessage.deleteInbox();
+        findMessage.deleteMessage();
     }
 }

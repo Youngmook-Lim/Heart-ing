@@ -5,6 +5,7 @@ import com.chillin.hearting.api.request.LoginTestReq;
 import com.chillin.hearting.api.request.UpdateNicknameReq;
 import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
+import com.chillin.hearting.api.service.OAuthService;
 import com.chillin.hearting.api.service.UserService;
 import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Slf4j // log 사용하기 위한 어노테이션
 @RestController
@@ -32,11 +34,13 @@ public class UserController {
     // 테스트용 service
     private final UserTestService userTestService;
 
+    private final OAuthService oAuthService;
 
-    @GetMapping("/guests/social/{code}")
-    public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
-        Data socialLoginData = userService.kakaoLogin(code, httpServletRequest, httpServletResponse);
+    @GetMapping("/guests/social/{provider}")
+    public ResponseEntity<ResponseDTO> socialLogin(@PathVariable("provider") String provider, @RequestParam("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
+
+        Data socialLoginData = oAuthService.socialLogin(code, provider, httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
@@ -62,7 +66,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/nickname")
-    public ResponseEntity<ResponseDTO> updateNickname(@RequestBody UpdateNicknameReq updateNicknameReq, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDTO> updateNickname(@Valid @RequestBody UpdateNicknameReq updateNicknameReq, HttpServletRequest httpServletRequest) {
 
         User user = (User) httpServletRequest.getAttribute("user");
 
@@ -78,7 +82,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/status-message")
-    public ResponseEntity<ResponseDTO> updateStatusMessage(@RequestBody UpdateStatusMessageReq updateStatusMessageReq, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDTO> updateStatusMessage(@Valid @RequestBody UpdateStatusMessageReq updateStatusMessageReq, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
 
         Data data = userService.updateStatusMessage(user.getId(), updateStatusMessageReq.getStatusMessage());

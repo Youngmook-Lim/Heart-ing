@@ -37,6 +37,10 @@ function NavbarSide({ width = 48, children }: SidebarProps) {
     }
   };
 
+  const onOpenHandler = () => {
+    setIsOpen(false)
+  }
+
   useEffect(() => {
     window.addEventListener("click", onSidebarHandler);
     return () => {

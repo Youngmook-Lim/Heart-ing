@@ -5,6 +5,21 @@ const plugin = require("tailwindcss/plugin");
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
+    fontSize: {
+      'xxs': '.5rem',
+      'xs': '.75rem',
+      'sm': '.875rem',
+      'tiny': '.875rem',
+      'base': '1rem',
+      'lg': '1.125rem',
+      'xl': '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
+      '6xl': '4rem',
+      '7xl': '5rem',
+    },
     extend: {
       sans: ["NeoDunggeunmo", "Arial", "sans-serif"],
       colors: {
@@ -35,9 +50,12 @@ module.exports = {
     plugin(function ({ addComponents }) {
       addComponents({
         ".modal": {
-          borderWidth: "4px",
-          borderRadius: "0.125rem",
+          // borderWidth: "0.25rem",
+          // borderRadius: "0.125rem",
           backgroundColor: "#fff",
+          // outlineStyle: "solid",
+          // outlineWidth: "4px",
+          boxShadow: "0 0 0 0.25rem #43316b",
         },
         ".modal-header": {
           color: "#fff",
@@ -47,7 +65,11 @@ module.exports = {
           textAlign: "left",
           paddingLeft: "0.5rem",
           paddingRight: "0.125rem",
-          borderBottomWidth: "4px",
+          // borderBottomWidth: "0.25rem",
+          // outlineStyle: "solid",
+          // boxSizing: "border-box",
+          boxShadow: "0 0 0 0.25rem #43316b",
+          // margin: "-0.25rem",
         },
         ".modal-button": {
           borderWidth: "2px",
@@ -57,6 +79,20 @@ module.exports = {
           height: "2.5rem" /* 40px */,
           lineHeight: "2.25rem",
           fontSize: "1rem" /* 16px */,
+        },
+        ".heartBoard": {
+          backgroundColor: "#fff",
+          boxShadow: "0 0 0 0.25rem #fb8bb0",
+        },
+        ".heartBoard-header": {
+          color: "#fff",
+          height: "2.5rem",
+          fontSize: "1.25rem" /* 16px */,
+          lineHeight: "2.5rem",
+          textAlign: "left",
+          paddingLeft: "0.5rem",
+          paddingRight: "0.5rem",
+          boxShadow: "0 0 0 0.25rem #fb8bb0",
         },
       });
     }),

@@ -32,7 +32,7 @@ class UserRepositoryTest {
 
         // when
         userRepository.save(member);
-        final User result = userRepository.findByEmail("wjdwn@naver.com").orElseThrow(NotFoundException::new);
+        final User result = userRepository.findByEmailAndType("wjdwn@naver.com", "KAKAO").orElseThrow(NotFoundException::new);
 
         // then
         assertThat(result.getId()).isEqualTo("abc");
