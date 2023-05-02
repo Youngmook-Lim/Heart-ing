@@ -44,3 +44,15 @@
 .textShadow .purple {
   text-shadow: -2px 0 #d5a7ea, 0 2px #d5a7ea, 2px 0 #d5a7ea, 0 -2px #d5a7ea;
 }
+
+.textShadow .deepPurple {
+  text-shadow: -2px 0 #43316B, 0 2px #43316B, 2px 0 #43316B, 0 -2px #43316B;
+}
+
+.textShadow .white {
+  text-shadow: -2px 0 #ffffff, 0 2px #ffffff, 2px 0 #ffffff, 0 -2px #ffffff;
+}
+
+.textShadow .textShadow-none {
+  text-shadow: none;
+}

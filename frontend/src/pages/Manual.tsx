@@ -1,28 +1,14 @@
-import { useEffect, useState } from 'react'
-import ManualHome from '../components/manual/ManualHome'
-import { getTotalHeartApi } from '../features/api/messageApi'
+import ManualSelectBox from "../components/manual/ManualSelectBox"
 
 function Manual() {
-
-  console.log("매뉴얼 페이지 렌더링")
-  const [totalHeartCnt, setTotalHeartCnt] = useState<number>(0);
-
-  useEffect(() => {
-    const interval = setInterval(async() => {
-      const totalCnt = await getTotalHeartApi()
-      setTotalHeartCnt(totalCnt)
-    }, 3000)
-  
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
-  return (    
-    <div>
-      <ManualHome totalHeartCnt={totalHeartCnt} />
-    </div>
-  )
+    return (
+        <>
+            <div className="text-3xl py-3 textShadow">
+                <p className="text-hrtColorYellow">사용 설명서</p>
+            </div>
+            <ManualSelectBox />
+        </>
+    )
 }
 
 export default Manual
