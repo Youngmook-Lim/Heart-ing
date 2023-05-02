@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Slf4j // log 사용하기 위한 어노테이션
 @RestController
@@ -65,7 +66,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/nickname")
-    public ResponseEntity<ResponseDTO> updateNickname(@RequestBody UpdateNicknameReq updateNicknameReq, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDTO> updateNickname(@Valid @RequestBody UpdateNicknameReq updateNicknameReq, HttpServletRequest httpServletRequest) {
 
         User user = (User) httpServletRequest.getAttribute("user");
 
