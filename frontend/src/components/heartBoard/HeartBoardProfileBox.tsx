@@ -8,9 +8,11 @@ function HeartBoardProfileBox({ ...props }) {
   const isMyBoard = useRecoilValue(isMyBoardAtom);
   const [isSetting, setIsSetting] = useState(false);
   const [newNickname, setNewNickname] = useState(props.userProfile.nickname);
-  const [newStatusMessage, setNewStatusMessage] = useState(props.userProfile.statusMessage);
-  const [countNickname, setCountNickname] = useState(0)
-  const [countStatus, setCountStatus] = useState(0)
+  const [newStatusMessage, setNewStatusMessage] = useState(
+    props.userProfile.statusMessage
+  );
+  const [countNickname, setCountNickname] = useState(0);
+  const [countStatus, setCountStatus] = useState(0);
 
   const onStateHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsSetting(true);
@@ -30,33 +32,33 @@ function HeartBoardProfileBox({ ...props }) {
 
   const onNicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.length > 8) {
-      const currentNickname = e.currentTarget.value.substr(0, 8)
+      const currentNickname = e.currentTarget.value.substr(0, 8);
       setNewNickname(currentNickname);
-      setCountNickname(8)
+      setCountNickname(8);
     } else {
       const currentNickname = e.currentTarget.value;
       setNewNickname(currentNickname);
-      setCountNickname(e.currentTarget.value.length)
+      setCountNickname(e.currentTarget.value.length);
     }
   };
 
   const onStatusMessageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.length > 16) {
-      const currentStatusMessage = e.currentTarget.value.substr(0, 16)
+      const currentStatusMessage = e.currentTarget.value.substr(0, 16);
       setNewStatusMessage(currentStatusMessage);
-      setCountStatus(16)
+      setCountStatus(16);
     } else {
       const currentStatusMessage = e.currentTarget.value;
       setNewStatusMessage(currentStatusMessage);
-      setCountStatus(e.currentTarget.value.length)
+      setCountStatus(e.currentTarget.value.length);
     }
   };
 
   useEffect(() => {
-    console.log('닉네임', newNickname)
-    console.log(newStatusMessage)
-    console.log(props)
-  }, [props])
+    console.log("닉네임", newNickname);
+    console.log(newStatusMessage);
+    console.log(props);
+  }, [props]);
 
   return (
     <div className="pt-3">
@@ -94,7 +96,7 @@ function HeartBoardProfileBox({ ...props }) {
         </form>
       ) : (
         <div className="flex flex-col items-center relative">
-          <div className="text-l bg-hrtColorYellow my-4 px-4 leading-9 rounded">
+          <div className="text-l bg-hrtColorYellow mt-4 px-4 leading-9 rounded">
             {props.userProfile.statusMessage}
           </div>
           {props.userProfile.statusMessage &&
@@ -102,10 +104,10 @@ function HeartBoardProfileBox({ ...props }) {
             <img
               src={BubbleArrow}
               alt="test"
-              className="w-4 pb-2 absolute bottom-1/3"
+              className="w-4 pb-3 absolute bottom-1/3"
             />
           ) : null}
-          <div className="flex align-middle">
+          <div className="flex align-middle pt-2">
             <span className="text-4xl">{props.userProfile.nickname}</span>
             {isMyBoard ? (
               <button onClick={onStateHandler}>
