@@ -23,6 +23,7 @@ function HeartwritingMessageForm({...props}) {
   }
 
   const onContentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(e.currentTarget.value)
     if (e.currentTarget.value.length > 100) {
       const currentContent = e.currentTarget.value.substr(0, 100);
       props.setContent(currentContent)
@@ -38,7 +39,7 @@ function HeartwritingMessageForm({...props}) {
 
   return (
     <div>
-      <input type="text" value={title} className='w-64 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none' onChange={onTitleHandler} placeholder='제목을 입력해주세요'/>
+      <input type="text" value={title} className='w-64 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none' onChange={onTitleHandler} placeholder='제목을 필수로 입력해주세요'/>
       <span className='text-hrtColorGray'>{countTitle}/8</span>
       <br/>
       <div className='w-72 mx-auto text-left mb-5'>
@@ -50,7 +51,7 @@ function HeartwritingMessageForm({...props}) {
         </span>
       </div>
       <div className='py-2 mb-10 text-right'>
-        <textarea value={content} className="block w-72 h-40 text-center mx-auto border-2 border-hrtColorPink outline-none rounded-md resize-none" onChange={onContentHandler} placeholder='전하고 싶은 마음이 있다면,&#13;&#10;메세지를 작성해보세요'/>
+        <textarea value={content} className="block w-72 h-48 text-center mx-auto p-2 border-2 border-hrtColorPink outline-none rounded-md resize-none" onChange={onContentHandler} placeholder='전하고 싶은 마음이 있다면,&#13;&#10;메세지를 작성해보세요'/>
         <span className='text-hrtColorGray pr-10'>{countContent}/100</span>
       </div>
     </div>
