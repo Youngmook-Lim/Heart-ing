@@ -130,7 +130,6 @@ public class HeartService {
                 List<Heart> defaultHearts = heartRepository.findAllByType(DEFAULT_TYPE);
                 List<HeartConditionDTO> resultList = heartRepository.findDefaultHeartSentCount(userId);
 
-                int size = resultList.size();
                 for (HeartConditionDTO dto : resultList) {
                     HeartConditionData data = HeartConditionData.builder()
                             .heartId(dto.getHeartId())
