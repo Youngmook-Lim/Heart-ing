@@ -17,6 +17,11 @@ spring:
             scope:
               - profile_nickname
               - account_email
+          google:
+            redirect-uri: http://localhost:3000/oauth2/code/google
+            #            redirect-uri: https://heart-ing.com/oauth2/code/google
+            scope:
+              - email
 
         provider:
           kakao:
@@ -24,7 +29,11 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+          google:
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v2/userinfo
 
+  
   # s3 file size bigger setting
   servlet:
     multipart:
@@ -44,7 +53,7 @@ app:
     refresh-token-expiry: 1209600000 # 7일
   #    refresh-token-expiry: 15000 # 7일
   oauth2:
-    redirect-uri: https://heart-ing.com/oauth2/code/kakao
+#    redirect-uri: https://heart-ing.com/oauth2/
 #    redirect-uri: http://localhost:3000/oauth2/code/kakao
 
 # S3 Setting
