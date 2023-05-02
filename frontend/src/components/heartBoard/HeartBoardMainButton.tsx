@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { userNicknameAtom } from "../../atoms/userAtoms";
 
 function BottomButton({ ...props }) {
-  const navigate = useNavigate()
-  const isMyBoard = useRecoilValue(isMyBoardAtom)
-  const userNickname = useRecoilValue(userNicknameAtom)
+  const navigate = useNavigate();
+  const isMyBoard = useRecoilValue(isMyBoardAtom);
+  const userNickname = useRecoilValue(userNicknameAtom);
 
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    navigate(`/heartwriting?id=${props.userId}`)
-  }
+    navigate(`/heartwriting?id=${props.userId}`);
+  };
 
   const onCopyHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     if (navigator.clipboard) {
@@ -18,7 +18,9 @@ function BottomButton({ ...props }) {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          alert(`${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`);
+          alert(
+            `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+          );
         })
         .catch(() => {
           alert("잠시 후 다시 시도해주세요.");
@@ -36,14 +38,18 @@ function BottomButton({ ...props }) {
       textarea.select();
       document.execCommand("copy");
       document.body.removeChild(textarea);
-      alert(`${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`);
+      alert(
+        `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+      );
     }
-  }
+  };
 
   return (
     <button className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]">
       {isMyBoard ? (
-        <div className="text-2xl" onClick={onCopyHandler}>공유하기</div>
+        <div className="text-2xl" onClick={onCopyHandler}>
+          나의 수신함 공유하기
+        </div>
       ) : (
         <div onClick={onNavigateHandler}>
           <div className="flex text-base pt-2 justify-center leading-3">
