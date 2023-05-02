@@ -36,10 +36,10 @@ public class UserController {
     private final OAuthService oAuthService;
 
 
-    @GetMapping("/guests/social/{code}")
-    public ResponseEntity<ResponseDTO> kakaoLogin(@PathVariable("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
+    @GetMapping("/guests/social/{provider}")
+    public ResponseEntity<ResponseDTO> socialLogin(@PathVariable("provider") String provider, @RequestParam("code") String code, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException, IllegalArgumentException {
 
-        Data socialLoginData = oAuthService.socialLogin(code, "kakao", httpServletRequest, httpServletResponse);
+        Data socialLoginData = oAuthService.socialLogin(code, provider, httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
