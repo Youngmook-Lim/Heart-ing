@@ -190,7 +190,7 @@ public class OAuthService {
             log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
             log.debug(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
-            user = userRepository.findByEmail(oAuth2Attribute.getEmail()).orElse(null);
+            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider).orElse(null);
 
             if (user != null) {
                 log.debug(provider + "로 로그인을 한 적이 있는 user입니다.");
