@@ -216,7 +216,8 @@ public class OAuthService {
             } else {
                 log.debug(provider + " 로그인 최초입니다.");
 
-                String nickname = "";
+                String nickname = "하팅" + (userRepository.count() + 1);
+                log.debug("nickname : {}", nickname);
 
                 UUID uuid = UUID.randomUUID();
                 String shortUuid = parseToShortUUID(uuid.toString());
