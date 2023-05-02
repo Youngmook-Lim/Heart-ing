@@ -29,7 +29,8 @@ public class HeartService {
     private final UserHeartRepository userHeartRepository;
     private final MessageHeartConditionRepository messageHeartConditionRepository;
 
-    private static final String DEFAULT_TYPE = "DEFAULT";
+    private static final String HEART_TYPE_DEFAULT = "DEFAULT";
+    private static final String HEART_TYPE_SPECIAL = "SPECIAL";
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
     private static final int HEART_PLANET_MAX_VALUE = 5;
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
@@ -58,7 +59,7 @@ public class HeartService {
 
         List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : allHearts) {
-            resHearts.add(HeartData.of(heart, (DEFAULT_TYPE.equals(heart.getType()) || hashSet.contains(heart.getId()) ? false : true)));
+            resHearts.add(HeartData.of(heart, (HEART_TYPE_DEFAULT.equals(heart.getType()) || hashSet.contains(heart.getId()) ? false : true)));
         }
         return resHearts;
     }
@@ -74,7 +75,7 @@ public class HeartService {
     public List<HeartData> findUserHearts(User user) {
         log.debug("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
-        List<Heart> findHearts = heartRepository.findAllByType(DEFAULT_TYPE);
+        List<Heart> findHearts = heartRepository.findAllByType(HEART_TYPE_DEFAULT);
         for (Heart heart : findHearts) {
             resHearts.add(HeartData.of(heart, false));
         }
@@ -112,9 +113,9 @@ public class HeartService {
         Heart findHeart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
         HeartDetailData heartDetailData = HeartDetailData.of(findHeart);
 
-        if (DEFAULT_TYPE.equals(findHeart.getType())) {
+        if (HEART_TYPE_DEFAULT.equals(findHeart.getType())) {
             heartDetailData.setIsLocked(false);
-        } else {
+        } else if (HEART_TYPE_SPECIAL.equals(findHeart.getType())) {
             if (user != null) {
                 String userId = user.getId();
                 List<UserHeart> findUserHeart = userHeartRepository.findByHeartIdAndUserId(heartId, userId);
