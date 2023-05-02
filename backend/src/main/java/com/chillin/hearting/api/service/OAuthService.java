@@ -122,10 +122,10 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + clientId);
-            sb.append("&client_secret=" + clientSecret);
-            sb.append("&redirect_uri=" + redirectUri);
-            sb.append("&code=" + code);
+            sb.append("&client_id=").append(clientId);
+            sb.append("&client_secret=").append(clientSecret);
+            sb.append("&redirect_uri=").append(redirectUri);
+            sb.append("&code=").append(code);
 
             bw.write(sb.toString());
             bw.flush();
