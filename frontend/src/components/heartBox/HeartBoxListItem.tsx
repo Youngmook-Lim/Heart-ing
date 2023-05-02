@@ -25,9 +25,7 @@ function HeartBoxListItem({ ...props }) {
       <div className="flex-none">
         <HeartItemIcon id={props.heartId} />
       </div>
-      <div className="flex-auto text-xl whitespace-pre-wrap">
-        {props.context}
-      </div>
+      <div className="flex-auto text-xl">{props.context}</div>
       <div className="flex-none">{props.emojiId}</div>
       <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute left-1 top-1"></div>
       <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute right-1 top-1"></div>
