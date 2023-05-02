@@ -1,12 +1,14 @@
-import React from 'react'
-import ManualHome from '../components/manual/ManualHome'
+import ManualSelectBox from "../components/manual/ManualSelectBox"
 
 function Manual() {
-  return (
-    <div>
-      <ManualHome />
-    </div>
-  )
+    return (
+        <>
+            <div className="text-3xl py-3 textShadow">
+                <p className="text-hrtColorYellow">사용 설명서</p>
+            </div>
+            <ManualSelectBox />
+        </>
+    )
 }
 
 export default Manual

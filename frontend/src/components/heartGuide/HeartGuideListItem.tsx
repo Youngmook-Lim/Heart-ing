@@ -13,7 +13,7 @@ function HeartGuideListItem({ heartInfo, onGetHeartDetailData }: HeartGuideListI
     
     const openDetailInfo = () => {
         setOpenDetailInfoAtom(true)
-        // onGetHeartDetailData(heartInfo.heartId)
+        onGetHeartDetailData(heartInfo.heartId)
     }
 
     return (
