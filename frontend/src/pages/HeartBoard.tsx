@@ -101,6 +101,10 @@ function HeartBoard() {
     getRecivedMessages,
   ]);
 
+  useEffect(() => {
+    getRecivedMessages(userId);
+  }, [readMessage]);
+
   const outsideHeightStyle = {
     height: `calc(100vh - ${isMyBoard ? 12 : 7}rem)`,
   };
@@ -114,7 +118,7 @@ function HeartBoard() {
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
       >
-        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between z-50">
+        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2">
           <div>마음 수신함</div>
           <div className="flex mt-0.5">
             <svg
@@ -153,7 +157,7 @@ function HeartBoard() {
           <HeartBoardList receivedList={receivedList} />
         </div>
         {isMyBoard ? (
-          <div className="mt-7">
+          <div className="mt-4">
             <HeartBoardMainButton userProfile={userProfile} userId={userId} />
           </div>
         ) : null}

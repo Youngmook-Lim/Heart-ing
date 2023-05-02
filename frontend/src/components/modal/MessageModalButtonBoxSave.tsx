@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { saveMessageApi } from "../../features/api/messageApi";
 import { useRecoilValue } from "recoil";
 import { selectedMessageIdAtom } from "../../atoms/messageAtoms";
 
 function MessageModalButtonBoxSave({ ...props }) {
   const messageId = useRecoilValue(selectedMessageIdAtom);
-  const isStored = props.isStored;
+  const [isStored, setIsStored] = useState(props.isStored);
 
   const onSaveHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
     const status = await saveMessageApi(messageId);
     if (status === "success") {
       alert("메세지를 저장했습니다");
+      setIsStored(true);
     }
   };
 
