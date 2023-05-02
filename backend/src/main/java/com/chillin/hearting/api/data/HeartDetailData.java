@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @Getter
 @Setter
@@ -21,6 +23,7 @@ public class HeartDetailData implements Data {
     private String type;
     private String acqCondition;
     private Boolean isLocked;
+    private List<HeartConditionData> conditions;
 
     public static HeartDetailData of(Heart heart) {
         return HeartDetailData.builder()
