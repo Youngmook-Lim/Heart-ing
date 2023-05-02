@@ -20,7 +20,7 @@ function MessageModalButtonBox({
 
   return (
     <div className="flex justify-center space-x-2 py-6">
-      {mode === "recent" || mode === "save" ? (
+      {(mode === "recent" && !isStored) || mode === "save" ? (
         <MessageModalButtonBoxDelete mode={mode} />
       ) : null}
       {mode === "recent" ? (
