@@ -2,6 +2,8 @@ package com.chillin.hearting.api.request;
 
 import lombok.*;
 
+import javax.validation.constraints.Size;
+
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -9,5 +11,6 @@ import lombok.*;
 @ToString
 public class UpdateNicknameReq {
 
+    @Size(min = 1, max = 8)
     private String nickname;
 }
