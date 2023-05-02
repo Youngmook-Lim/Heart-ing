@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PASS = credentials('registry-pass')
+    }
+
     tools {
         gradle 'gradle_7.6'
         nodejs 'nodejs_18.13.0'
@@ -10,12 +14,28 @@ pipeline {
 
         stage('Build') {
             steps {
-
                 withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
                 "BACKEND_NODEJS_VERSION=${env.BACKEND_NODEJS_VERSION}",
                 ]) {
                     sh "chmod +x -R ${env.WORKSPACE}"
                     sh './pipeline/jenkins/build/build.sh'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh "echo test to be included"
+            }
+        }
+
+        stage('Push') {
+            steps {
+                withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
+                "BACKEND_NODEJS_VERSION=${env.BACKEND_NODEJS_VERSION}",
+                ]) {
+                    sh "chmod +x -R ${env.WORKSPACE}"
+                    sh './pipeline/jenkins/push/push.sh'
                 }
             }
         }
