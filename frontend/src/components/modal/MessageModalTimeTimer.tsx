@@ -45,17 +45,21 @@ function MessageModalTimeTimer({ remainTime }: propType) {
     }
   };
 
-  return (
-    <div>
-      <div className="text-4xl">
-        <span>{getHours(time)}</span>
-        <span>:</span>
-        <span>{getMinutes(time)}</span>
-        <span>:</span>
-        <span>{getSeconds(time)}</span>
+  if (time && time > 0) {
+    return (
+      <div>
+        <div className="text-4xl">
+          <span>{getHours(time)}</span>
+          <span>:</span>
+          <span>{getMinutes(time)}</span>
+          <span>:</span>
+          <span>{getSeconds(time)}</span>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return <div className="text-sm">남은시간을 불러오는 중 ...</div>;
+  }
 }
 
 export default MessageModalTimeTimer;

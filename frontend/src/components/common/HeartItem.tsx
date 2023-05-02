@@ -14,6 +14,7 @@ function HeartItem({ ...props }) {
   const setSelectedMessgeIdAtom = useSetRecoilState(selectedMessageIdAtom);
   const isMyBoard = useRecoilValue(isMyBoardAtom);
   const [isRead, setIsRead] = useState(false);
+  const [isAnimation, setIsAnimation] = useState(false);
 
   const readMessage = (messageId: number) => {
     console.log(messageId + " 메시지를 읽습니다");
@@ -23,12 +24,25 @@ function HeartItem({ ...props }) {
     setIsRead(true);
   };
 
+  const bounceAnimation = () => {
+    console.log("됴됴잉");
+    setIsAnimation(true);
+    setTimeout(function () {
+      setIsAnimation(false);
+    }, 500);
+  };
+
   return (
     <div className="place-content-center py-2">
       {isMyBoard ? (
         <div
-          className="flex justify-center relative "
-          onClick={() => readMessage(props.messageId)}
+          className={`flex justify-center relative ${
+            isAnimation ? "jello-vertical" : null
+          }`}
+          onClick={() => {
+            readMessage(props.messageId);
+            bounceAnimation();
+          }}
         >
           <HeartItemIcon id={props.heartId} />
           {props.isRead || isRead ? null : (
@@ -36,12 +50,20 @@ function HeartItem({ ...props }) {
           )}
         </div>
       ) : (
-        <div className="flex justify-center">
+        <div
+          className={`flex justify-center ${
+            isAnimation ? "shake-horizontal" : null
+          }`}
+          onClick={() => bounceAnimation()}
+        >
           <HeartItemIcon id={props.heartId} />
         </div>
       )}
 
-      <div className="px-2 leading-5 tracking-tight"> {props.context} </div>
+      <div className="px-2 leading-5 tracking-tight whitespace-pre-line">
+        {" "}
+        {props.context}{" "}
+      </div>
     </div>
   );
 }

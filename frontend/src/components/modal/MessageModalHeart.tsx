@@ -21,10 +21,10 @@ function MessageModalHeart({ ...props }) {
           <div className="text-base text-hrtColorPink absolute inset-x-px -top-1">
             touch
           </div>
-          <div className="flex justify-center absolute inset-x-px top-4">
+          <div className="flex justify-center absolute inset-x-px top-4 ">
             <img src={TouchArrow} alt="test" className="w-2.5" />
           </div>
-          <div className="flex justify-center p-0">
+          <div className="flex justify-center p-0 heartbeat">
             <HeartItemIcon id={props.heartId} />
           </div>
           {/* <div>반응 : {props.emojiUrl}</div> */}
