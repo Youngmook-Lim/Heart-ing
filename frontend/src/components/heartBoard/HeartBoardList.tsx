@@ -24,10 +24,10 @@ function HeartBoardList({ ...props }) {
   // recentMessageList 길이 만큼 반복해 HeartItem를 불러옵니다
   if (recentMessageList && recentMessageList.length > 0) {
     // 원본이 reverse되는 것을 막기 위해 복사본을 만듭니다
-    const copyRecentMessageList = [...recentMessageList].reverse();
+    // const copyRecentMessageList = [...recentMessageList].reverse();
     return (
       <div className="grid grid-cols-3">
-        {copyRecentMessageList.map(
+        {recentMessageList.map(
           ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
             <HeartItem
               key={messageId}

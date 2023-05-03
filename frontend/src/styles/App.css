@@ -15,10 +15,18 @@
   height: calc((var(--vh, 1vh) * 100) - 12rem);
 }
 
-body {
+.writingHeight {
+  height: calc((var(--vh, 1vh) * 100) - 17.5rem);
+}
+
+.writingDetailHeight {
+  height: calc((var(--vh, 1vh) * 100) - 21rem);
+}
+
+/* body {
   overflow: hidden;
   touch-action: none;
-}
+} */
 
 /* .App-logo {
   height: 40vmin;
