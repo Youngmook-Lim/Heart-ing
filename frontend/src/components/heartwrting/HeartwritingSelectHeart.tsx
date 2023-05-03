@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { IHeartInfoTypes } from '../../types/messageType'
-import HeartItem from '../common/HeartItem'
 import { ReactComponent as SelectedHeart } from "../../assets/images/pixel/heart/heart_select_1.svg";
 import HeartwritingSelectedHeartItem from "./HeartwritingSelectedHeartItem";
 
