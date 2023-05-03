@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hearting-back
-          image: youngmookk/hearting-backend
+          image: youngmookk/hearting-backend:latest
           ports:
             - containerPort: 8080
           envFrom:

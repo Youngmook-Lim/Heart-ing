@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hearting-front
-          image: youngmookk/hearting-frontend
+          image: youngmookk/hearting-frontend:latest
           ports:
             - containerPort: 80
 
