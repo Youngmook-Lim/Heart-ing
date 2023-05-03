@@ -12,8 +12,8 @@ function ManualSelectBoxSection({
   manualImg,
 }: ManualSelectBoxSectionProps) {
   return (
-    <div className="flex flex-col justify-center h-full">
-      <div className="flex justify-center items-center h-1/2 m-3">
+    <div className="flex flex-col h-full  overflow-auto p-4">
+      <div className="flex items-center h-1/2 m-3">
         <ManualSelectBoxSectionImg manualImg={manualImg} />
       </div>
       <div className=" h-fit">
