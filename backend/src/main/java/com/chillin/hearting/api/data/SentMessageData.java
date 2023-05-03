@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class SentMessageData implements Data {
     private Long messageId;
     private String title;
+    private String shortDescription;
     private String content;
     private Long heartId;
     private String heartName;
@@ -33,6 +34,7 @@ public class SentMessageData implements Data {
         return SentMessageData.builder()
                 .messageId(message.getId())
                 .title(message.getTitle())
+                .shortDescription(heart.getShortDescription())
                 .heartId(heart.getId())
                 .heartName(heart.getName())
                 .heartUrl(heart.getImageUrl())
