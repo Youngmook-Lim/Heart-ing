@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { io } from 'socket.io-client';
+
 import NavbarSide from "./NavbarSide";
 import NavbarSideContext from "./NavbarSideContext";
 
-import Logo from "../../assets/images/logo/logo_line.png";
-import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
 import useDetectClose from "../../features/hook/useDetectClose";
 import NavbarNotification from "./NavbarNotification";
+import Logo from "../../assets/images/logo/logo_line.png";
 
 function Navbar() {
   const navigate = useNavigate()
@@ -29,6 +31,31 @@ function Navbar() {
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate('/')
   }
+
+    const onSocket = () => {
+    if (isLogin) {
+      const socket = io("https://heart-ing.com", { path: "/ws" });
+      socket.on("connect", () => {
+        console.log("회원 웹소켓 서버에 연결");
+        socket.emit('join-room', getUserInfo().userId);
+      })
+
+      socket.on("receive-message", (data) => {
+        console.log("받은 메시지:", data);
+      });
+    } else {
+      const socket = io("https://heart-ing.com", { path: "/ws" });
+      socket.on("connect", () => {
+        console.log("비회원 웹소켓 서버에 연결");
+        socket.emit('join-room', 'anonymous');
+      })
+    }
+
+  };
+
+    useEffect(() => {
+      onSocket()
+    }, [])
   
   return (
     <div>
