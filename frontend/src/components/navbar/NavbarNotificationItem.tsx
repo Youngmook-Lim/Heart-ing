@@ -28,7 +28,11 @@ function NavbarNotificationItem({...props}) {
         if (nowMinute-createdMinute > 0) {
           return `${nowMinute-createdMinute}분 전`
         } else {
-          return `${nowMinute-createdMinute+60}분 전`
+          if (nowHour === createdHour && nowMinute ===createdMinute) {
+            return '지금'
+          } else {
+            return `${nowMinute-createdMinute+60}분 전`
+          }
         }
       }
     }

@@ -14,7 +14,7 @@ import Logo from "../../assets/images/logo/logo_line.png";
 import { getReceived } from "../../features/api/messageApi";
 
 interface MyObject {
-  [key: string]: any; // 어떤 타입의 값도 가능한 인덱스 시그니처
+  [key: string]: any;
 }
 
 function Navbar() {
@@ -23,6 +23,7 @@ function Navbar() {
   const isLogin = useRecoilValue(isLoginAtom)
   // const [notiIsOpen, notiRef, notiHandler] = useDetectClose(false)
   const [notiIsOpen, setNotiIsOpen] = useState(false)
+  const [isNew, setIsNew] = useState(false)
   const [receivedList, setReceivedList] = useState({});
   const myId = getUserInfo().userId
 
@@ -32,6 +33,7 @@ function Navbar() {
 
   const onNotiButtonHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     setNotiIsOpen(!notiIsOpen)
+    setIsNew(false)
   }
   
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -43,19 +45,17 @@ function Navbar() {
     console.log(userId);
     const data = await getReceived(userId);
     if (data.status === "success") {
-      console.log('걍 뽑아', data.data.messageList)
       const notiData:MyObject = {trueList:[], falseList:[]};
       const listLength = Math.min(20, Object.keys(data.data.messageList).length)
       for (let i = 0; i < listLength; i++) {
-        console.log('읽었어?', data.data.messageList[i].isRead)
         if (data.data.messageList[i].isRead) {
           notiData.trueList[i] = data.data.messageList[i]
         } else {
+          setIsNew(true)
           notiData.falseList[i] = data.data.messageList[i]
         }
       }
       setReceivedList(notiData);
-      console.log('정제해봣습ㄴ디ㅏ', notiData)
     }
   }, []);
 
@@ -79,13 +79,12 @@ function Navbar() {
     }
   };
 
-
-    useEffect(() => {
-      onSocket()
-      if (isLogin) {
-        getData(myId)
-      }
-    }, [])
+  useEffect(() => {
+    onSocket()
+    if (isLogin) {
+      getData(myId)
+    }
+  }, [])
   
   return (
     <div>
@@ -97,8 +96,11 @@ function Navbar() {
           {isLogin ? 
           <div>
             <div 
-              className="w-6 m-2 my-4 flex-none"
+              className="w-6 m-2 my-4 flex-none relative"
               onClick={onNotiButtonHandler}>
+              {isNew ? 
+              <div className="bg-hrtColorNewRed w-3	h-3	rounded-full border-2	border-white absolute z-10 top-0 right-0"></div>
+              : null}
               <svg
                 fill="currentColor"
                 viewBox="0 0 20 20"
