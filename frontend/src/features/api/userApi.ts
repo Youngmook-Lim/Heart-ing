@@ -58,7 +58,7 @@ export async function getProfile(userId:string) {
 
 export async function reissueTokenApi() {
   try{
-    const res = await nonAuthAxios.get('api/v1/auth/users/access-token')
+    const res = await axios.get('api/v1/auth/users/access-token')
     const data = res.data
     return data
   } catch(err) {

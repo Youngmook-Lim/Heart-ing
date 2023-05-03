@@ -32,7 +32,7 @@ axios.interceptors.response.use(
         } else {
           deleteUserInfo();
           alert("다시 로그인해주세요");
-          window.location.replace("/manual");
+          window.location.replace("/");
         }
         return new Promise(() => {});
       } else {
