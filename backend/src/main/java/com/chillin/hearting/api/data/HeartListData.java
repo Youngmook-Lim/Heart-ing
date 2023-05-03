@@ -10,10 +10,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder
 public class HeartListData implements Data {
     private List<HeartData> heartList;
 
-    @Builder
     public HeartListData(List<HeartData> hearts) {
         this.heartList = hearts;
     }

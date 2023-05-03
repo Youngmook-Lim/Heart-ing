@@ -36,7 +36,6 @@ public class HeartDetailData implements Data {
                 .type(heart.getType())
                 .acqCondition(heart.getAcqCondition())
                 .isLocked(true)
-                .isAcq(true)
                 .build();
     }
 }

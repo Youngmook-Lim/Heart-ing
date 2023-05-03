@@ -14,8 +14,8 @@ public class HeartConditionData implements Data {
     private Long heartId;
     private String name;
     private String heartUrl;
-    private Integer currentValue;
-    private Integer maxValue;
+    private Long currentValue;
+    private Long maxValue;
 
     public static HeartConditionData of(Heart heart) {
         return HeartConditionData.builder()
