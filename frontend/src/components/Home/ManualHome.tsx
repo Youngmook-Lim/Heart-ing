@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import google_login_button from "../../assets/images/png/btn_google_signin_light_normal_web.png";
-import kakao_login_button from "../../assets/images/png/kakao_login_button_1.png";
+import google_login_button from "../../assets/images/social/google.png";
+import kakao_login_button from "../../assets/images/social/kakao.png";
 import main_home_logo from "../../assets/images/logo/main_home_logo.png";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
@@ -62,7 +62,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                 <p className="border-b border-hrtColorPink w-1/4 my-4"></p>
               </span>
             </div>
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center mx-8">
               <a href={KAKAO_REQUEST}>
                 <img
                   src={kakao_login_button}
