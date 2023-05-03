@@ -1,10 +1,12 @@
-import heart_select from '../../assets/images/png/heart_select.png' 
+import heart_select from "../../assets/images/png/heart_select.png";
 
 interface ManualSelectBoxSectionImgProps {
-  manualImg: number
+  manualImg: number;
 }
 
-function ManualSelectBoxSectionImg({manualImg}: ManualSelectBoxSectionImgProps) {
+function ManualSelectBoxSectionImg({
+  manualImg,
+}: ManualSelectBoxSectionImgProps) {
   const index = manualImg;
   const manualImgList = [
     heart_select,
@@ -20,12 +22,15 @@ function ManualSelectBoxSectionImg({manualImg}: ManualSelectBoxSectionImgProps) 
   ];
   return (
     <>
-      <div className="flex justify-center items-center mt-8 mb-4">
-        <img src={manualImgList[index]} alt="설명서 이미지"
-        className='w-2/3' />
+      <div className="flex justify-center items-center h-full">
+        <img
+          src={manualImgList[index]}
+          alt="설명서 이미지"
+          className="h-full"
+        />
       </div>
     </>
-  )
+  );
 }
 
-export default ManualSelectBoxSectionImg
+export default ManualSelectBoxSectionImg;

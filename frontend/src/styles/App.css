@@ -11,10 +11,14 @@
   height: calc((var(--vh, 1vh) * 100) - 3.5rem);
 }
 
-/* body {
+.manualHeight {
+  height: calc((var(--vh, 1vh) * 100) - 10.5rem);
+}
+
+body {
   overflow: hidden;
   touch-action: none;
-} */
+}
 
 /* .App-logo {
   height: 40vmin;
