@@ -27,6 +27,7 @@ public class SentMessageData implements Data {
     private String emojiUrl;
     private LocalDateTime createdDate;
     private LocalDateTime expiredDate;
+    private Boolean isStored;
 
     public static SentMessageData of(Message message) {
         Emoji emoji = message.getEmoji();
