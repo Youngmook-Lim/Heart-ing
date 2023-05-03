@@ -22,6 +22,7 @@ public class UserHeartService {
     private final HeartRepository heartRepository;
 
 
+    @Transactional
     public void saveUserHearts(String userId, Long heartId) {
         User findUser = userRepository.findById(userId).get();
         Heart findHeart = heartRepository.findById(heartId).get();
