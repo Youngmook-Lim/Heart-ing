@@ -9,7 +9,7 @@ import {
 } from "../atoms/userAtoms";
 import { savingUserInfo } from "../features/userInfo";
 
-function Kakao() {
+function Google() {
   const navigate = useNavigate();
 
   const setIsLogin = useSetRecoilState(isLoginAtom);
@@ -22,9 +22,9 @@ function Kakao() {
   useEffect(() => {
     async function kakaoLogin() {
       if (!code) return;
-      const data = await login('kakao', code);
+      const data = await login('google', code);
       if (data !== null) {
-        console.log("카카오 됏당");
+        console.log("구글 됏당");
         console.log("닉네임 머임?", data.data);
         const userInfo = {
           userId: data.data.userId,
@@ -40,13 +40,13 @@ function Kakao() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        console.log("카카오로그인 실패ㅜ;");
+        console.log("ㄱ글로그인 실패ㅜ;");
       }
     }
     kakaoLogin();
   }, [code, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
 
-  return <div>카카오 로그인</div>;
+  return <div>구글 로그인</div>;
 }
 
-export default Kakao;
+export default Google;

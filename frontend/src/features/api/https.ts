@@ -32,7 +32,7 @@ axios.interceptors.response.use(
         } else {
           deleteUserInfo();
           alert("다시 로그인해주세요");
-          window.location.replace("/manual");
+          window.location.replace("/");
         }
         return new Promise(() => {});
       } else {
@@ -42,3 +42,11 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
+export const nonAuthAxios = baseAxios.create({
+  baseURL: process.env.REACT_APP_API,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
