@@ -75,7 +75,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
       <div className="App w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-40">
         <div className="container modal border-hrtColorOutline m-6 w-full">
           <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
-            <div className="flex-auto">마음 읽기</div>
+            <div className="flex-auto">하트 읽기</div>
             <button onClick={() => closeModal()} className="flex-none">
               <ButtonIcon id={0} />
             </button>

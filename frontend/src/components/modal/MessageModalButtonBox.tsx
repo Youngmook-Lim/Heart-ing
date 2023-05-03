@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 
 import { IMessageModalTypes } from "../../types/messageType";
 
@@ -7,29 +8,38 @@ import MessageModalButtonBoxDelete from "./MessageModalButtonBoxDelete";
 import MessageModalButtonBoxEmoji from "./MessageModalButtonBoxEmoji";
 import MessageModalButtonBoxSave from "./MessageModalButtonBoxSave";
 
-function MessageModalButtonBox({
-  mode,
-  isExpired,
-  isStored,
-}: IMessageModalTypes) {
+function MessageModalButtonBox({ ...props }: IMessageModalTypes) {
   // recent : 24시간 리스트에서 읽을 때 => 삭제, 보관, 반응
   // save : 영구보관에서 읽을 때 => 삭제, 닫기, 반응
   // sent : 보낸메시지에서 읽을 때 => 닫기
   // 반응은 만료되지 않은 메시지에서만 가능
   // 이미 보관된 메시지는 보관이 뜨지 않음
 
+  const [isStored, setIsStored] = useState(props.isStored);
+  const [isEmoji, setIsEmoji] = useState(false);
+  const changeIsStored = (value: boolean) => {
+    setIsStored(value);
+  };
+  const changeIsEmoji = (value: boolean) => {
+    setIsEmoji(value);
+  };
+
   return (
     <div className="flex justify-center space-x-2 py-6">
-      {(mode === "recent" && !isStored) || mode === "save" ? (
-        <MessageModalButtonBoxDelete mode={mode} />
+      {(props.mode === "recent" && !isStored) || props.mode === "save" ? (
+        <MessageModalButtonBoxDelete mode={props.mode} />
       ) : null}
-      {mode === "recent" ? (
-        <MessageModalButtonBoxSave isStored={isStored} />
+      {props.mode === "recent" ? (
+        <MessageModalButtonBoxSave
+          isStored={isStored}
+          changeIsStored={changeIsStored}
+        />
       ) : null}
-      {mode === "sent" || mode === "save" ? (
+      {props.mode === "sent" || props.mode === "save" ? (
         <MessageModalButtonBoxClose />
       ) : null}
-      {(mode === "save" || mode === "recent") && !isExpired ? (
+      {(props.mode === "save" || props.mode === "recent") &&
+      !props.isExpired ? (
         <MessageModalButtonBoxEmoji />
       ) : null}
     </div>
