@@ -17,7 +17,7 @@ import MessageModalHeart from "./MessageModalHeart";
 import MessageModalTextbox from "./MessageModalTextbox";
 import MessageModalTime from "./MessageModalTime";
 import ButtonIcon from "../common/ButtonIcon";
-import { getMessageDetail } from "../../features/api/messageApi";
+import { getMessageDetail, getSentMessageDetailApi } from "../../features/api/messageApi";
 
 function MessageModal({ mode }: IMessageModalTypes) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
@@ -35,9 +35,22 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
   }
 
+  async function getSentMessageDetail(selectedMessageId: number | null) {
+    if (!selectedMessageId) return;
+    const data = await getSentMessageDetailApi(selectedMessageId);
+    if (data.status === "success") {
+      console.log(data);
+      setMessageData(data.data);
+    }
+  }
+
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
-    getRecivedMessages(selectedMessageId);
+    if (mode === "received") {   
+      getRecivedMessages(selectedMessageId);
+    } else {
+      getSentMessageDetail(selectedMessageId);
+    }
   }, [mode, selectedMessageId]);
 
   // 메시지 모달을 닫습니다
@@ -86,7 +99,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
             <MessageModalButtonBox
               mode={mode}
               isExpired={isExpired}
-              isStored={messageData.isStored}
+              isStored={messageData?.isStored}
             />
           </div>
         </div>

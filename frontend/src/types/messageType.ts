@@ -54,7 +54,5 @@ export interface IHeartInfoTypes {
 }
 
 export interface ITotalHeartPropsTypes {
-  // totalHeartCnt: number;
-  // onGetTotalHeart: ()
   onGetTotalHeart: () => Promise<number>;
 }

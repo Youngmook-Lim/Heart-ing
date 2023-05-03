@@ -32,17 +32,22 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
                     <div className="mx-6 my-auto">
                         {heartDetailInfo && (
                             <>
-                                <img className="mx-auto my-auto" src='https://heart-ing.s3.ap-northeast-2.amazonaws.com/heart/heart_yellow_1.svg' alt='heartIcon' />
-                                {heartDetailInfo.isLocked ? <div>??</div> : <div>{heartDetailInfo.name}</div>}
-                                <HeartGuideDetailInfoStory heartStory={heartDetailInfo.longDescription} />
-                                <HeartGuideDetailInfoAcqCondition
-                                    acqCondition={heartDetailInfo.acqCondition}
-                                    sendCnt={heartDetailInfo.sendCnt}
-                                    receivedCnt={heartDetailInfo.receivedCnt}
-                                />
+                            {heartDetailInfo.isLocked ? 
+                                <img className="w-2/6 mx-auto my-auto opacity-30" src={heartDetailInfo.heartUrl} alt='heartIcon' />
+                            : <img className="w-2/6 mx-auto my-auto" src={heartDetailInfo.heartUrl} alt='heartIcon' />}
+                                 <div className="text-2xl">{heartDetailInfo.name}하트</div>
+                                 <div className="mt-4">
+                                    <HeartGuideDetailInfoStory heartStory={heartDetailInfo.longDescription} />
+                                    <HeartGuideDetailInfoAcqCondition
+                                        acqCondition={heartDetailInfo.acqCondition}
+                                        conditions={heartDetailInfo.conditions}
+                                        type={heartDetailInfo.type}
+                                    />
+                                 </div>
                             </>
                         )}
-                        <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>확인</div>
+                        <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>닫기</div>
+                        {/* <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>획득</div> */}
                     </div>
                 </div>
             </div>

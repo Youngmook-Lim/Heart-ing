@@ -18,8 +18,8 @@ function HeartGuideListItem({ heartInfo, onGetHeartDetailData }: HeartGuideListI
 
     return (
         <div onClick={() => openDetailInfo()}>
-            <img className='mx-auto my-auto' src={heartInfo.heartUrl} alt='heartIcon' />
-            {heartInfo.isLocked ? <div>??</div> : <div>{heartInfo.name}</div>}
+            <img className='mx-auto mt-6' src={heartInfo.heartUrl} alt='heartIcon' />
+             <div>{heartInfo.name}</div>
         </div>
     )
 }
