@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
+import google_login_button from '../../assets/images/png/btn_google_signin_light_normal_web.png'
 import kakao_login_button from '../../assets/images/png/kakao_login_button_1.png'
 import main_home_logo from '../../assets/images/logo/main_home_logo.png'
 import { useRecoilValue } from 'recoil';
@@ -18,6 +19,11 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes ) {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
   const KAKAO_REQUEST = `${KAKAO_API}/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+
+  const GOOGLE_API = process.env.REACT_APP_GOOGLE_API;
+  const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+  const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const GOOGLE_REQUEST = `${GOOGLE_API}/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email`;
 
   const isLogin = useRecoilValue(isLoginAtom)
   const userId = getUserInfo().userId;
@@ -49,6 +55,9 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes ) {
               </div>
               <a href={KAKAO_REQUEST}>
                 <img src={kakao_login_button} alt='kakao_login_button' />
+              </a>
+              <a href={GOOGLE_REQUEST}>
+                <img src={google_login_button} alt='google_login_button' />
               </a>
             </>
           }
