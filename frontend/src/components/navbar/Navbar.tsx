@@ -27,9 +27,7 @@ function Navbar() {
   }
   
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    isLogin ? 
-      navigate(`/heartboard/user?id=${getUserInfo().userId}`)
-      : navigate('/manual')
+    navigate('/')
   }
   
   return (

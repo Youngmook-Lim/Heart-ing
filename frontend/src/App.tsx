@@ -14,6 +14,7 @@ import ReceivedHeart from "./pages/ReceivedHeart";
 import SentHeart from "./pages/SentHeart";
 import Setting from "./pages/Setting";
 import Navbar from "./components/navbar/Navbar";
+import Google from "./pages/Google";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/heartguide" element={<HeartGuide />} />
           <Route path="/heartwriting" element={<Heartwriting />} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
+          <Route path="/oauth2/code/google" element={<Google />} />
           <Route path="/manual" element={<Manual />} />
           <Route path="/receivedheart" element={<ReceivedHeart />} />
           <Route path="/sentheart" element={<SentHeart />} />
