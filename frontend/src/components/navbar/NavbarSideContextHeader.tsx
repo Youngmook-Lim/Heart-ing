@@ -5,7 +5,7 @@ import { isLoginAtom, userNicknameAtom } from "../../atoms/userAtoms";
 import { logout } from "../../features/api/userApi";
 import { deleteUserInfo, getUserInfo } from "../../features/userInfo";
 
-function NavbarSideContextHeader() {
+function NavbarSideContextHeader({...props}) {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);

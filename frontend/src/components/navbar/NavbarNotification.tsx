@@ -34,7 +34,7 @@ function NavbarNotification({...props}) {
   // }, [notiRef]);
 
   return (
-    <div className="border-hrtColorOutline mx-auto w-72 h-32 absolute right-12 z-10">
+    <div className="border-hrtColorOutline mx-auto w-72 h-32 absolute right-12 z-50">
     <div className="modal relative">
       <div className="bg-hrtColorOutline border-hrtColorOutline mb-4 flex justify-between">
         <div className="text-white h-8 text-lg leading-8 text-left pl-2 pr-1 shadow-lg shadow-purple">알림</div>
@@ -44,7 +44,7 @@ function NavbarNotification({...props}) {
       </div>
       <div className="overflow-y-scroll scrollbar-hidden h-32 mx-3">
         <div className="flex flex-col items-start text-left">
-          <p className="text-xs">읽지 않은 알림</p>
+          <p className="text-xs">• 읽지 않은 알림</p>
           { Object.keys(props.notiData.falseList).length ?
             <div>
               {props.notiData.falseList.map((message: IGetMessageListTypes) => (
@@ -56,7 +56,7 @@ function NavbarNotification({...props}) {
         }
         </div>
         <div className="flex flex-col items-start">
-          <p className="text-xs">지난 알림</p>
+          <p className="text-xs">• 지난 알림</p>
           {props.notiData.trueList.map((message: IGetMessageListTypes) => (
             <div>
               <NavbarNotificationItem messageInfo={message} onClickHandler={onClickHandler} />

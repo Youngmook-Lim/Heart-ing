@@ -84,7 +84,7 @@ function Navbar() {
     if (isLogin) {
       getData(myId)
     }
-  }, [])
+  }, [isLogin])
   
   return (
     <div>
