@@ -1,12 +1,12 @@
-import { axios } from './https'
+import { axios, nonAuthAxios } from './https'
 
-export async function loginKakao(code: string) {
+export async function login(provider: string, code: string) {
   try{
-    const res = await axios.get(`api/v1/auth/guests/social/${code}`);
+    const res = await nonAuthAxios.get(`api/v1/auth/guests/social/${provider}?code=${code}`);
     const data = res.data
     return data
   } catch(err) {
-    console.log('카카오 안됐단다')
+    console.log('소셜 안됐단다')
     console.log(err)
     return null
   }
@@ -47,7 +47,7 @@ export async function logout() {
 
 export async function getProfile(userId:string) {
   try{
-    const res = await axios.get(`api/v1/auth/guests/${userId}`)
+    const res = await nonAuthAxios.get(`api/v1/auth/guests/${userId}`)
     const data = res.data
     return data
   } catch(err) {
