@@ -30,9 +30,10 @@ public class HeartService {
 
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
     private static final String HEART_TYPE_SPECIAL = "SPECIAL";
-    private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
     private static final int HEART_PLANET_MAX_VALUE = 5;
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
+    private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
+    private static final Long[] specialHeartList = new Long[]{6L, 7L};
 
     /**
      * 모든 도감 리스트를 반환합니다.
@@ -172,6 +173,6 @@ public class HeartService {
 
     public void getHeartCondition(String userId) {
         List<Heart> specialHearts = heartRepository.findAllByType(HEART_TYPE_SPECIAL);
-
+        
     }
 }
