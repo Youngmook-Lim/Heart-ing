@@ -56,7 +56,7 @@ function BottomButton({ ...props }) {
             <p className="text-hrtColorPink">{props.userProfile.nickname}</p>
             <p>님에게</p>
           </div>
-          <div className="text-2xl">마음 보내기</div>
+          <div className="text-2xl">하트 보내기</div>
         </div>
       )}
     </button>
