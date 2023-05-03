@@ -4,6 +4,7 @@ import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
+import com.chillin.hearting.api.service.HeartService;
 import com.chillin.hearting.api.service.MessageService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.*;
@@ -24,6 +25,7 @@ public class MessageController {
 
     private static final String SUCCESS = "success";
     private final MessageService messageService;
+    private final HeartService heartService;
 
     @PostMapping("")
     public ResponseEntity<ResponseDTO> sendMessage(@Valid @RequestBody SendMessageReq sendMessageReq, HttpServletRequest httpServletRequest) {
@@ -51,6 +53,8 @@ public class MessageController {
         log.debug("Client request from : " + clientIp);
 
         Data data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), clientIp);
+
+        if (user != null) heartService.updateHeartCondition(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
