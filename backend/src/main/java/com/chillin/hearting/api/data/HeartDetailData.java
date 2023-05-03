@@ -23,6 +23,7 @@ public class HeartDetailData implements Data {
     private String type;
     private String acqCondition;
     private Boolean isLocked;
+    private Boolean isAcq;
     private List<HeartConditionData> conditions;
 
     public static HeartDetailData of(Heart heart) {
@@ -35,6 +36,7 @@ public class HeartDetailData implements Data {
                 .type(heart.getType())
                 .acqCondition(heart.getAcqCondition())
                 .isLocked(true)
+                .isAcq(true)
                 .build();
     }
 }

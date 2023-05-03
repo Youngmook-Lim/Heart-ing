@@ -18,8 +18,8 @@ spring:
               - profile_nickname
               - account_email
           google:
-            redirect-uri: http://localhost:3000/oauth2/code/google
-            #            redirect-uri: https://heart-ing.com/oauth2/code/google
+            #            redirect-uri: http://localhost:3000/oauth2/code/google
+            redirect-uri: https://heart-ing.com/oauth2/code/google
             scope:
               - email
 

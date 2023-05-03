@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { io } from 'socket.io-client';
@@ -11,6 +11,11 @@ import { getUserInfo } from "../../features/userInfo";
 import useDetectClose from "../../features/hook/useDetectClose";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
+import { getReceived } from "../../features/api/messageApi";
+
+interface MyObject {
+  [key: string]: any; // 어떤 타입의 값도 가능한 인덱스 시그니처
+}
 
 function Navbar() {
   const navigate = useNavigate()
@@ -18,6 +23,7 @@ function Navbar() {
   const isLogin = useRecoilValue(isLoginAtom)
   // const [notiIsOpen, notiRef, notiHandler] = useDetectClose(false)
   const [notiIsOpen, setNotiIsOpen] = useState(false)
+  const [receivedList, setReceivedList] = useState({});
   const myId = getUserInfo().userId
 
   const onNotiHandler = (e: MouseEvent) => {
@@ -31,17 +37,38 @@ function Navbar() {
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate('/')
   }
+  
+  const getData = useCallback(async (userId: string | null) => {
+    if (!userId) return;
+    console.log(userId);
+    const data = await getReceived(userId);
+    if (data.status === "success") {
+      console.log('걍 뽑아', data.data.messageList)
+      const notiData:MyObject = {trueList:[], falseList:[]};
+      const listLength = Math.min(20, Object.keys(data.data.messageList).length)
+      for (let i = 0; i < listLength; i++) {
+        console.log('읽었어?', data.data.messageList[i].isRead)
+        if (data.data.messageList[i].isRead) {
+          notiData.trueList[i] = data.data.messageList[i]
+        } else {
+          notiData.falseList[i] = data.data.messageList[i]
+        }
+      }
+      setReceivedList(notiData);
+      console.log('정제해봣습ㄴ디ㅏ', notiData)
+    }
+  }, []);
 
-    const onSocket = () => {
+  const onSocket = () => {
     if (isLogin) {
       const socket = io("https://heart-ing.com", { path: "/ws" });
       socket.on("connect", () => {
         console.log("회원 웹소켓 서버에 연결");
         socket.emit('join-room', getUserInfo().userId);
       })
-
       socket.on("receive-message", (data) => {
         console.log("받은 메시지:", data);
+        getData(myId)
       });
     } else {
       const socket = io("https://heart-ing.com", { path: "/ws" });
@@ -50,11 +77,14 @@ function Navbar() {
         socket.emit('join-room', 'anonymous');
       })
     }
-
   };
+
 
     useEffect(() => {
       onSocket()
+      if (isLogin) {
+        getData(myId)
+      }
     }, [])
   
   return (
@@ -83,7 +113,7 @@ function Navbar() {
               </svg>
             </div>
             {notiIsOpen ? 
-            <NavbarNotification onNotiHandler={onNotiHandler} />
+            <NavbarNotification onNotiHandler={onNotiHandler} setNotiIsOpen={setNotiIsOpen} notiData={receivedList} />
             : null}
             </div>
             :null}

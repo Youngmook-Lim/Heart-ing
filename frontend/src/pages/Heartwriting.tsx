@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { io } from 'socket.io-client';
+
 import { IMessageSendTypes } from '../types/messageType';
 import { getUserInfo } from '../features/userInfo';
 import { getMessageHeartApi, sendMessageApi } from '../features/api/messageApi';
@@ -19,6 +21,8 @@ function Heartwriting() {
   
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
+  const socket = io("https://heart-ing.com", { path: "/ws" });
+
   const getUserProfile = useCallback(
     async (userId: string | null) => {
       if (!userId) {
@@ -45,10 +49,16 @@ function Heartwriting() {
       content: content,
     }
     
-    const status = await sendMessageApi(messageInfo)
-    if (status === 'success') {
+    const data = await sendMessageApi(messageInfo)
+    if (data.status === 'success') {
       alert('메세지 성공!')
       navigate(`/heartboard/user?id=${userId}`)
+      if (socket && socket.connected) {
+        socket.emit("send-message", userId, data.data);
+        console.log('알람보내용')
+  } else {
+    console.log("웹소켓 서버에 먼저 연결하세요");
+  }
     }
   }
  

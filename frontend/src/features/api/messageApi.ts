@@ -16,8 +16,8 @@ export async function getReceived(userId: string) {
 export async function sendMessageApi(body: IMessageSendTypes) {
   try {
     const res = await axios.post(`api/v1/messages`, body);
-    const status = res.data.status;
-    return status;
+    const data = res.data;
+    return data;
   } catch (err) {
     console.log(err);
     return null;
@@ -89,6 +89,18 @@ export async function getSent() {
   } catch (err) {
     console.log("보낸 메시지 리스트 조회에 실패했습니다");
     console.log(err);
+    return null;
+  }
+}
+
+export async function getSentMessageDetailApi(messageId: number) {
+  try {
+    const res = await axios.get(`api/v1/messages/sent/${messageId}`);
+    const data = res.data;
+    console.log("내가 보낸거 확인~", data)
+    return data;
+  } catch (err) {
+    console.log("내가 보낸 거 못 받았당", err);
     return null;
   }
 }

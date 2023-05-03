@@ -30,15 +30,15 @@ function HeartGuide() {
 
   return (
     <>
-      <h1>마음 도감</h1>
-      <div className="container mx-auto px-6 py-8">
-      <div className="modal border-hrtColorPink">
-        {allHeartInfoList ?
-          <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo} /> : null}
-        </div>
-        {openDetailInfo ?
-          <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
+      <div className="text-3xl py-3 textShadow">
+        <p className="text-hrtColorYellow">하트 도감</p>
       </div>
+        <div className="">
+          {allHeartInfoList ?
+            <HeartGuideList allHeartInfoList={allHeartInfoList} onGetHeartDetailData={handleGetHeartDetailInfo} /> : null}
+          </div>
+          {openDetailInfo ?
+            <HeartGuideDetailInfo heartDetailInfo={heartDetailInfo} /> : null }
     </>
   )
 }

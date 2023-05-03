@@ -18,44 +18,41 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
     setOpenDetailInfoAtom(false);
   };
 
-  return (
-    <>
-      <div className="fullHeight w-full fixed left-0 top-0 bg-black bg-opacity-70 text-center flex  items-center justify-center ">
-        <div className="container modal border-hrtColorOutline m-6 w-full">
-          <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
-            <div className="flex-auto">정보</div>
-            <button onClick={() => closeModal()} className="flex-none">
-              <ButtonIcon id={0} />
-            </button>
-          </div>
-          <div className="mx-6 my-auto">
-            {heartDetailInfo && (
-              <>
-                <img
-                  className="mx-auto my-auto"
-                  src="https://heart-ing.s3.ap-northeast-2.amazonaws.com/heart/heart_yellow_1.svg"
-                  alt="heartIcon"
-                />
-                {heartDetailInfo.isLocked ? (
-                  <div>??</div>
-                ) : (
-                  <div>{heartDetailInfo.name}</div>
-                )}
-                <HeartGuideDetailInfoStory
-                  heartStory={heartDetailInfo.longDescription}
-                />
-                <HeartGuideDetailInfoAcqCondition
-                  acqCondition={heartDetailInfo.acqCondition}
-                  sendCnt={heartDetailInfo.sendCnt}
-                  receivedCnt={heartDetailInfo.receivedCnt}
-                />
-              </>
-            )}
-            <div
-              className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline"
-              onClick={() => closeModal()}
-            >
-              확인
+    const closeModal = () => {
+        setOpenDetailInfoAtom(false);
+    };
+
+    return (
+        <>
+            <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-70 text-center flex  items-center justify-center ">
+                <div className="container modal border-hrtColorOutline m-6 w-full">
+                    <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
+                        <div className="flex-auto">정보</div>
+                        <button onClick={() => closeModal()} className="flex-none">
+                            <ButtonIcon id={0} />
+                        </button>
+                    </div>
+                    <div className="mx-6 my-auto">
+                        {heartDetailInfo && (
+                            <>
+                            {heartDetailInfo.isLocked ? 
+                                <img className="w-2/6 mx-auto my-auto opacity-30" src={heartDetailInfo.heartUrl} alt='heartIcon' />
+                            : <img className="w-2/6 mx-auto my-auto" src={heartDetailInfo.heartUrl} alt='heartIcon' />}
+                                 <div className="text-2xl">{heartDetailInfo.name}하트</div>
+                                 <div className="mt-4">
+                                    <HeartGuideDetailInfoStory heartStory={heartDetailInfo.longDescription} />
+                                    <HeartGuideDetailInfoAcqCondition
+                                        acqCondition={heartDetailInfo.acqCondition}
+                                        conditions={heartDetailInfo.conditions}
+                                        type={heartDetailInfo.type}
+                                    />
+                                 </div>
+                            </>
+                        )}
+                        <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>닫기</div>
+                        {/* <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>획득</div> */}
+                    </div>
+                </div>
             </div>
           </div>
         </div>
