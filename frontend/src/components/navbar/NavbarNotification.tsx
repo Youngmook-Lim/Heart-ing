@@ -3,23 +3,26 @@ import { useRecoilValue } from "recoil";
 
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
-import { IGetMessageListTypes, IMessageInfoTypes } from "../../types/messageType";
+import {
+  IGetMessageListTypes,
+  IMessageInfoTypes,
+} from "../../types/messageType";
 import NavbarNotificationItem from "./NavbarNotificationItem";
 import PurpleCloseButton from "../../assets/images/pixel/button/close_purple_1.svg";
 import { useNavigate } from "react-router";
 
-function NavbarNotification({...props}) {
-  const navigate = useNavigate()
+function NavbarNotification({ ...props }) {
+  const navigate = useNavigate();
   const notiRef = useRef<HTMLDivElement>(null);
 
   const closeNoti = (e: React.MouseEvent<HTMLButtonElement>) => {
-    props.setNotiIsOpen(false)
-  }
+    props.setNotiIsOpen(false);
+  };
 
   const onClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    props.setNotiIsOpen(false)
-    navigate(`/heartboard/user?id=${getUserInfo().userId}`)
-  }
+    props.setNotiIsOpen(false);
+    navigate(`/heartboard/user?id=${getUserInfo().userId}`);
+  };
 
   // useEffect(() => {
   //   const handleClick = (e: MouseEvent) => {
@@ -62,11 +65,11 @@ function NavbarNotification({...props}) {
               <NavbarNotificationItem messageInfo={message} onClickHandler={onClickHandler} />
             </div>
           ))}
-        </div>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default NavbarNotification
+export default NavbarNotification;

@@ -72,7 +72,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const expiredDate = new Date(messageData.expiredDate);
     const isExpired = kr_curr > expiredDate; // 현재 시간보다 만료 시간이 더 과거이면 만료됨
     return (
-      <div className="App w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-50">
+      <div className="App w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-40">
         <div className="container modal border-hrtColorOutline m-6 w-full">
           <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
             <div className="flex-auto">마음 읽기</div>
