@@ -148,6 +148,7 @@ public class HeartService {
                 heartConditionData.setCurrentValue(userCurrentValue);
                 heartConditionData.setMaxValue(HEART_PLANET_MAX_VALUE);
                 heartConditionList.add(heartConditionData);
+                break;
 
             case 7:
                 log.debug("무지개 하트 획득 조건을 반환합니다.");
@@ -163,6 +164,7 @@ public class HeartService {
                             .build();
                     heartConditionList.add(data);
                 }
+                break;
         }
 
         return heartConditionList;
