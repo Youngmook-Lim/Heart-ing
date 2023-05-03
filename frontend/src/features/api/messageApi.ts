@@ -16,8 +16,8 @@ export async function getReceived(userId: string) {
 export async function sendMessageApi(body: IMessageSendTypes) {
   try {
     const res = await axios.post(`api/v1/messages`, body);
-    const status = res.data.status;
-    return status;
+    const data = res.data;
+    return data;
   } catch (err) {
     console.log(err);
     return null;
