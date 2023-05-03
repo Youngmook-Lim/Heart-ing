@@ -4,9 +4,10 @@ import HeartGuideDetailInfoAcqConditionItem from "./HeartGuideDetailInfoAcqCondi
 interface HeartGuideDetailInfoAcqConditionProps {
     acqCondition: string,
     conditions: IHeartConditionsTypes[] | null,
+    type: string,
 }
 
-function HeartGuideDetailInfoAcqCondition({ acqCondition, conditions }:HeartGuideDetailInfoAcqConditionProps) {
+function HeartGuideDetailInfoAcqCondition({ acqCondition, conditions, type }:HeartGuideDetailInfoAcqConditionProps) {
     return (
         <>
             <div className="textShadow mt-4">
@@ -21,7 +22,12 @@ function HeartGuideDetailInfoAcqCondition({ acqCondition, conditions }:HeartGuid
                             condition={condition}
                         />
                     ))
-                : null}
+                    : (type === 'SPECIAL' ?
+                        <div className="flex">
+                            <div className="w-full h-4 bg-hrtColorPink my-2" style={{ width: "100%" }}></div>
+                            <p className="w-10 ml-2 text-xl"> max </p>
+                        </div>
+                        : null )}
             </div>
         </>
     )
