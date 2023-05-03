@@ -1,8 +1,26 @@
 .App {
   text-align: center;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
-.App-logo {
+.navHeight {
+  height: 3.5rem;
+}
+
+.fullHeight {
+  height: calc((var(--vh, 1vh) * 100) - 3.5rem);
+}
+
+.manualHeight {
+  height: calc((var(--vh, 1vh) * 100) - 12rem);
+}
+
+body {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -26,7 +44,7 @@
 
 .App-link {
   color: #61dafb;
-}
+} */
 
 @keyframes App-logo-spin {
   from {
@@ -38,15 +56,15 @@
 }
 
 .textShadow p {
-  text-shadow: -2px 0 #fb8bb0, 0 2px #fb8bb0, 2px 0 #fb8bb0, 0 -2px #fb8bb0;
+  text-shadow: -1px 0 #fb8bb0, 0 1px #fb8bb0, 1px 0 #fb8bb0, 0 -1px #fb8bb0;
 }
 
 .textShadow .purple {
-  text-shadow: -2px 0 #d5a7ea, 0 2px #d5a7ea, 2px 0 #d5a7ea, 0 -2px #d5a7ea;
+  text-shadow: -1px 0 #d5a7ea, 0 1px #d5a7ea, 1px 0 #d5a7ea, 0 -1px #d5a7ea;
 }
 
 .textShadow .white {
-  text-shadow: -2px 0 #ffffff, 0 2px #ffffff, 2px 0 #ffffff, 0 -2px #ffffff;
+  text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
 }
 
 .textShadow .textShadow-none {
