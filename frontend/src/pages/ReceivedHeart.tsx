@@ -26,7 +26,7 @@ function ReceivedHeart() {
   }, [readMessage]);
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto px-6 py-8 fullHeight overflow-auto">
       <HeartBoxHeader mode={"received"} />
       <HeartBoxList inboxList={inboxList} />
       {readMessage ? <MessageModal mode={"save"} /> : null}

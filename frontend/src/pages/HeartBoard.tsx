@@ -106,19 +106,19 @@ function HeartBoard() {
   }, [readMessage]);
 
   const outsideHeightStyle = {
-    height: `calc(100vh - ${isMyBoard ? 12 : 7}rem)`,
+    height: `calc((var(--vh, 1vh) * 100) - ${isMyBoard ? 12 : 7}rem)`,
   };
   const innerHeightStyle = {
-    height: `calc(100vh - ${isMyBoard ? 15 : 10}rem)`,
+    height: `calc((var(--vh, 1vh) * 100) - ${isMyBoard ? 15 : 10}rem)`,
   };
 
   return (
-    <div className="container mx-auto p-6 pb-8 h-[calc(100vh-8rem)]">
+    <div className="container mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
       <div
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
       >
-        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2">
+        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-40">
           <div>마음 수신함</div>
           <div className="">
             <div className="text-xs text-right h-6 -my-1 -mt-2">누적 수신</div>
