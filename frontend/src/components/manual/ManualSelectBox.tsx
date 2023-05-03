@@ -81,7 +81,7 @@ function ManualSelectBox() {
 
   return (
     <div className="flex flex-col items-center manualHeight">
-      <div className="h-20 w-5/6 bg-hrtColorPink rounded-lg flex flex-col justify-center items-center">
+      <div className="h-24 w-5/6 bg-hrtColorPink rounded-lg flex flex-col justify-center items-center">
         <select
           className="w-2/3 h-6 bg-white text-center mt-1 mb-2"
           value={selectedOption}
