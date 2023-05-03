@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import NavbarSideContext from "./NavbarSideContext";
+import NavbarSideContext from "./NavbarSideContent";
 
 // interface SidebarProps {
 //   width?: number;
@@ -38,7 +38,7 @@ function NavbarSide({...props}) {
     }
   };
 
-  const onOpenHandler = (e: React.MouseEvent<any>) => {
+  const onOpenHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsOpen(false)
   }
 

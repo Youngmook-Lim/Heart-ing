@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { io } from "socket.io-client";
 
 import NavbarSide from "./NavbarSide";
-import NavbarSideContext from "./NavbarSideContext";
+import NavbarSideContext from "./NavbarSideContent";
 
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
@@ -87,13 +87,8 @@ function Navbar() {
     if (isLogin) {
       getData(myId);
     }
-<<<<<<< HEAD
   }, [isLogin])
   
-=======
-  }, []);
-
->>>>>>> 5c6390ca3d11c0704cc2b88786eab6cf56cea0a9
   return (
     <div>
       <nav className="navHeight">
