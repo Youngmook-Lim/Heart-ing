@@ -93,6 +93,18 @@ export async function getSent() {
   }
 }
 
+export async function getSentMessageDetailApi(messageId: number) {
+  try {
+    const res = await axios.get(`api/v1/messages/sent/${messageId}`);
+    const data = res.data;
+    console.log("내가 보낸거 확인~", data)
+    return data;
+  } catch (err) {
+    console.log("내가 보낸 거 못 받았당", err);
+    return null;
+  }
+}
+
 export async function getMessageHeartApi() {
   try {
     const res = await axios.get("api/v1/hearts/user-hearts");
