@@ -41,6 +41,7 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
                                     <HeartGuideDetailInfoAcqCondition
                                         acqCondition={heartDetailInfo.acqCondition}
                                         conditions={heartDetailInfo.conditions}
+                                        type={heartDetailInfo.type}
                                     />
                                  </div>
                             </>
