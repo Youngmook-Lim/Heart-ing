@@ -8,22 +8,20 @@ function HeartGuideDetailInfoAcqConditionItem({condition}: AcqConditionItemProps
 
   const currentValue = condition.currentValue
   const maxValue = condition.maxValue
-
-  const percentage = () => {
-    const calculated = (currentValue / maxValue) * 100
-    if( calculated > 100) {
-      return 100
-    }
-    return calculated
-  }
-
+  
   return (
     <>
-    <div className="w-full h-4 bg-white border-1 border-hrtColorPink" style={{ width: `${percentage}%` }}>
-      <div className="h-full bg-hrtColorPink">
+      <div className="flex items-center">
+        {condition.heartId ? (
+          <img className='w-6 mr-2' src={condition.heartUrl ? condition.heartUrl : undefined} alt='heartIcon' />
+        ) : null }
+        <div className="w-full h-4 bg-white border-2 border-hrtColorPink">
+          <div className="h-full bg-hrtColorPink" style={{ width: `${(currentValue / maxValue) * 100}%` }}></div>
+        </div>
+        <div className="ml-2">
+          <p className="w-10">{currentValue} / {maxValue}</p>
+        </div>
       </div>
-    </div>
-    <p>{currentValue} / {maxValue}</p>
     </>
   )
 }
