@@ -19,7 +19,7 @@ function BottomButton({ ...props }) {
         .writeText(window.location.href)
         .then(() => {
           alert(
-            `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+            `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
           );
         })
         .catch(() => {
@@ -39,7 +39,7 @@ function BottomButton({ ...props }) {
       document.execCommand("copy");
       document.body.removeChild(textarea);
       alert(
-        `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+        `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
       );
     }
   };
