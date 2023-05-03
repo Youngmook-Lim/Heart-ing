@@ -113,13 +113,13 @@ function HeartBoard() {
   };
 
   return (
-    <div className="container mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
+    <div className="container fullHeight mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
       <div
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
       >
-        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-40">
-          <div>마음 수신함</div>
+        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-10">
+          <div>하트 수신함</div>
           <div className="">
             <div className="text-xs text-right h-6 -my-1 -mt-2">누적 수신</div>
             <div className="flex -mt-1.5">
@@ -141,7 +141,7 @@ function HeartBoard() {
           className="whitespace-nowrap overflow-auto scrollbar-hide"
           style={innerHeightStyle}
         >
-          <div className="pb-4">
+          <div className="pb-2">
             <HeartBoardProfileBox
               onChangeProfile={updateProfile}
               userProfile={userProfile}
