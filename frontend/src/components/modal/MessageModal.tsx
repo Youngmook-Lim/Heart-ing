@@ -5,11 +5,13 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   readMessageAtom,
   selectedMessageIdAtom,
+  isOpenEmojiListAtom
 } from "../../atoms/messageAtoms";
 
 import {
   IMessageDetailTypes,
   IMessageModalTypes,
+  IResponseHeartTypes,
 } from "../../types/messageType";
 
 import MessageModalButtonBox from "./MessageModalButtonBox";
@@ -20,11 +22,14 @@ import ButtonIcon from "../common/ButtonIcon";
 import {
   getMessageDetail,
   getSentMessageDetailApi,
+  responseHeartApi,
 } from "../../features/api/messageApi";
+import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
 function MessageModal({ mode }: IMessageModalTypes) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
+  const isOpenEmojiList = useRecoilValue(isOpenEmojiListAtom);
 
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -47,19 +52,35 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
   }
 
-  useEffect(() => {
-    // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
-    if (mode === "sent") {
-      getSentMessageDetail(selectedMessageId);
-    } else {
-      getRecivedMessages(selectedMessageId);
+  async function onEmojiHandler(emojiId:number) {
+    const EmojiInfo: IResponseHeartTypes = {
+      messageId: selectedMessageId,
+      emojiId: emojiId,
     }
-  }, [mode, selectedMessageId]);
+    console.log("데이터 잘 담아보내니...?ㅠㅠㅠ", EmojiInfo)
+    const data = await responseHeartApi(EmojiInfo)
+    if (data === 'success') {
+      console.log("반응 이모지 전송 성공")
+    } else {
+      console.log("반응 이모지 전송 실패~!");
+    }
+  }
+    
+    useEffect(() => {
+      // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
+      if (mode === "sent") {
+        getSentMessageDetail(selectedMessageId);
+      } else {
+        getRecivedMessages(selectedMessageId);
+      }
+    }, [mode, selectedMessageId]);
+    
+    // 메시지 모달을 닫습니다
+    const closeModal = () => {
+      setReadMessageAtom(false);
+    };
+    
 
-  // 메시지 모달을 닫습니다
-  const closeModal = () => {
-    setReadMessageAtom(false);
-  };
 
   const curr = new Date();
   console.log("현재시간(Locale) : " + curr + "<br>"); // 현재시간(Locale)
@@ -99,6 +120,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
               title={messageData.title}
               content={messageData.content}
             />
+            { isOpenEmojiList ? <HeartResponseEmojiList onEmojiHandler={ onEmojiHandler }/> : null }
             <MessageModalButtonBox
               mode={mode}
               isExpired={isExpired}
