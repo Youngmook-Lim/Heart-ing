@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -67,7 +68,7 @@ class MessageReceivedServiceTest {
         messageList.add(message3);
         messageList.add(message4);
 
-        doReturn(messageList).when(messageRepository).findByReceiverIdAndIsActiveTrue(receiverId);
+        doReturn(messageList).when(messageRepository).findByReceiverIdAndIsActiveTrue(receiverId, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         // when
         final ReceivedMessageData data = messageReceivedService.getReceivedMessages(receiverId, true);
@@ -76,7 +77,7 @@ class MessageReceivedServiceTest {
         assertThat(data.getMessageList().size()).isEqualTo(2);
 
         // verify
-        verify(messageRepository, times(1)).findByReceiverIdAndIsActiveTrue(receiverId);
+        verify(messageRepository, times(1)).findByReceiverIdAndIsActiveTrue(receiverId, Sort.by(Sort.Direction.DESC, "createdDate"));
         verify(messageRepository, times(2)).save(any(Message.class));
     }
 

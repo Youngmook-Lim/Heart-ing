@@ -10,6 +10,7 @@ import com.chillin.hearting.exception.MessageNotFoundException;
 import com.chillin.hearting.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class MessageReceivedService {
     public ReceivedMessageData getReceivedMessages(String userId, boolean isSelf) {
 
         // Get list of all received messages
-        List<Message> initialList = messageRepository.findByReceiverIdAndIsActiveTrue(userId);
+        List<Message> initialList = messageRepository.findByReceiverIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
         log.debug(initialList.toString());
 
         // Update expired messages
