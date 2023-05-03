@@ -45,11 +45,11 @@ function HeartBoardList({ ...props }) {
       <div className="">
         {isMyBoard ? (
           <div className="text-sm text-hrtColorPink m-2 my-6">
-            친구들에게 마음 수신함을 공유해보세요!
+            친구들에게 하트 수신함을 공유해보세요!
           </div>
         ) : (
           <div className="text-sm text-hrtColorPink m-2 my-6">
-            여러분의 마음을 보내보세요!
+            여러분의 하트를 보내보세요!
           </div>
         )}
       </div>
