@@ -14,6 +14,7 @@ public class HeartData implements Data {
     private Long heartId;
     private String name;
     private String heartUrl;
+    private String shortDescription;
     private String type;
     @Builder.Default
     @Getter(onMethod_ = {@JsonProperty("isLocked")})
@@ -27,6 +28,7 @@ public class HeartData implements Data {
                 .heartId(heart.getId())
                 .name(heart.getName())
                 .heartUrl((isLocked) ? getLockedUrl() : heart.getImageUrl())
+                .shortDescription(heart.getShortDescription())
                 .type(heart.getType())
                 .isLocked(isLocked)
                 .build();
