@@ -10,13 +10,12 @@ import com.chillin.hearting.db.repository.UserHeartRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,7 +32,8 @@ public class HeartService {
     private static final int HEART_PLANET_MAX_VALUE = 5;
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
-    private static final Long[] specialHeartList = new Long[]{6L, 7L};
+    private static final ArrayList<Long> specialHeartList = new ArrayList<>(Arrays.asList(7L));
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 모든 도감 리스트를 반환합니다.
@@ -43,25 +43,25 @@ public class HeartService {
      * @param user
      * @return 하트 DTO
      */
-    public List<HeartData> findAllHearts(User user) {
+    public Data findAllHearts(User user) {
         log.debug("도감 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
         List<Heart> allHearts = heartRepository.findAll();
 
-        HashSet<Long> hashSet = new HashSet<>();
+        HashSet<Long> mySpecialHeartSet = new HashSet<>();
         if (user != null) {
             String userId = user.getId();
             log.debug("들어온 유저 아이디 : {}", userId);
             List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
             for (UserHeart myHeart : userHearts) {
-                hashSet.add(myHeart.getHeart().getId());
+                mySpecialHeartSet.add(myHeart.getHeart().getId());
             }
         }
 
         List<HeartData> resHearts = new ArrayList<>();
         for (Heart heart : allHearts) {
-            resHearts.add(HeartData.of(heart, (HEART_TYPE_DEFAULT.equals(heart.getType()) || hashSet.contains(heart.getId()) ? false : true)));
+            resHearts.add(HeartData.of(heart, (HEART_TYPE_DEFAULT.equals(heart.getType()) || mySpecialHeartSet.contains(heart.getId()) ? false : true)));
         }
-        return resHearts;
+        return HeartListData.builder().heartList(resHearts).build();
     }
 
     /**
@@ -96,6 +96,19 @@ public class HeartService {
             }
         }
 
+//        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("firstName", "Gyunny");
+//        map.put("lastName", "Choi");
+//        map.put("gender", "Man");
+//        hashOperations.putAll("key", map);
+
+        String firstName = (String) redisTemplate.opsForHash().get("key", "firstName");
+        String lastName = (String) redisTemplate.opsForHash().get("key", "lastName");
+        String gender = (String) redisTemplate.opsForHash().get("key", "gender");
+        System.out.println(firstName);
+        System.out.println(lastName);
+        System.out.println(gender);
         return resHearts;
     }
 
@@ -122,14 +135,8 @@ public class HeartService {
                 if (!findUserHeart.isEmpty()) {
                     heartDetailData.setIsLocked(false);
                 } else {
-                    List<HeartConditionData> conditionList = getHeartCondition(userId, findHeart);
-                    for (HeartConditionData conditionData : conditionList) {
-                        if (conditionData.getCurrentValue() < conditionData.getMaxValue()) {
-                            heartDetailData.setIsAcq(false);
-                            break;
-                        }
-                    }
-                    heartDetailData.setConditions(conditionList);
+
+//                    heartDetailData.setConditions(conditionList);
                 }
             }
         }
@@ -137,42 +144,47 @@ public class HeartService {
         return heartDetailData;
     }
 
-    private List<HeartConditionData> getHeartCondition(String userId, Heart heart) {
-        int heartId = heart.getId().intValue();
-        List<HeartConditionData> heartConditionList = new ArrayList<>();
-        switch (heartId) {
-            case 6:
-                log.debug("행성 하트 획득 조건을 반환합니다.");
-
-                HeartConditionData heartConditionData = HeartConditionData.of(null);
-                int userCurrentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId);
-                heartConditionData.setCurrentValue(userCurrentValue);
-                heartConditionData.setMaxValue(HEART_PLANET_MAX_VALUE);
-                heartConditionList.add(heartConditionData);
-                break;
+    private void checkHeartCondition(String userId, Long heartId) {
+        switch (heartId.intValue()) {
+//            case 6:
+//                log.debug("행성 하트 획득 조건을 반환합니다.");
+//
+//                HeartConditionData heartConditionData = HeartConditionData.of(null);
+//                int userCurrentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId);
+//                heartConditionData.setCurrentValue(userCurrentValue);
+//                heartConditionData.setMaxValue(HEART_PLANET_MAX_VALUE);
+//                heartConditionList.add(heartConditionData);
+//                break;
 
             case 7:
                 log.debug("무지개 하트 획득 조건을 반환합니다.");
                 List<HeartConditionDTO> resultList = heartRepository.findDefaultHeartSentCount(userId);
-
-                for (HeartConditionDTO dto : resultList) {
-                    HeartConditionData data = HeartConditionData.builder()
-                            .heartId(dto.getHeartId())
-                            .name(dto.getName())
-                            .heartUrl(dto.getHeartUrl())
-                            .currentValue((dto.getCurrentValue() > HEART_RAINBOW_MAX_VALUE) ? HEART_RAINBOW_MAX_VALUE : dto.getCurrentValue())
-                            .maxValue(HEART_RAINBOW_MAX_VALUE)
-                            .build();
-                    heartConditionList.add(data);
+                HashOperations<String, String, Map<Long, List>> hashOperations = redisTemplate.opsForHash();
+                Map<Long, List> heartMap = (Map<Long, List>) hashOperations.get(userId, "conditions");
+                if (heartMap == null) {
+                    Map<Long, List> map = new HashMap<>();
+                    map.put(heartId, new ArrayList());
                 }
+//                List<> heartConditions = heartMap.get(heartId);
+
+//                for (HeartConditionDTO dto : resultList) {
+//                    HeartConditionData data = HeartConditionData.builder()
+//                            .heartId(dto.getHeartId())
+//                            .name(dto.getName())
+//                            .heartUrl(dto.getHeartUrl())
+//                            .currentValue((dto.getCurrentValue() > HEART_RAINBOW_MAX_VALUE) ? HEART_RAINBOW_MAX_VALUE : dto.getCurrentValue())
+//                            .maxValue(HEART_RAINBOW_MAX_VALUE)
+//                            .build();
+//                    heartConditionList.add(data);
+//                }
                 break;
         }
-
-        return heartConditionList;
     }
 
-    public void getHeartCondition(String userId) {
-        List<Heart> specialHearts = heartRepository.findAllByType(HEART_TYPE_SPECIAL);
-        
+    public void checkHeartCondition(String userId) {
+        for (Long sHeartId : specialHeartList) {
+            checkHeartCondition(userId, sHeartId);
+        }
+
     }
 }

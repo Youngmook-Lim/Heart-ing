@@ -33,8 +33,8 @@ public class HeartController {
     @GetMapping("")
     public ResponseEntity<ResponseDTO> findAllHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        List<HeartData> allHearts = heartService.findAllHearts(user);
-        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_ALLHEARTS_SUCCESS).data(HeartListData.builder().hearts(allHearts).build()).build();
+        Data data = heartService.findAllHearts(user);
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_ALLHEARTS_SUCCESS).data(data).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
@@ -42,7 +42,7 @@ public class HeartController {
     public ResponseEntity<ResponseDTO> findUserHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
         List<HeartData> messageHearts = heartService.findUserHearts(user);
-        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(HeartListData.builder().hearts(messageHearts).build()).build();
+        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(HeartListData.builder().heartList(messageHearts).build()).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

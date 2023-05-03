@@ -18,6 +18,8 @@ public class HeartData implements Data {
     @Builder.Default
     @Getter(onMethod_ = {@JsonProperty("isLocked")})
     private Boolean isLocked = true;
+    @Getter(onMethod_ = {@JsonProperty("isAcq")})
+    private Boolean isAcq;
 
 
     public static HeartData of(Heart heart, boolean isLocked) {
@@ -41,5 +43,9 @@ public class HeartData implements Data {
 
     private static String getLockedUrl() {
         return "https://heart-ing.s3.ap-northeast-2.amazonaws.com/heart/heart_lock_1.svg";
+    }
+
+    public void setAcq(boolean isAcq) {
+        this.isAcq = isAcq;
     }
 }
