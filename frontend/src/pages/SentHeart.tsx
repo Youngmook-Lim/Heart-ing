@@ -15,9 +15,10 @@ function SentHeart() {
   async function getInboxMessages() {
     const data = await getSent();
     if (data.status === "success") {
-      console.log(data.data);
+      setInboxList(data.data.sentMessageList);
     }
   }
+
   useEffect(() => {
     getInboxMessages();
   }, []);
