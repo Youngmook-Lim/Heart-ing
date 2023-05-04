@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import NavbarSideContext from "./NavbarSideContent";
 
-interface SidebarProps {
-  width?: number;
-  children: React.ReactNode;
-}
+// interface SidebarProps {
+//   width?: number;
+//   children: React.ReactNode;
+// }
 
-function NavbarSide({ width = 48, children }: SidebarProps) {
+function NavbarSide({...props}) {
   const refSidebar = useRef<HTMLDivElement | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [xPosition, setXPosition] = useState(-width);
+  const [xPosition, setXPosition] = useState(-props.width);
 
   // const onToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   //   setIsOpen(!isOpen)
@@ -21,7 +22,7 @@ function NavbarSide({ width = 48, children }: SidebarProps) {
       setXPosition(0);
       setIsOpen(true);
     } else {
-      setXPosition(-width);
+      setXPosition(-props.width);
       setIsOpen(false);
     }
   };
@@ -32,12 +33,12 @@ function NavbarSide({ width = 48, children }: SidebarProps) {
     let sideChildren = refSidebar.current?.contains(e.target as Node);
     // console.log('isOpen은', isOpen, sideArea, sideChildren)
     if (isOpen && !sideArea) {
-      await setXPosition(-width);
+      await setXPosition(-props.width);
       await setIsOpen(false);
     }
   };
 
-  const onOpenHandler = () => {
+  const onOpenHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsOpen(false)
   }
 
@@ -75,13 +76,13 @@ function NavbarSide({ width = 48, children }: SidebarProps) {
           ref={refSidebar}
           className="flex items-start fixed top-0 bottom-0 right-0 transition duration-400 ease-in-out h-full z-50"
           style={{
-            width: `${width}vw`,
+            width: `${props.width}vw`,
             height: "100%",
             transform: `translatex(${-xPosition}vw)`,
           }}
         >
           <div className={`${isOpen ? "" : "hidden"} relative w-full`}>
-            {children}
+            <NavbarSideContext onOpenHandler={onOpenHandler}/>
             <button
               className="absolute top-0 right-0 px-2"
               onClick={onToggleHandler}
