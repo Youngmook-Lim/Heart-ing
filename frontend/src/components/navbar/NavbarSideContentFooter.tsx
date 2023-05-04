@@ -21,7 +21,13 @@ function NavbarSideContentFooter() {
         >
           <img src={Twitter} className="w-6 h-6 mx-2" alt="" />
         </a>
-        <img src={Insta} className="w-6 h-6 mx-2" alt="" />
+        <a
+          href="https://instagram.com/hearting_kr?igshid=YmMyMTA2M2Y="
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={Insta} className="w-6 h-6 mx-2" alt="" />
+        </a>
       </div>
       <p className="text-gray-400">SSAFY 8기 B307</p>
     </div>
