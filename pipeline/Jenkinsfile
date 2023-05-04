@@ -40,11 +40,7 @@ pipeline {
             steps {
                 withEnv(["PRODUCTION_VERSION=${env.PRODUCTION_VERSION}"]) {
                     sh "chmod +x -R ${env.WORKSPACE}"
-                    sh '''
-                        for file in hearting-back.yml hearting-front.yml hearting-websocket.yml; do
-                        sed -i "s/__PRODUCTION_VERSION__/${PRODUCTION_VERSION}/g" $file
-                        done
-                    '''
+                    sh "export PRODUCTION_VERSION=${PRODUCTION_VERSION}"
                     sh './pipeline/jenkins/deploy/deploy.sh'
                 }
             }
