@@ -22,10 +22,10 @@ function Kakao() {
   useEffect(() => {
     async function kakaoLogin() {
       if (!code) return;
-      const data = await login('kakao', code);
+      const data = await login("kakao", code);
       if (data !== null) {
         // console.log("카카오 됏당");
-        console.log("닉네임 머임?", data.data);
+        // console.log("닉네임 머임?", data.data);
         const userInfo = {
           userId: data.data.userId,
           accessToken: data.data.accessToken,

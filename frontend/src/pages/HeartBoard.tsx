@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isLoginAtom } from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 
-import { IUpdateProfileTypes } from "../types/userType";
-
 import { getUserInfo } from "../features/userInfo";
-import { getProfile, modifyStatusMessage } from "../features/api/userApi";
+import { getProfile } from "../features/api/userApi";
 import { getReceived } from "../features/api/messageApi";
-import { modifyNickname } from "../features/api/userApi";
 
 import HeartBoardList from "../components/heartBoard/HeartBoardList";
 import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton";
@@ -29,7 +26,6 @@ function HeartBoard() {
   const [totalCount, setTotalCount] = useState(0);
 
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
-  const setUserNickname = useSetRecoilState(userNicknameAtom);
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -46,7 +42,7 @@ function HeartBoard() {
         navigate("/notfound");
       }
     },
-    [navigate, setUserNickname]
+    [navigate]
   );
 
   // userId로 최근 메시지 리스트 가져오기
@@ -59,7 +55,6 @@ function HeartBoard() {
     }
   }, []);
 
-  
   // 내 userId localStorage에서 가져오기
   const myId = getUserInfo().userId;
 
@@ -123,9 +118,7 @@ function HeartBoard() {
           style={innerHeightStyle}
         >
           <div className="pb-2">
-            <HeartBoardProfileBox
-              userProfile={userProfile}
-            />
+            <HeartBoardProfileBox userProfile={userProfile} />
           </div>
           {isMyBoard ? null : (
             <div className="relative flex justify-center">

@@ -1,31 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { isLoginAtom, userNicknameAtom } from "../../atoms/userAtoms";
-import { logout } from "../../features/api/userApi";
-import { deleteUserInfo, getUserInfo } from "../../features/userInfo";
-import NavbarSideContentHeaderProfile from "./NavbarSideContentHeaderProfile";
+import { getUserInfo } from "../../features/userInfo";
 
-function NavbarSideContentHeader({...props}) {
+function NavbarSideContentHeader({ ...props }) {
   const navigate = useNavigate();
 
-  const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
+  const isLogin = useRecoilValue(isLoginAtom);
   const userNickname = useRecoilValue(userNicknameAtom);
   const userId = getUserInfo().userId;
-  const [isSetting, setIsSetting] = useState(false)
 
-  const onSettingHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsSetting(!isSetting)
-  }
-
-  const onLogoutHandler = async (e: React.MouseEvent<SVGSVGElement>) => {
-    const status = await logout();
-    if (status === "success") {
-      setIsLogin(false);
-      deleteUserInfo();
-      navigate("/");
-    }
-  };
   const onMyBoardHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
     navigate(`/heartboard/user?id=${userId}`);
   };
@@ -37,7 +22,7 @@ function NavbarSideContentHeader({...props}) {
             <span onClick={onMyBoardHandler} className="text-2xl px-2 mr-2">
               {userNickname}
             </span>
-          {/* <button onClick={onSettingHandler}>
+            {/* <button onClick={onSettingHandler}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -79,7 +64,7 @@ function NavbarSideContentHeader({...props}) {
           :
           null
         } */}
-        </div>
+          </div>
         </div>
       ) : (
         <span className="text-lg px-2 mr-2">로그인이 필요합니다</span>

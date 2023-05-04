@@ -4,12 +4,13 @@ import { IMessageInfoTypes } from "../../types/messageType";
 
 import HeartBoxListItem from "./HeartBoxListItem";
 import HeartBoxListTimeline from "./HeartBoxListTimeline";
+import Loading from "../common/Loading";
 
 function HeartBoxList({ ...props }) {
   const [inboxMessageList, setInboxMessageList] = useState(props.inboxList);
 
   useEffect(() => {
-    console.log(props.inboxList);
+    // console.log(props.inboxList);
     setInboxMessageList(props.inboxList);
   }, [props.inboxList]);
 
@@ -42,7 +43,7 @@ function HeartBoxList({ ...props }) {
       </div>
     );
   } else {
-    return <div className=""></div>;
+    return <Loading />;
   }
 }
 

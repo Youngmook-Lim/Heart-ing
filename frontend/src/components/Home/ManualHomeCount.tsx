@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { ITotalHeartPropsTypes } from "../../types/messageType";
 
 function ManualHomeCount({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const [totalHeartCnt, setTotalHeartCnt] = useState<number>(0);
+
+  const handleGetTotalHeartCnt = useCallback(async () => {
+    const totalCnt = await onGetTotalHeart();
+    setTotalHeartCnt(totalCnt);
+  }, [onGetTotalHeart]);
 
   useEffect(() => {
     handleGetTotalHeartCnt();
@@ -15,12 +20,7 @@ function ManualHomeCount({ onGetTotalHeart }: ITotalHeartPropsTypes) {
     return () => {
       clearInterval(interval);
     };
-  }, []);
-
-  const handleGetTotalHeartCnt = async () => {
-    const totalCnt = await onGetTotalHeart();
-    setTotalHeartCnt(totalCnt);
-  };
+  }, [handleGetTotalHeartCnt]);
 
   console.log("카운트 렌더링");
   return (

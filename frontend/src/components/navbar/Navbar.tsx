@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { io } from "socket.io-client";
@@ -8,7 +8,6 @@ import NavbarSideContent from "./NavbarSideContent";
 
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
-import useDetectClose from "../../features/hook/useDetectClose";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
 import { getReceived } from "../../features/api/messageApi";
@@ -62,7 +61,7 @@ function Navbar() {
     }
   }, []);
 
-  const onSocket = () => {
+  const onSocket = useCallback(async () => {
     if (isLogin) {
       const socket = io("https://heart-ing.com", { path: "/ws" });
       socket.on("connect", () => {
@@ -80,15 +79,15 @@ function Navbar() {
         socket.emit("join-room", "anonymous");
       });
     }
-  };
+  }, [getData, isLogin, myId]);
 
   useEffect(() => {
     onSocket();
     if (isLogin) {
       getData(myId);
     }
-  }, [isLogin])
-  
+  }, [isLogin, getData, myId, onSocket]);
+
   return (
     <div>
       <nav className="navHeight">

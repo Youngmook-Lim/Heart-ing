@@ -16,7 +16,7 @@ function ReceivedHeart() {
   async function getInboxMessages() {
     const data = await getSave();
     if (data.status === "success") {
-      console.log(data.data.inboxList);
+      // console.log(data.data.inboxList);
       setInboxList(data.data.inboxList);
     }
   }
