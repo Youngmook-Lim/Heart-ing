@@ -1,20 +1,34 @@
-import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition";
-import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
-import ButtonIcon from "../common/ButtonIcon";
+import { useEffect, useState } from "react";
 
 import { useSetRecoilState } from "recoil";
 import { openDetailInfoAtom } from "../../atoms/guideAtoms";
 import { IHeartDetailInfoTypes } from "../../types/guideType";
+import { acquireHeart } from "../../features/api/guideApi";
+import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition";
+import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
+import ButtonIcon from "../common/ButtonIcon";
 
 interface HeartGuideDetailInfoProps {
   heartDetailInfo: IHeartDetailInfoTypes | null;
 }
 
 function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
+  const [heartId, setHeartId] = useState(0);
   const setOpenDetailInfoAtom = useSetRecoilState(openDetailInfoAtom);
+
+  useEffect(() => {
+    if (heartDetailInfo) setHeartId(heartDetailInfo.heartId);
+  }, [heartDetailInfo]);
 
   const closeModal = () => {
     setOpenDetailInfoAtom(false);
+  };
+
+  const onAcquireHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const data = await acquireHeart(heartId);
+    if (data.status === "success") {
+      alert("하트를 획득했습니다.");
+    }
   };
 
   return (
@@ -56,13 +70,21 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
                 </div>
               </>
             )}
-            <div
-              className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline"
-              onClick={() => closeModal()}
-            >
-              닫기
-            </div>
-            {/* <div className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline" onClick={() => closeModal()}>획득</div> */}
+            {heartDetailInfo && heartDetailInfo.isAcq === true ? (
+              <div
+                className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline"
+                onClick={(e) => onAcquireHandler(e)}
+              >
+                획득
+              </div>
+            ) : (
+              <div
+                className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline"
+                onClick={() => closeModal()}
+              >
+                닫기
+              </div>
+            )}
           </div>
         </div>
       </div>
