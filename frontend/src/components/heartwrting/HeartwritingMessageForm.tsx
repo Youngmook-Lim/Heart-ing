@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { IMessageSendTypes } from "../../types/messageType";
-import { getUserInfo } from "../../features/userInfo";
 
 function HeartwritingMessageForm({ ...props }) {
   const [title, setTitle] = useState("");
@@ -64,7 +62,7 @@ function HeartwritingMessageForm({ ...props }) {
           />
         </svg>
         <span className="text-sm text-hrtColorPink">
-          전달하는 마음은 24시간 동안 유지되며, 수정•삭제할 수 없습니다
+          전달하는 하트는 24시간 동안 유지되며, 수정•삭제할 수 없습니다
         </span>
       </div>
       <div className="py-2 text-right mb-5 ">

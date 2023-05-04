@@ -81,7 +81,7 @@ function Heartwriting() {
     getUserProfile(userId);
     getHeartList();
     setIsSelected(false);
-  }, []);
+  }, [userId, getUserProfile]);
 
   return (
     <div className="fullHeight container mx-auto px-6 fullHeight justify-between flex-col">

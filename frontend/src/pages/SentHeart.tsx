@@ -24,7 +24,7 @@ function SentHeart() {
   }, []);
 
   return (
-    <div className="container mx-auto px-6 py-8 fullHeight overflow-auto">
+    <div className="container mx-auto px-6 fullHeight overflow-auto">
       <HeartBoxHeader mode={"sent"} />
       <HeartBoxList inboxList={inboxList} />
       {readMessage ? <MessageModal mode={"sent"} /> : null}

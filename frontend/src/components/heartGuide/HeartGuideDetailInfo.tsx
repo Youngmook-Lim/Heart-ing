@@ -1,4 +1,3 @@
-import HeartItemIcon from "../common/HeartItemIcon";
 import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition";
 import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
 import ButtonIcon from "../common/ButtonIcon";
@@ -20,7 +19,7 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
 
   return (
     <>
-      <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-70 text-center flex  items-center justify-center ">
+      <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-40">
         <div className="container modal border-hrtColorOutline m-6 w-full">
           <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
             <div className="flex-auto">정보</div>

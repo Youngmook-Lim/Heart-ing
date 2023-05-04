@@ -10,9 +10,9 @@ function HeartBoxHeader({ ...props }) {
         <div>
           <div className="text-4xl py-3 textShadow">
             {props.mode === "received" ? (
-              <p className="text-hrtColorYellow">마음 영구 보관함</p>
+              <p className="text-hrtColorYellow">하트 저장소</p>
             ) : (
-              <p className="text-hrtColorYellow purple">내가 보낸 마음</p>
+              <p className="text-hrtColorYellow purple">보낸 하트</p>
             )}
           </div>
         </div>
