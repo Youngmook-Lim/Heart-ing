@@ -19,3 +19,13 @@ export const isMyBoardAtom = atom<boolean>({
   key: "isMyBoard",
   default: false,
 });
+
+export const isOpenEmojiListAtom = atom<boolean>({
+  key: "isOpenEmojiList",
+  default: false,
+})
+
+export const isSelectedEmojiIdAtom = atom<number>({
+  key: "isSelectedEmojiAtom",
+  default: 0,
+})
