@@ -4,14 +4,17 @@ import { isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
 
 interface propsType {
   id: number,
+  onEmojiHandler: (emojiId: number) => void;
+  messageEmojiId: number,
 }
 
-function HeartResponseEmojiListItem({ id }: propsType) {
+function HeartResponseEmojiListItem({ id, onEmojiHandler, messageEmojiId }: propsType) {
 
   const [ isSelectedEmojiId, setIsSelectedEmojiId ] = useRecoilState(isSelectedEmojiIdAtom)
 
-  const getEmojiId = () => {
-    setIsSelectedEmojiId(id)
+  const getEmojiId = async() => {
+    setIsSelectedEmojiId(() => id)
+    onEmojiHandler(id)
   }
 
   return (
@@ -20,7 +23,7 @@ function HeartResponseEmojiListItem({ id }: propsType) {
         <div className="absolute z-50">
           <ResponseEmojiIcon id={id} />
         </div>
-        { isSelectedEmojiId === id ? <div className="w-11 h-11 bg-hrtColorLightPink rounded-full transform"></div> : <div className="w-11 h-11"></div> }
+        { isSelectedEmojiId === id || messageEmojiId === id ? <div className="w-11 h-11 bg-hrtColorLightPink rounded-full transform"></div> : <div className="w-11 h-11"></div> }
       </div>
     </>
   )
