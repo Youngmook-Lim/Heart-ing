@@ -28,6 +28,9 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
     const data = await acquireHeart(heartId);
     if (data.status === "success") {
       alert("하트를 획득했습니다.");
+      window.location.reload();
+    } else {
+      window.location.reload();
     }
   };
 
