@@ -21,7 +21,7 @@ pipeline {
 
         stage('Kubernetes test') {
             steps {
-                sh "kubectl --kubeconfig=/var/jenkins_home/kubeconfig.yml get all"
+                sh "microk8s.kubectl --kubeconfig=/var/jenkins_home/kubeconfig.yml get all"
             }
         }
 
