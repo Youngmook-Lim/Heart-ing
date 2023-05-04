@@ -22,7 +22,6 @@ function ManualHomeCount({ onGetTotalHeart }: ITotalHeartPropsTypes) {
     };
   }, [handleGetTotalHeartCnt]);
 
-  console.log("카운트 렌더링");
   return (
     <div className="text-xl textShadow my-12">
       <p className="purple text-white">지금까지</p>
