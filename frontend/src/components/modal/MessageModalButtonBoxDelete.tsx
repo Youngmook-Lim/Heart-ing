@@ -18,14 +18,18 @@ function MessageModalButtonBoxDelete({ ...props }) {
     if (props.mode === "recent") {
       const status = await deleteTemporaryMessageApi(messageId);
       if (status === "success") {
-        alert("메세지를 삭제했습니다");
-        setReadMessageAtom(false);
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+          alert("메세지를 삭제했습니다");
+          setReadMessageAtom(false);
+        }
       }
     } else {
       const status = await deletepermanentMessageApi(messageId);
       if (status === "success") {
-        alert("메세지를 삭제했습니다");
-        setReadMessageAtom(false);
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+          alert("메세지를 삭제했습니다");
+          setReadMessageAtom(false);
+        }
       }
     }
   };

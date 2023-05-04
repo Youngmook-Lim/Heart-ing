@@ -24,7 +24,7 @@ function Google() {
       if (!code) return;
       const data = await login('google', code);
       if (data !== null) {
-        console.log("구글 됏당");
+        // console.log("구글 됏당");
         console.log("닉네임 머임?", data.data);
         const userInfo = {
           userId: data.data.userId,
@@ -40,13 +40,13 @@ function Google() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        console.log("ㄱ글로그인 실패ㅜ;");
+        // console.log("ㄱ글로그인 실패ㅜ;");
       }
     }
     kakaoLogin();
   }, [code, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
 
-  return <div>구글 로그인</div>;
+  return <div></div>;
 }
 
 export default Google;
