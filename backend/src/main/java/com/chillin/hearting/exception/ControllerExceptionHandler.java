@@ -247,4 +247,16 @@ public class ControllerExceptionHandler {
                 .message(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(HeartAlreadyAcquiredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseDTO HeartAlreadyAcquiredException(HeartAlreadyAcquiredException e) {
+        log.error(e.getMessage());
+
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 }
