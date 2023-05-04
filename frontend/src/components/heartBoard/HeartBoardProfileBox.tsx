@@ -9,8 +9,8 @@ function HeartBoardProfileBox({ ...props }) {
   const myNickname = useRecoilValue(userNicknameAtom);
   const myStatus = useRecoilValue(userStautsMessageAtom);
 
-  const nickname = isMyBoard ? myNickname : props.userProfile.statusMessage;
-  const statusMessage = isMyBoard ? myStatus : props.userProfile.nickname;
+  const nickname = isMyBoard ? myNickname : props.userProfile.nickname;
+  const statusMessage = isMyBoard ? myStatus : props.userProfile.statusMessage;
 
   return (
     <div className="pt-3">
