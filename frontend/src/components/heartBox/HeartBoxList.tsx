@@ -42,6 +42,8 @@ function HeartBoxList({ ...props }) {
         )}
       </div>
     );
+  } else if (inboxMessageList && inboxMessageList.length === 0) {
+    return <div className="text-sm text-hrtColorPink m-2 my-6">비어있어요</div>;
   } else {
     return <Loading />;
   }

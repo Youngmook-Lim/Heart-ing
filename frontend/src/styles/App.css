@@ -44,13 +44,13 @@
   touch-action: none;
 } */
 
-/* For Webkit-based browsers (Chrome, Safari and Opera)
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-} */
+}
 
 /* For IE, Edge and Firefox */
-/* .scrollbar-hide {
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
-} */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
