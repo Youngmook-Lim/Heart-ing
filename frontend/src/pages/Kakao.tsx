@@ -24,7 +24,7 @@ function Kakao() {
       if (!code) return;
       const data = await login('kakao', code);
       if (data !== null) {
-        console.log("카카오 됏당");
+        // console.log("카카오 됏당");
         console.log("닉네임 머임?", data.data);
         const userInfo = {
           userId: data.data.userId,
@@ -40,13 +40,13 @@ function Kakao() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        console.log("카카오로그인 실패ㅜ;");
+        // console.log("카카오로그인 실패ㅜ;");
       }
     }
     kakaoLogin();
   }, [code, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
 
-  return <div>카카오 로그인</div>;
+  return <div></div>;
 }
 
 export default Kakao;

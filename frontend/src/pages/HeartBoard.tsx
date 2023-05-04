@@ -42,7 +42,7 @@ function HeartBoard() {
         setUserProfile(data.data);
         setTotalCount(data.data.messageTotal);
       } else {
-        console.log("에러났당");
+        // console.log("에러났당");
         navigate("/notfound");
       }
     },
@@ -52,7 +52,7 @@ function HeartBoard() {
   // userId로 최근 메시지 리스트 가져오기
   const getRecivedMessages = useCallback(async (userId: string | null) => {
     if (!userId) return;
-    console.log(userId);
+    // console.log(userId);
     const data = await getReceived(userId);
     if (data.status === "success") {
       setReceivedList(data.data.messageList);

@@ -13,8 +13,8 @@ function HeartwritingSelectedHeartItem({...props}) {
           <img src={props.heartInfo.heartUrl} />
         </div>
       )}
-
       <div className="px-2 leading-5 tracking-tight"> {props.heartInfo.name} </div>
+      {props.isSelected ? <div className="text-base mt-2 opacity-70">"{props.heartInfo.shortDescription}"</div> : null}
     </div>
     </div>
   )
