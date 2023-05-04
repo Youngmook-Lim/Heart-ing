@@ -39,54 +39,54 @@ function Navbar() {
     navigate("/");
   };
 
-  const getData = useCallback(async (userId: string | null) => {
-    if (!userId) return;
-    // console.log(userId);
-    const data = await getReceived(userId);
-    if (data.status === "success") {
-      const notiData: MyObject = { trueList: [], falseList: [] };
-      const listLength = Math.min(
-        20,
-        Object.keys(data.data.messageList).length
-      );
-      for (let i = 0; i < listLength; i++) {
-        if (data.data.messageList[i].isRead) {
-          notiData.trueList[i] = data.data.messageList[i];
-        } else {
-          setIsNew(true);
-          notiData.falseList[i] = data.data.messageList[i];
-        }
-      }
-      setReceivedList(notiData);
-    }
-  }, []);
+  // const getData = useCallback(async (userId: string | null) => {
+  //   if (!userId) return;
+  //   // console.log(userId);
+  //   const data = await getReceived(userId);
+  //   if (data.status === "success") {
+  //     const notiData: MyObject = { trueList: [], falseList: [] };
+  //     const listLength = Math.min(
+  //       20,
+  //       Object.keys(data.data.messageList).length
+  //     );
+  //     for (let i = 0; i < listLength; i++) {
+  //       if (data.data.messageList[i].isRead) {
+  //         notiData.trueList[i] = data.data.messageList[i];
+  //       } else {
+  //         setIsNew(true);
+  //         notiData.falseList[i] = data.data.messageList[i];
+  //       }
+  //     }
+  //     setReceivedList(notiData);
+  //   }
+  // }, []);
 
-  const onSocket = useCallback(async () => {
-    if (isLogin) {
-      const socket = io("https://heart-ing.com", { path: "/ws" });
-      socket.on("connect", () => {
-        // console.log("회원 웹소켓 서버에 연결");
-        socket.emit("join-room", getUserInfo().userId);
-      });
-      socket.on("receive-message", (data) => {
-        // console.log("받은 메시지:", data);
-        getData(myId);
-      });
-    } else {
-      const socket = io("https://heart-ing.com", { path: "/ws" });
-      socket.on("connect", () => {
-        // console.log("비회원 웹소켓 서버에 연결");
-        socket.emit("join-room", "anonymous");
-      });
-    }
-  }, [getData, isLogin, myId]);
+  // const onSocket = useCallback(async () => {
+  //   if (isLogin) {
+  //     const socket = io("https://heart-ing.com", { path: "/ws" });
+  //     socket.on("connect", () => {
+  //       // console.log("회원 웹소켓 서버에 연결");
+  //       socket.emit("join-room", getUserInfo().userId);
+  //     });
+  //     socket.on("receive-message", (data) => {
+  //       // console.log("받은 메시지:", data);
+  //       getData(myId);
+  //     });
+  //   } else {
+  //     const socket = io("https://heart-ing.com", { path: "/ws" });
+  //     socket.on("connect", () => {
+  //       // console.log("비회원 웹소켓 서버에 연결");
+  //       socket.emit("join-room", "anonymous");
+  //     });
+  //   }
+  // }, [getData, isLogin, myId]);
 
-  useEffect(() => {
-    onSocket();
-    if (isLogin) {
-      getData(myId);
-    }
-  }, [isLogin, getData, myId, onSocket]);
+  // useEffect(() => {
+  //   onSocket();
+  //   if (isLogin) {
+  //     getData(myId);
+  //   }
+  // }, [isLogin, getData, myId, onSocket]);
 
   return (
     <div>
@@ -95,7 +95,7 @@ function Navbar() {
           <div onClick={onNavigateHandler}>
             <img src={Logo} alt="test" className="w-16 m-2" />
           </div>
-          {isLogin ? (
+          {/* {isLogin ? (
             <div>
               <div
                 className="w-6 m-2 my-4 flex-none relative"
@@ -125,7 +125,7 @@ function Navbar() {
                 />
               ) : null}
             </div>
-          ) : null}
+          ) : null} */}
         </div>
         <NavbarSide width={60}>
           <NavbarSideContent />
