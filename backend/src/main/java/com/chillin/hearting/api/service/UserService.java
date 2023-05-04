@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Slf4j
@@ -50,7 +52,11 @@ public class UserService {
     public UpdateNicknameData updateNickname(String userId, String nickname) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        user.updateNickname(nickname);
+        LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        log.debug("닉네임 수정 시간 : {}", nowLocalTime);
+
+        user.updateNickname(nickname, nowLocalTime);
 
         return UpdateNicknameData.builder()
                 .nickname(user.getNickname())
@@ -62,7 +68,11 @@ public class UserService {
     public UpdateStatusMessageData updateStatusMessage(String userId, String statusMessage) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        user.updateStatusMessage(statusMessage);
+        LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        log.debug("상태메시지 수정 시간 : {}", nowLocalTime);
+
+        user.updateStatusMessage(statusMessage, nowLocalTime);
 
         return UpdateStatusMessageData.builder()
                 .statusMessage(user.getStatusMessage())
