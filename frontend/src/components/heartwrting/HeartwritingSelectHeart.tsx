@@ -15,7 +15,7 @@ function HeartwritingSelectHeart({ ...props }) {
 
   useEffect(() => {
     props.onHeartNumberHandler(selectedHeartId);
-  }, [selectedHeartId]);
+  }, [props, selectedHeartId]);
 
   return (
     <div>
