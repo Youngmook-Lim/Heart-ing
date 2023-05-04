@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   readMessageAtom,
   selectedMessageIdAtom,
-  isOpenEmojiListAtom
+  isOpenEmojiListAtom,
+  isSelectedEmojiIdAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -29,8 +30,9 @@ import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 function MessageModal({ mode }: IMessageModalTypes) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
-  const isOpenEmojiList = useRecoilValue(isOpenEmojiListAtom);
-
+  const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
+  const [isSelectedEmojiId, setIsSelectedEmojiId] = useRecoilState(isSelectedEmojiIdAtom);
+  
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
   // selectedMessageId로 상세 메시지 정보 가져오기
@@ -38,7 +40,6 @@ function MessageModal({ mode }: IMessageModalTypes) {
     if (!selectedMessageId) return;
     const data = await getMessageDetail(selectedMessageId);
     if (data.status === "success") {
-      console.log(data);
       setMessageData(data.data);
     }
   }
@@ -47,7 +48,6 @@ function MessageModal({ mode }: IMessageModalTypes) {
     if (!selectedMessageId) return;
     const data = await getSentMessageDetailApi(selectedMessageId);
     if (data.status === "success") {
-      console.log(data);
       setMessageData(data.data);
     }
   }
@@ -57,12 +57,9 @@ function MessageModal({ mode }: IMessageModalTypes) {
       messageId: selectedMessageId,
       emojiId: emojiId,
     }
-    console.log("데이터 잘 담아보내니...?ㅠㅠㅠ", EmojiInfo)
     const data = await responseHeartApi(EmojiInfo)
     if (data === 'success') {
-      console.log("반응 이모지 전송 성공")
     } else {
-      console.log("반응 이모지 전송 실패~!");
     }
   }
     
@@ -70,24 +67,28 @@ function MessageModal({ mode }: IMessageModalTypes) {
       // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
       if (mode === "sent") {
         getSentMessageDetail(selectedMessageId);
+        
       } else {
         getRecivedMessages(selectedMessageId);
+      }
+
+      return () => {
+        setIsOpenEmojiList(false)
+        setIsSelectedEmojiId(0);
       }
     }, [mode, selectedMessageId]);
     
     // 메시지 모달을 닫습니다
     const closeModal = () => {
       setReadMessageAtom(false);
+      setIsOpenEmojiList(false)
     };
     
 
-
   const curr = new Date();
-  console.log("현재시간(Locale) : " + curr + "<br>"); // 현재시간(Locale)
   const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
   const KR_TIME_DIFF = 9 * 60 * 60 * 1000; //한국 시간(KST)은 UTC시간보다 9시간 더 빠름
   const kr_curr = new Date(utc + KR_TIME_DIFF); //utc 밀리초 값에 9시간을 더함
-  console.log("한국시간 : " + kr_curr); // 한국시간 GMT+0900 (한국 표준시)
 
   if (messageData) {
     const expiredDate = new Date(messageData.expiredDate);
@@ -121,7 +122,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
               content={messageData.content}
             />
             <div className="absolute top-40 w-full h-auto">
-              { isOpenEmojiList ? <HeartResponseEmojiList onEmojiHandler={ onEmojiHandler }/> : null }
+              {isOpenEmojiList ? <HeartResponseEmojiList messageEmojiId={ messageData.emojiId } onEmojiHandler={ onEmojiHandler }/> : null }
             </div>
             <MessageModalButtonBox
               mode={mode}

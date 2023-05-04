@@ -1,27 +1,20 @@
-import { useEffect } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import HeartResponseEmojiListItem from "./HeartResponseEmojiListItem"
 import touch_arrow from "../../assets/images/png/touch_arrow.png"
-import { isOpenEmojiListAtom, isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
+import { isOpenEmojiListAtom } from "../../atoms/messageAtoms"
 
 interface propsType {
+  messageEmojiId: number,
   onEmojiHandler: (emojiId: number) => void;
 }
 
-function HeartResponseEmojiList({ onEmojiHandler }: propsType) {
+function HeartResponseEmojiList({ messageEmojiId, onEmojiHandler }: propsType) {
 
-  const isSelectedEmojiId = useRecoilValue(isSelectedEmojiIdAtom)
   const setIsOpenEmojiList = useSetRecoilState(isOpenEmojiListAtom)
 
   const closeModalEmojiBox = () => {
     setIsOpenEmojiList(false);
   };
-
-  useEffect(() => {
-    return () => {
-      onEmojiHandler(isSelectedEmojiId)
-    }
-  }, [])
 
   return (
     <div className="flex flex-col w-full">
@@ -31,8 +24,8 @@ function HeartResponseEmojiList({ onEmojiHandler }: propsType) {
           <button className="w-6 text-white" onClick={closeModalEmojiBox}>x</button>
         </div>
         <div className="grid grid-cols-5 py-2">
-          {Array.from({ length: 5 }, (_, index) => (
-            <HeartResponseEmojiListItem key={index} id={index + 1} />
+          {[1,2,3,4,5].map((id) => (
+            <HeartResponseEmojiListItem key={id} id={id} messageEmojiId={ messageEmojiId } onEmojiHandler={ onEmojiHandler } />
           ))}
         </div>
       </div>

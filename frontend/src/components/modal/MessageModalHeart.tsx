@@ -1,27 +1,15 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useState } from "react";
 
-import { isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
 import HeartItemIcon from "../common/HeartItemIcon";
 import TouchArrow from "../../assets/images/png/touch_arrow.png";
-import ResponseEmojiIcon from "../common/ResponseEmojiIcon";
 
 function MessageModalHeart({ ...props }) {
   const [isIconMode, setIsIconMode] = useState(true);
-  // const [isSelectedEmojiId, setIsSelectedEmojiIdAtom] = useRecoilState(isSelectedEmojiIdAtom)
 
   const switchInfoMode = () => {
     setIsIconMode(!isIconMode);
   };
-
-  useEffect(() => {
-    // setIsSelectedEmojiIdAtom(() =>props.emojiId)
-  
-    return () => {
-    }
-  }, [])
-  
 
   return (
     <div>
@@ -40,10 +28,7 @@ function MessageModalHeart({ ...props }) {
             <div className="flex justify-center p-0 heartbeat">
               <HeartItemIcon id={props.heartId} />
             </div>
-              <img className="absolute w-6 right-3 bottom-3" src={props.emojiUrl} alt="emoji" />
-              {/* <div className="absolute w-6 right-3 bottom-3">
-                <ResponseEmojiIcon id={isSelectedEmojiId} />
-              </div> */}
+            { props.emojiUrl ? <img className="absolute w-6 right-3 bottom-3" src={props.emojiUrl} alt="emoji" /> : null}
           </div>
         </button>
       ) : (
