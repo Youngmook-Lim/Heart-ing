@@ -203,7 +203,10 @@ public class OAuthService {
 
                     // 계정 정지 기간이 이미 기간이 지난 경우
                     if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {
-                        user.updateUserStatusToActive();
+                        LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+                        log.debug("계정 일시 정지 해제 시간 : {}", nowLocalTime);
+                        user.updateUserStatusToActive(nowLocalTime);
                         log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
                         return userRepository.saveAndFlush(user);
                     }
