@@ -13,7 +13,7 @@ import ManualHomeCount from "./ManualHomeCount";
 function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const navigate = useNavigate();
 
-  console.log("홈 렌더링");
+  // console.log("홈 렌더링");
 
   const KAKAO_API = process.env.REACT_APP_KAKAO_API;
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;

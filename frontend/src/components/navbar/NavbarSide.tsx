@@ -6,12 +6,12 @@ import NavbarSideContent from "./NavbarSideContent";
 //   children: React.ReactNode;
 // }
 
-function NavbarSide({...props}) {
+function NavbarSide({ ...props }) {
   const refSidebar = useRef<HTMLDivElement | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [xPosition, setXPosition] = useState(-props.width);
-  const [isSetting, setIsSetting] = useState(false)
+  const [isSetting, setIsSetting] = useState(false);
 
   // const onToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   //   setIsOpen(!isOpen)
@@ -26,13 +26,12 @@ function NavbarSide({...props}) {
       setXPosition(-props.width);
       setIsOpen(false);
     }
-    setIsSetting(false)
+    setIsSetting(false);
   };
 
   const onSidebarHandler = async (e: MouseEvent): Promise<void> => {
     // console.log('내자식', children)
     let sideArea = refSidebar.current;
-    let sideChildren = refSidebar.current?.contains(e.target as Node);
     // console.log('isOpen은', isOpen, sideArea, sideChildren)
     if (isOpen && !sideArea) {
       await setXPosition(-props.width);
@@ -41,9 +40,9 @@ function NavbarSide({...props}) {
   };
 
   const onOpenHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsOpen(false)
+    setIsOpen(false);
     setXPosition(-props.width);
-  }
+  };
 
   useEffect(() => {
     window.addEventListener("click", onSidebarHandler);
@@ -85,7 +84,10 @@ function NavbarSide({...props}) {
           }}
         >
           <div className={`${isOpen ? "" : "hidden"} relative w-full`}>
-            <NavbarSideContent onOpenHandler={onOpenHandler} setIsSetting={[isSetting, setIsSetting]}/>
+            <NavbarSideContent
+              onOpenHandler={onOpenHandler}
+              setIsSetting={[isSetting, setIsSetting]}
+            />
             <button
               className="absolute top-0 right-0 px-2"
               onClick={onToggleHandler}

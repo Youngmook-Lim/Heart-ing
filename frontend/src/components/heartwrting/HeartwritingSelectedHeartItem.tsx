@@ -1,23 +1,30 @@
-import React from 'react'
+import React from "react";
 
-function HeartwritingSelectedHeartItem({...props}) {
+function HeartwritingSelectedHeartItem({ ...props }) {
   return (
     <div>
       <div className="place-content-center py-2">
-      {props.heartInfo.isLocked ? (
-        <div className="flex justify-center opacity-30">
-          <img src={props.heartInfo.heartUrl} />
+        {props.heartInfo.isLocked ? (
+          <div className="flex justify-center opacity-30">
+            <img src={props.heartInfo.heartUrl} alt="" />
+          </div>
+        ) : (
+          <div className="flex justify-center relative">
+            <img src={props.heartInfo.heartUrl} alt="" />
+          </div>
+        )}
+        <div className="px-2 leading-5 tracking-tight">
+          {" "}
+          {props.heartInfo.name}{" "}
         </div>
-      ) : (
-        <div className="flex justify-center relative">
-          <img src={props.heartInfo.heartUrl} />
-        </div>
-      )}
-      <div className="px-2 leading-5 tracking-tight"> {props.heartInfo.name} </div>
-      {props.isSelected ? <div className="text-base mt-2 opacity-70">"{props.heartInfo.shortDescription}"</div> : null}
+        {props.isSelected ? (
+          <div className="text-base mt-2 opacity-70">
+            "{props.heartInfo.shortDescription}"
+          </div>
+        ) : null}
+      </div>
     </div>
-    </div>
-  )
+  );
 }
 
-export default HeartwritingSelectedHeartItem
+export default HeartwritingSelectedHeartItem;
