@@ -26,12 +26,12 @@ function Heartwriting() {
   const getUserProfile = useCallback(
     async (userId: string | null) => {
       if (!userId) {
-        console.log("에러났당");
+        // console.log("에러났당");
         navigate("/notfound");
       } else {
         const data = await getProfile(userId);
         if (data.status !== "success") {
-          console.log("에러났당");
+          // console.log("에러났당");
           navigate("/notfound");
         }
       }
@@ -39,6 +39,9 @@ function Heartwriting() {
     [navigate]
   );
 
+  const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsSelected(false)
+  }
   const onSendHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!userId) return;
     const messageInfo: IMessageSendTypes = {
@@ -51,13 +54,13 @@ function Heartwriting() {
 
     const data = await sendMessageApi(messageInfo);
     if (data.status === "success") {
-      alert("메세지 성공!");
+      alert("메세지가 전송되었습니다");
       navigate(`/heartboard/user?id=${userId}`);
       if (socket && socket.connected) {
         socket.emit("send-message", userId, data.data);
-        console.log("알람보내용");
+        // console.log("알람보내용");
       } else {
-        console.log("웹소켓 서버에 먼저 연결하세요");
+        // console.log("웹소켓 서버에 먼저 연결하세요");
       }
     }
   };
@@ -100,29 +103,39 @@ function Heartwriting() {
               onSettingMode={setMode}
               selectedHeartInfo={heartList[Number(selectedHeartId) - 1]}
               userId={userId}
+              isSelected={isSelected}
             />
           ) : (
             <HeartwritingSelectHeart
               onHeartNumberHandler={setHeartNumber}
               onSettingMode={setMode}
               heartList={heartList}
+              isSelected={isSelected}
             />
           )}
         </div>
       </div>
       <div className="flex justify-center items-center h-28">
         {isSelected ? (
+          <div className="flex w-full justify-center">
+          <button
+            onClick={onReturnHandler}
+            className='mr-8 p-auto h-16 w-16 rounded-xl border-2 bg-hrtColorYellow border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]'
+          >
+          <div className="text-2xl">{`<`}</div>
+          </button>
           <button
             onClick={onSendHandler}
             disabled={title ? false : true}
-            className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]"
+            className={`px-8 h-16 w-48 rounded-xl border-2 ${title ? 'bg-hrtColorYellow border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]' : 'bg-gray-200 border-gray-300 shadow-[0_4px_4px_rgba(182,182,182,1)] text-white'}`}
           >
             <div className="text-2xl">전달하기</div>
           </button>
+          </div>
         ) : (
           <button
             onClick={setMode}
-            className="bg-hrtColorYellow px-8 h-16 w-48 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]"
+            className={`px-8 h-16 w-48 rounded-xl border-2 ${selectedHeartId ? 'bg-hrtColorYellow border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]' : 'bg-gray-200 border-gray-300 shadow-[0_4px_4px_rgba(182,182,182,1)] text-white'}`}
             disabled={selectedHeartId ? false : true}
           >
             <div className="text-2xl">다 음</div>

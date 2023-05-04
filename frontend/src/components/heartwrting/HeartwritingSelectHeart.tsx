@@ -32,6 +32,7 @@ function HeartwritingSelectHeart({ ...props }) {
                 <HeartwritingSelectedHeartItem
                   heartInfo={heart}
                   id={String(heart.heartId)}
+                  isSelected={props.isSelected}
                 />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2/3 text-xxs whitespace-no-wrap">
                   <p>로그인 후</p>

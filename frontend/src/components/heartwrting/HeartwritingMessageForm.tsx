@@ -37,15 +37,16 @@ function HeartwritingMessageForm({ ...props }) {
 
   return (
     <div>
+      <div className="relative">
       <input
         type="text"
         value={title}
-        className="w-64 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none"
+        className="w-72 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none"
         onChange={onTitleHandler}
         placeholder="제목을 필수로 입력해주세요"
       />
-      <span className="text-hrtColorGray">{countTitle}/8</span>
-      <br />
+      {title ? <span className="text-gray-400 absolute bottom-2 right-8">{countTitle}/8</span> : null}
+      </div>
       <div className="w-72 mx-auto text-left mb-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +73,7 @@ function HeartwritingMessageForm({ ...props }) {
           onChange={onContentHandler}
           placeholder="전하고 싶은 마음이 있다면,&#13;&#10;메세지를 작성해보세요"
         />
-        <span className="text-hrtColorGray pr-10">{countContent}/100</span>
+        <span className="text-gray-400 pr-10">{countContent}/100</span>
       </div>
     </div>
   );
