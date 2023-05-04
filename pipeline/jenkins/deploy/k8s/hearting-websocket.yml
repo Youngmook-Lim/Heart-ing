@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hearting-websocket
-          image: youngmookk/hearting-websocket:latest
+          image: youngmookk/hearting-websocket:__PRODUCTION_VERSION__
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
