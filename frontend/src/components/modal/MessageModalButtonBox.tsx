@@ -16,12 +16,8 @@ function MessageModalButtonBox({ ...props }: IMessageModalTypes) {
   // 이미 보관된 메시지는 보관이 뜨지 않음
 
   const [isStored, setIsStored] = useState(props.isStored);
-  const [isEmoji, setIsEmoji] = useState(false);
   const changeIsStored = (value: boolean) => {
     setIsStored(value);
-  };
-  const changeIsEmoji = (value: boolean) => {
-    setIsEmoji(value);
   };
 
   return (
