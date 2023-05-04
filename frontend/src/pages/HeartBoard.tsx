@@ -39,7 +39,6 @@ function HeartBoard() {
       if (!userId) return;
       const data = await getProfile(userId);
       if (data.status === "success") {
-        setUserNickname(data.data.nickname);
         setUserProfile(data.data);
         setTotalCount(data.data.messageTotal);
       } else {
@@ -60,17 +59,7 @@ function HeartBoard() {
     }
   }, []);
 
-  async function updateProfile(profileInfo: IUpdateProfileTypes) {
-    const nicknameBody = { nickname: profileInfo.nickname };
-    const statusBody = { statusMessage: profileInfo.statusMessage };
-    const nicknameStatus = await modifyNickname(nicknameBody);
-    const statusMessageStatus = await modifyStatusMessage(statusBody);
-
-    if (nicknameStatus === "success" && statusMessageStatus === "success") {
-      getUserProfile(userId);
-      setUserNickname(profileInfo.nickname);
-    }
-  }
+  
   // 내 userId localStorage에서 가져오기
   const myId = getUserInfo().userId;
 
@@ -135,7 +124,6 @@ function HeartBoard() {
         >
           <div className="pb-2">
             <HeartBoardProfileBox
-              onChangeProfile={updateProfile}
               userProfile={userProfile}
             />
           </div>
