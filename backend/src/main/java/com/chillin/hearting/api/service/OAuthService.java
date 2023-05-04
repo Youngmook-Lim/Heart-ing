@@ -51,6 +51,7 @@ public class OAuthService {
     private final BlockedUserRepository blockedUserRepository;
     private final Environment environment;
     private final UserService userService;
+    private final MigrationService migrationService;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -229,6 +230,8 @@ public class OAuthService {
                     uuid = UUID.randomUUID();
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
+                // 레디스에 유저 보낸 하트 정보 등록
+                migrationService.migrateUserSentHeart(shortUuid);
 
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
                 return userRepository.saveAndFlush(user);
