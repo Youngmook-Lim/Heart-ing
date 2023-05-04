@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "*******************************"
-echo "*******Building FRONTEND*******"
+echo "*******Building Frontend*******"
 echo "*******************************"
 
 # frontend build
@@ -10,7 +10,7 @@ npm install --legacy-peer-deps
 CI=false npm run build
 
 echo "********************************"
-echo "********Building BACKEND********"
+echo "********Building Backend********"
 echo "********************************"
 
 # backend build
@@ -18,13 +18,11 @@ cd /var/jenkins_home/workspace/hearting-pipeline-docker/backend
 gradle clean build -x test
 
 echo "********************************"
-echo "***Building DOCKER CONTAINERS***"
+echo "***Building Container Images***"
 echo "********************************"
 
 # docker container build
 cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline
 docker compose build \
---build-arg FRONTEND_VERSION=$FRONTEND_VERSION \
---build-arg BACKEND_SPRING_VERSION=$BACKEND_SPRING_VERSION \
---build-arg BACKEND_NODEJS_VERSION=$BACKEND_NODEJS_VERSION \
+--build-arg PRODUCTION_VERSION=$PRODUCTION_VERSION \
 --no-cache

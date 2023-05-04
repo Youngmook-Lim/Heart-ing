@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hearting-back
-          image: youngmookk/hearting-backend:latest
+          image: youngmookk/hearting-backend:__PRODUCTION_VERSION__
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

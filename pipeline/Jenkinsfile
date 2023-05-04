@@ -14,9 +14,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
-                "BACKEND_NODEJS_VERSION=${env.BACKEND_NODEJS_VERSION}",
-                ]) {
+                withEnv(["PRODUCTION_VERSION=${env.PRODUCTION_VERSION}"]) {
                     sh "chmod +x -R ${env.WORKSPACE}"
                     sh './pipeline/jenkins/build/build.sh'
                 }
@@ -31,9 +29,7 @@ pipeline {
 
         stage('Push') {
             steps {
-                withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
-                "BACKEND_NODEJS_VERSION=${env.BACKEND_NODEJS_VERSION}",
-                ]) {
+                withEnv(["PRODUCTION_VERSION=${env.PRODUCTION_VERSION}"]) {
                     sh "chmod +x -R ${env.WORKSPACE}"
                     sh './pipeline/jenkins/push/push.sh'
                 }
@@ -42,8 +38,15 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh './pipeline/jenkins/deploy/deploy.sh'
+                withEnv(["PRODUCTION_VERSION=${env.PRODUCTION_VERSION}"]) {
+                    sh "chmod +x -R ${env.WORKSPACE}"
+                    sh '''
+                        for file in hearting-back.yaml hearting-front.yaml hearting-websocket.yaml; do
+                        sed -i "s/__PRODUCTION_VERSION__/${PRODUCTION_VERSION}/g" $file
+                        done
+                    '''
+                    sh './pipeline/jenkins/deploy/deploy.sh'
+                }
             }
         }
     }
