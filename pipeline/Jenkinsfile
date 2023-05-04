@@ -12,19 +12,6 @@ pipeline {
 
     stages {
 
-        // stage('Copy kubeconfig') {
-        //     steps {
-        //         sh "cp /var/snap/microk8s/current/credentials/client.config ${WORKSPACE}/kubeconfig.yml"
-        //         sh "chown jenkins:jenkins ${WORKSPACE}/kubeconfig.yml"
-        //     }
-        // }
-
-        stage('Kubernetes test') {
-            steps {
-                sh "kubectl --kubeconfig=/var/jenkins_home/kubeconfig.yml get all"
-            }
-        }
-
         stage('Build') {
             steps {
                 withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
