@@ -9,6 +9,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <RecoilRoot>
-    <App />
+    <div className="mx-auto w-full md:max-w-sm lg:min-h-screen">
+      <App />
+    </div>
   </RecoilRoot>
 );

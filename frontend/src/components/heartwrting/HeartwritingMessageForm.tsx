@@ -21,7 +21,7 @@ function HeartwritingMessageForm({ ...props }) {
   };
 
   const onContentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.currentTarget.value);
+    // console.log(e.currentTarget.value);
     if (e.currentTarget.value.length > 100) {
       const currentContent = e.currentTarget.value.substr(0, 100);
       props.setContent(currentContent);
@@ -38,14 +38,18 @@ function HeartwritingMessageForm({ ...props }) {
   return (
     <div>
       <div className="relative">
-      <input
-        type="text"
-        value={title}
-        className="w-72 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none"
-        onChange={onTitleHandler}
-        placeholder="제목을 필수로 입력해주세요"
-      />
-      {title ? <span className="text-gray-400 absolute bottom-2 right-8">{countTitle}/8</span> : null}
+        <input
+          type="text"
+          value={title}
+          className="w-72 mt-5 mb-2 text-center border-b-2 border-hrtColorPink outline-none"
+          onChange={onTitleHandler}
+          placeholder="제목을 필수로 입력해주세요"
+        />
+        {title ? (
+          <span className="text-gray-400 absolute bottom-2 right-8">
+            {countTitle}/8
+          </span>
+        ) : null}
       </div>
       <div className="w-72 mx-auto text-left mb-5">
         <svg

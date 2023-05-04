@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { deleteUserInfo, getUserInfo } from "../../features/userInfo";
 import NavbarSideContentHeaderProfile from "./NavbarSideContentHeaderProfile";
 import { logout } from "../../features/api/userApi";
 
-function NavbarSideContentBody({...props}) {
+function NavbarSideContentBody({ ...props }) {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
-  const [isSetting, setIsSetting] = props.setIsSetting
+  const [isSetting, setIsSetting] = props.setIsSetting;
 
   const onSettingHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsSetting(!isSetting)
-  }
+    setIsSetting(!isSetting);
+  };
 
   const onLogoutHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
     const status = await logout();
@@ -22,7 +22,7 @@ function NavbarSideContentBody({...props}) {
       setIsLogin(false);
       deleteUserInfo();
       navigate("/");
-      props.onOpenHandler()
+      props.onOpenHandler();
     }
   };
 
@@ -30,50 +30,87 @@ function NavbarSideContentBody({...props}) {
     <div>
       {isLogin ? (
         <div className="m-3 p-2">
-          <NavLink to={`/heartboard/user?id=${getUserInfo().userId}`} className="block text-left text-xl mb-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to={`/heartboard/user?id=${getUserInfo().userId}`}
+            className="block text-left text-xl mb-4"
+            onClick={props.onOpenHandler}
+          >
             받은 하트
           </NavLink>
-          <NavLink to="/sentheart" className="block text-left  text-xl my-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/sentheart"
+            className="block text-left  text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
             보낸 하트
           </NavLink>
-          <NavLink to="/receivedheart" className="block text-left text-xl mb-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/receivedheart"
+            className="block text-left text-xl mb-4"
+            onClick={props.onOpenHandler}
+          >
             하트저장소
           </NavLink>
-          <NavLink to="/heartguide" className="block text-left text-xl my-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/heartguide"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
             하트 도감
           </NavLink>
-          <NavLink to="/manual" className="block text-left text-xl my-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/manual"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
             사용설명서
           </NavLink>
-          <hr/>
-          <div className="block text-left text-xl my-4" onClick={onLogoutHandler}>
-          로그아웃
-        </div>
-        <div className="block text-left text-xl my-4" onClick={onSettingHandler}>
-          프로필수정
-        </div>
-        { isSetting ?
-          <NavbarSideContentHeaderProfile onOpenHandler={props.onOpenHandler} setIsSetting={setIsSetting} />
-          :
-          null
-        }
+          <hr />
+          <div
+            className="block text-left text-xl my-4"
+            onClick={onLogoutHandler}
+          >
+            로그아웃
+          </div>
+          <div
+            className="block text-left text-xl my-4"
+            onClick={onSettingHandler}
+          >
+            프로필수정
+          </div>
+          {isSetting ? (
+            <NavbarSideContentHeaderProfile
+              onOpenHandler={props.onOpenHandler}
+              setIsSetting={setIsSetting}
+            />
+          ) : null}
         </div>
       ) : (
         <div className="mb-3 mx-3 p-2">
-          <NavLink to="/" className="block text-left text-xl my-4" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
             로그인
           </NavLink>
-          <NavLink to="/heartguide" className="block text-left text-xl my-6" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/heartguide"
+            className="block text-left text-xl my-6"
+            onClick={props.onOpenHandler}
+          >
             하트 도감
           </NavLink>
-          <NavLink to="/manual" className="block text-left text-xl my-6" onClick={props.onOpenHandler}>
+          <NavLink
+            to="/manual"
+            className="block text-left text-xl my-6"
+            onClick={props.onOpenHandler}
+          >
             사용설명서
           </NavLink>
         </div>
       )}
-      <div className="m-3 p-2">
-
-        </div>
+      <div className="m-3 p-2"></div>
     </div>
   );
 }
