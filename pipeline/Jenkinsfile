@@ -12,6 +12,12 @@ pipeline {
 
     stages {
 
+        stage('Kubernetes test') {
+            withKubeConfig([credentialsId: 'user1']) {
+                sh 'kubectl get all'
+            }
+        }
+
         stage('Build') {
             steps {
                 withEnv(["FRONTEND_VERSION=${env.FRONTEND_VERSION}", "BACKEND_SPRING_VERSION=${env.BACKEND_SPRING_VERSION}",
