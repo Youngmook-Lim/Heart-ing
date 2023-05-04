@@ -2,14 +2,14 @@ version: "3"
 services:
   hearting-front:
     container_name: hearting-front
-    image: hearting-frontend:${FRONTEND_VERSION}
+    image: hearting-frontend:${PRODUCTION_VERSION}
     build:
       context: ../frontend
     ports:
       - "3000:80"
   hearting-back:
     container_name: hearting-back
-    image: hearting-backend:${BACKEND_SPRING_VERSION}
+    image: hearting-backend:${PRODUCTION_VERSION}
     build:
       context: ../backend
     ports:
@@ -18,7 +18,7 @@ services:
       - ./env-files/env-back.env
   hearting-websocket:
     container_name: hearting-websocket
-    image: hearting-websocket:${BACKEND_NODEJS_VERSION}
+    image: hearting-websocket:${PRODUCTION_VERSION}
     build:
       context: ../backend-nodejs
     ports:
