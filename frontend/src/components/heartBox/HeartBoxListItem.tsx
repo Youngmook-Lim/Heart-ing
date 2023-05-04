@@ -5,6 +5,7 @@ import {
 } from "../../atoms/messageAtoms";
 
 import HeartItemIcon from "../common/HeartItemIcon";
+import ResponseEmojiIcon  from "../common/ResponseEmojiIcon";
 
 function HeartBoxListItem({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
@@ -26,7 +27,8 @@ function HeartBoxListItem({ ...props }) {
         <HeartItemIcon id={props.heartId} />
       </div>
       <div className="flex-auto text-xl">{props.context}</div>
-      <div className="flex-none">{props.emojiId}</div>
+      <div className="flex-none">
+        <ResponseEmojiIcon id={props.emojiId} /></div>
       <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute left-1 top-1"></div>
       <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute right-1 top-1"></div>
       <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute left-1 bottom-1"></div>
