@@ -56,12 +56,12 @@ function Heartwriting() {
     if (data.status === "success") {
       alert("메세지가 전송되었습니다");
       navigate(`/heartboard/user?id=${userId}`);
-      if (socket && socket.connected) {
-        socket.emit("send-message", userId, data.data);
-        // console.log("알람보내용");
-      } else {
-        // console.log("웹소켓 서버에 먼저 연결하세요");
-      }
+      // if (socket && socket.connected) {
+      //   socket.emit("send-message", userId, data.data);
+      //   // console.log("알람보내용");
+      // } else {
+      //   // console.log("웹소켓 서버에 먼저 연결하세요");
+      // }
     }
   };
 
