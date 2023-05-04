@@ -29,7 +29,6 @@ public class HeartController {
     private static final String FIND_MSGHEARTS_SUCCESS = "메시지용 하트 리스트 조회에 성공했습니다.";
     private static final String FIND_HEART_DETAIL_SUCCESS = "도감 하트 상세 조회에 성공했습니다.";
     private static final String SAVE_USER_HEART_SUCCESS = "하트 획득에 성공했습니다.";
-    private static final String SYNCHRONIZE_HEART_INFO_SUCCESS = "Redis 하트 정보를 MySQL과 동기화에 성공했습니다.";
 
 
     @GetMapping("")
@@ -64,10 +63,4 @@ public class HeartController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/synchronization/heartInfo")
-    public ResponseEntity<ResponseDTO> synchronizeHeartInfo() {
-        heartService.synchronizeHeartInfo();
-        ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(SYNCHRONIZE_HEART_INFO_SUCCESS).build();
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
 }
