@@ -13,8 +13,10 @@ pipeline {
     stages {
 
         stage('Kubernetes test') {
-            withKubeConfig([credentialsId: 'user1']) {
-                sh 'kubectl get all'
+            steps {
+                withKubeConfig([credentialsId: 'user1']) {
+                    sh 'kubectl get all'
+                }
             }
         }
 
