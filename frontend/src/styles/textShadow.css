@@ -1,0 +1,18 @@
+.textShadow p {
+  text-shadow: -1px 0 #fb8bb0, 0 1px #fb8bb0, 1px 0 #fb8bb0, 0 -1px #fb8bb0,
+    -2px 0 #fb8bb0, 0 2px #fb8bb0, 2px 0 #fb8bb0, 0 -2px #fb8bb0;
+}
+
+.textShadow .purple {
+  text-shadow: -1px 0 #d5a7ea, 0 1px #d5a7ea, 1px 0 #d5a7ea, 0 -1px #d5a7ea,
+    -2px 0 #d5a7ea, 0 2px #d5a7ea, 2px 0 #d5a7ea, 0 -2px #d5a7ea;
+}
+
+.textShadow .white {
+  text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff,
+    -2px 0 #ffffff, 0 2px #ffffff, 2px 0 #ffffff, 0 -2px #ffffff;
+}
+
+.textShadow .textShadow-none {
+  text-shadow: none;
+}
