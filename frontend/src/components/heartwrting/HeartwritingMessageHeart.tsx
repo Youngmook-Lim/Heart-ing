@@ -1,10 +1,11 @@
-import React from 'react'
+import React from "react";
 import HeartItem from '../common/HeartItem'
+import HeartwritingSelectedHeartItem from './HeartwritingSelectedHeartItem'
 
 function HeartwritingMessageHeart({...props}) {
   return (
     <div className='text-3xl'>
-      <HeartItem heartId={props.selectedHeartInfo.heartId} context={props.selectedHeartInfo.name}/>
+      <HeartwritingSelectedHeartItem heartInfo={props.selectedHeartInfo} isSelected={props.isSelected}/>
     </div>
   )
 }

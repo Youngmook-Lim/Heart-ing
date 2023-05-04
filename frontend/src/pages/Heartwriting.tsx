@@ -103,12 +103,14 @@ function Heartwriting() {
               onSettingMode={setMode}
               selectedHeartInfo={heartList[Number(selectedHeartId) - 1]}
               userId={userId}
+              isSelected={isSelected}
             />
           ) : (
             <HeartwritingSelectHeart
               onHeartNumberHandler={setHeartNumber}
               onSettingMode={setMode}
               heartList={heartList}
+              isSelected={isSelected}
             />
           )}
         </div>
