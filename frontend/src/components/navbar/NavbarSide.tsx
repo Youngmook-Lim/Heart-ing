@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import NavbarSideContext from "./NavbarSideContent";
+import NavbarSideContent from "./NavbarSideContent";
 
 // interface SidebarProps {
 //   width?: number;
@@ -11,6 +11,7 @@ function NavbarSide({...props}) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [xPosition, setXPosition] = useState(-props.width);
+  const [isSetting, setIsSetting] = useState(false)
 
   // const onToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   //   setIsOpen(!isOpen)
@@ -25,6 +26,7 @@ function NavbarSide({...props}) {
       setXPosition(-props.width);
       setIsOpen(false);
     }
+    setIsSetting(false)
   };
 
   const onSidebarHandler = async (e: MouseEvent): Promise<void> => {
@@ -40,6 +42,7 @@ function NavbarSide({...props}) {
 
   const onOpenHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsOpen(false)
+    setXPosition(-props.width);
   }
 
   useEffect(() => {
@@ -82,7 +85,7 @@ function NavbarSide({...props}) {
           }}
         >
           <div className={`${isOpen ? "" : "hidden"} relative w-full`}>
-            <NavbarSideContext onOpenHandler={onOpenHandler}/>
+            <NavbarSideContent onOpenHandler={onOpenHandler} setIsSetting={[isSetting, setIsSetting]}/>
             <button
               className="absolute top-0 right-0 px-2"
               onClick={onToggleHandler}

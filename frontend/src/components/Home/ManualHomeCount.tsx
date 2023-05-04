@@ -25,13 +25,13 @@ function ManualHomeCount({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   console.log("카운트 렌더링");
   return (
     <div className="text-xl textShadow my-12">
-      <p className="purple text-white">지금까지 주고 받은 하트의 갯수</p>
+      <p className="purple text-white">지금까지</p>
       <span className="flex justify-center text-white items-center textShadow my-2">
-        <p className="purple">총</p>
-        <p className="mx-4 white text-hrtColorPink tracking-widest" id="number">
+        <p className="mr-1 white text-hrtColorPink tracking-widest" id="number">
           {totalHeartCnt}
         </p>
-        <p className="purple">개</p>
+        {/* <p className="purple">총</p> */}
+        <p className="purple text-white">개의 마음이 전해졌어요!</p>
       </span>
     </div>
   );

@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { io } from "socket.io-client";
 
 import NavbarSide from "./NavbarSide";
-import NavbarSideContext from "./NavbarSideContent";
+import NavbarSideContent from "./NavbarSideContent";
 
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
@@ -42,7 +42,7 @@ function Navbar() {
 
   const getData = useCallback(async (userId: string | null) => {
     if (!userId) return;
-    console.log(userId);
+    // console.log(userId);
     const data = await getReceived(userId);
     if (data.status === "success") {
       const notiData: MyObject = { trueList: [], falseList: [] };
@@ -66,17 +66,17 @@ function Navbar() {
     if (isLogin) {
       const socket = io("https://heart-ing.com", { path: "/ws" });
       socket.on("connect", () => {
-        console.log("회원 웹소켓 서버에 연결");
+        // console.log("회원 웹소켓 서버에 연결");
         socket.emit("join-room", getUserInfo().userId);
       });
       socket.on("receive-message", (data) => {
-        console.log("받은 메시지:", data);
+        // console.log("받은 메시지:", data);
         getData(myId);
       });
     } else {
       const socket = io("https://heart-ing.com", { path: "/ws" });
       socket.on("connect", () => {
-        console.log("비회원 웹소켓 서버에 연결");
+        // console.log("비회원 웹소켓 서버에 연결");
         socket.emit("join-room", "anonymous");
       });
     }
@@ -129,7 +129,7 @@ function Navbar() {
           ) : null}
         </div>
         <NavbarSide width={60}>
-          <NavbarSideContext />
+          <NavbarSideContent />
         </NavbarSide>
       </nav>
     </div>

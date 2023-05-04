@@ -21,6 +21,7 @@ function NavbarSideContentHeaderProfile({...props}) {
       setMyNickname(newNickname);
       setMyStatus(newStatusMessage)
       props.setIsSetting(false)
+      props.onOpenHandler()
     }
   };
 
@@ -52,10 +53,9 @@ function NavbarSideContentHeaderProfile({...props}) {
     <div className="z-100">
         <form onSubmit={onSubmitHandler} className="my-4">
           <div className="flex flex-wrap items-center">
-            <div className="w-11 text-sm leading-10 my-1 ml-2">닉네임</div>
+            <div className="w-11 text-sm leading-10 my-1">닉네임</div>
             <input
               type="text"
-              defaultValue={myNickname}
               value={newNickname}
               onChange={onNicknameHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
@@ -63,7 +63,7 @@ function NavbarSideContentHeaderProfile({...props}) {
             <span className="text-hrtColorGray">{countNickname}/8</span>
           </div>
           <div className="flex flex-wrap items-center">
-            <div className="w-11 leading-10 my-2 ml-2">
+            <div className="w-11 leading-10 my-2">
               <div className="text-sm leading-4">
                 상태
                 <br />
@@ -72,14 +72,13 @@ function NavbarSideContentHeaderProfile({...props}) {
             </div>
             <input
               type="text"
-              defaultValue={myStatus}
               value={newStatusMessage}
               onChange={onStatusMessageHandler}
               className="bg-hrtColorLightPink rounded m-2 p-1 flex-auto w-2"
             />
             <span className="text-hrtColorGray">{countStatus}/16</span>
           </div>
-          <button>저장</button>
+            <button disabled={newNickname.length > 0 ? false : true} className={` ${newNickname.length > 0 ? 'border-hrtColorOutline' : 'text-hrtColorGray' } border-2 rounded-md text-sm px-2 mt-2`}>저장</button>
         </form>
     </div>
   )

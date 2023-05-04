@@ -30,14 +30,14 @@ function NavbarSideContentHeader({...props}) {
     navigate(`/heartboard/user?id=${userId}`);
   };
   return (
-    <div>
+    <div className="flex items-center">
       {isLogin ? (
         <div>
-        <div className="flex justify-between align-middle p-2">
-          <span onClick={onMyBoardHandler} className="text-2xl px-2 mr-2">
-            {userNickname}
-          </span>
-          <button onClick={onSettingHandler}>
+          <div className="flex justify-between align-middle p-2">
+            <span onClick={onMyBoardHandler} className="text-2xl px-2 mr-2">
+              {userNickname}
+            </span>
+          {/* <button onClick={onSettingHandler}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -78,10 +78,11 @@ function NavbarSideContentHeader({...props}) {
           <NavbarSideContentHeaderProfile />
           :
           null
-        }
+        } */}
+        </div>
         </div>
       ) : (
-        <span>로그인이 필요합니다</span>
+        <span className="text-lg px-2 mr-2">로그인이 필요합니다</span>
       )}
     </div>
   );
