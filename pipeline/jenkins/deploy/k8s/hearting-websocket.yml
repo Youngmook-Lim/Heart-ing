@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hearting-websocket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hearting-websocket
+  template:
+    metadata:
+      labels:
+        app: hearting-websocket
+    spec:
+      containers:
+        - name: hearting-websocket
+          image: youngmookk/hearting-websocket:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hearting-websocket
+spec:
+  selector:
+    app: hearting-websocket
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
