@@ -74,3 +74,8 @@ export interface IGetMessageListTypes {
   shortDescrption: string;
   title: string;
 }
+
+export interface IResponseHeartTypes {
+  messageId: number,
+  emojiId: number,
+}
