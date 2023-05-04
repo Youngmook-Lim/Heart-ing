@@ -15,6 +15,7 @@ spec:
       containers:
         - name: hearting-front
           image: youngmookk/hearting-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
 
