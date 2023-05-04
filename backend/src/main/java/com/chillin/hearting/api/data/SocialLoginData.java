@@ -17,14 +17,18 @@ public class SocialLoginData implements Data {
     // 닉네임
     private String nickname;
 
+    // 상태 메시지
+    private String statusMessage;
+
     // accessToken
     private String accessToken;
 
     @Builder
-    public SocialLoginData(String userId, String nickname, String accessToken) {
+    public SocialLoginData(String userId, String nickname, String statusMessage, String accessToken) {
 
         this.userId = userId;
         this.nickname = nickname;
+        this.statusMessage = statusMessage;
         this.accessToken = accessToken;
     }
 

@@ -87,9 +87,11 @@ public class OAuthService {
             socialLoginData = SocialLoginData.builder()
                     .userId(socialUser.getId())
                     .nickname(socialUser.getNickname())
+                    .statusMessage(socialUser.getStatusMessage())
                     .accessToken(accessToken.getToken())
                     .build();
 
+            log.debug("social 로그인 성공 후 반환 값 : {}", socialLoginData);
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
             CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
