@@ -6,6 +6,7 @@ import { IMessageInfoTypes } from "../../types/messageType";
 import { isMyBoardAtom } from "../../atoms/messageAtoms";
 
 import HeartItem from "../common/HeartItem";
+import Loading from "../common/Loading";
 
 function HeartBoardList({ ...props }) {
   const isMyBoard = useRecoilValue(isMyBoardAtom);
@@ -23,8 +24,6 @@ function HeartBoardList({ ...props }) {
 
   // recentMessageList 길이 만큼 반복해 HeartItem를 불러옵니다
   if (recentMessageList && recentMessageList.length > 0) {
-    // 원본이 reverse되는 것을 막기 위해 복사본을 만듭니다
-    // const copyRecentMessageList = [...recentMessageList].reverse();
     return (
       <div className="grid grid-cols-3">
         {recentMessageList.map(
@@ -55,7 +54,11 @@ function HeartBoardList({ ...props }) {
       </div>
     );
   } else {
-    return <div className="grid grid-cols-3 p-2"></div>;
+    return (
+      <div className="loadingBody">
+        <Loading></Loading>
+      </div>
+    );
   }
 }
 
