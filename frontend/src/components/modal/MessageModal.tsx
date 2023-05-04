@@ -102,7 +102,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
             </button>
           </div>
           {/* <p>{selectedMessageId} 메시지 / 지금은 더미데이터</p> */}
-          <div className="mx-6">
+          <div className="relative mx-6">
             <MessageModalHeart
               heartId={messageData.heartId}
               heartUrl={messageData.heartUrl}
@@ -120,7 +120,9 @@ function MessageModal({ mode }: IMessageModalTypes) {
               title={messageData.title}
               content={messageData.content}
             />
-            { isOpenEmojiList ? <HeartResponseEmojiList onEmojiHandler={ onEmojiHandler }/> : null }
+            <div className="absolute top-40 w-full h-auto">
+              { isOpenEmojiList ? <HeartResponseEmojiList onEmojiHandler={ onEmojiHandler }/> : null }
+            </div>
             <MessageModalButtonBox
               mode={mode}
               isExpired={isExpired}
