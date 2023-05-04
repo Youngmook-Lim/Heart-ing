@@ -12,11 +12,16 @@ pipeline {
 
     stages {
 
+        stage('Copy kubeconfig') {
+            steps {
+                sh "sudo cp /var/snap/microk8s/current/credentials/client.config ${WORKSPACE}/kubeconfig.yml"
+                sh "sudo chown jenkins:jenkins ${WORKSPACE}/kubeconfig.yml"
+            }
+        }
+
         stage('Kubernetes test') {
             steps {
-                withKubeConfig([credentialsId: 'user1']) {
-                    sh 'kubectl get all'
-                }
+                sh "KUBECONFIG=${WORKSPACE}/kubeconfig.yaml kubectl get all"
             }
         }
 
