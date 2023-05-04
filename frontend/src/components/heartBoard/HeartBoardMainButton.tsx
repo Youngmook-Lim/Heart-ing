@@ -19,7 +19,7 @@ function BottomButton({ ...props }) {
         .writeText(window.location.href)
         .then(() => {
           alert(
-            `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+            `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
           );
         })
         .catch(() => {
@@ -39,7 +39,7 @@ function BottomButton({ ...props }) {
       document.execCommand("copy");
       document.body.removeChild(textarea);
       alert(
-        `${userNickname}님의 마음보관함이 복사되었습니다.\n친구들에게 공유해보세요!`
+        `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
       );
     }
   };
@@ -56,7 +56,7 @@ function BottomButton({ ...props }) {
             <p className="text-hrtColorPink">{props.userProfile.nickname}</p>
             <p>님에게</p>
           </div>
-          <div className="text-2xl">마음 보내기</div>
+          <div className="text-2xl">하트 보내기</div>
         </div>
       )}
     </button>

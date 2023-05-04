@@ -2,11 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  isLoginAtom,
-  userNicknameAtom,
-  userStautsMessageAtom,
-} from "../atoms/userAtoms";
+import { isLoginAtom, userNicknameAtom } from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 
 import { IUpdateProfileTypes } from "../types/userType";
@@ -30,12 +26,10 @@ function HeartBoard() {
   // const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
-  const [spaceSize, setSpaceSize] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
   const setUserNickname = useSetRecoilState(userNicknameAtom);
-  const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom);
 
   // 하트보드 주인 userId 뽑아서 프로필 가져오기
   let params = new URL(document.URL).searchParams;
@@ -53,7 +47,7 @@ function HeartBoard() {
         navigate("/notfound");
       }
     },
-    [navigate]
+    [navigate, setUserNickname]
   );
 
   // userId로 최근 메시지 리스트 가져오기
@@ -83,8 +77,6 @@ function HeartBoard() {
   useEffect(() => {
     // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
     setIsMyBoard(isLogin && userId === myId ? true : false);
-    if (isLogin && userId === myId) setSpaceSize(200);
-    else setSpaceSize(120);
     getUserProfile(userId);
     getRecivedMessages(userId);
     setReadMessage(false);
@@ -103,7 +95,7 @@ function HeartBoard() {
 
   useEffect(() => {
     getRecivedMessages(userId);
-  }, [readMessage]);
+  }, [getRecivedMessages, userId, readMessage]);
 
   const outsideHeightStyle = {
     height: `calc((var(--vh, 1vh) * 100) - ${isMyBoard ? 12 : 7}rem)`,
@@ -113,13 +105,13 @@ function HeartBoard() {
   };
 
   return (
-    <div className="container mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
+    <div className="container fullHeight mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
       <div
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
       >
-        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-40">
-          <div>마음 수신함</div>
+        <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-10">
+          <div>하트 수신함</div>
           <div className="">
             <div className="text-xs text-right h-6 -my-1 -mt-2">누적 수신</div>
             <div className="flex -mt-1.5">
@@ -141,7 +133,7 @@ function HeartBoard() {
           className="whitespace-nowrap overflow-auto scrollbar-hide"
           style={innerHeightStyle}
         >
-          <div className="pb-4">
+          <div className="pb-2">
             <HeartBoardProfileBox
               onChangeProfile={updateProfile}
               userProfile={userProfile}

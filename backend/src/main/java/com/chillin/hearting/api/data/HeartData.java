@@ -14,10 +14,13 @@ public class HeartData implements Data {
     private Long heartId;
     private String name;
     private String heartUrl;
+    private String shortDescription;
     private String type;
     @Builder.Default
     @Getter(onMethod_ = {@JsonProperty("isLocked")})
     private Boolean isLocked = true;
+    @Getter(onMethod_ = {@JsonProperty("isAcq")})
+    private Boolean isAcq;
 
 
     public static HeartData of(Heart heart, boolean isLocked) {
@@ -25,6 +28,7 @@ public class HeartData implements Data {
                 .heartId(heart.getId())
                 .name(heart.getName())
                 .heartUrl((isLocked) ? getLockedUrl() : heart.getImageUrl())
+                .shortDescription(heart.getShortDescription())
                 .type(heart.getType())
                 .isLocked(isLocked)
                 .build();
@@ -41,5 +45,9 @@ public class HeartData implements Data {
 
     private static String getLockedUrl() {
         return "https://heart-ing.s3.ap-northeast-2.amazonaws.com/heart/heart_lock_1.svg";
+    }
+
+    public void setAcq(boolean isAcq) {
+        this.isAcq = isAcq;
     }
 }
