@@ -5,7 +5,6 @@ import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
 import com.chillin.hearting.db.repository.HeartRepository;
-import com.chillin.hearting.db.repository.MessageHeartConditionRepository;
 import com.chillin.hearting.db.repository.UserHeartRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +27,7 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
     private final UserHeartRepository userHeartRepository;
-    private final MessageHeartConditionRepository messageHeartConditionRepository;
+    private final MigrationService migrationService;
 
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
     private static final String HEART_TYPE_SPECIAL = "SPECIAL";
@@ -175,13 +177,9 @@ public class HeartService {
         String key = KEY_SEND_HEARTS_PREFIX + userId;
         // update sent heart count
         if (redisTemplate.hasKey(key)) {
-            System.out.println(hashOperations.get(key, heartId.toString()));
             hashOperations.put(key, heartId.toString(), hashOperations.get(key, heartId.toString()) + 1);
         } else {
-            List<HeartCountDTO> heartCountDTOList = heartRepository.findAllHeartSentCount(userId);
-            for (HeartCountDTO dto : heartCountDTOList) {
-                hashOperations.put(key, dto.getHeartId().toString(), dto.getCurrentValue());
-            }
+            migrationService.migrateUserSentHeart(userId);
         }
     }
 
@@ -229,25 +227,5 @@ public class HeartService {
                 }
         }
         return isAcquirable;
-    }
-
-    /**
-     * MySQL에 저장된 모든 하트 정보를 Redis에 업데이트 합니다.
-     */
-    public void synchronizeHeartInfo() {
-        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
-        Map<String, Object> map;
-        for (Heart heart : heartRepository.findAll()) {
-            map = new HashMap<>();
-            map.put("id", heart.getId());
-            map.put("name", heart.getName());
-            map.put("imageUrl", heart.getImageUrl());
-            map.put("shortDescription", heart.getShortDescription());
-            map.put("longDescription", heart.getLongDescription());
-            map.put("type", heart.getType());
-            map.put("acqCondition", heart.getAcqCondition());
-            hashOperations.putAll("heartInfo:" + heart.getId(), map);
-        }
-
     }
 }
