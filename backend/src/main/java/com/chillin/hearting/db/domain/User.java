@@ -86,7 +86,9 @@ public class User implements Serializable {
         this.messageTotal = messageTotal;
     }
 
-    public void updateUserStatusToActive() {
+    // 계정 일시 정지 해제
+    public void updateUserStatusToActive(LocalDateTime nowLocalTime) {
+        this.updatedDate = nowLocalTime;
         this.status = 'A';
     }
 
@@ -99,7 +101,8 @@ public class User implements Serializable {
     }
 
     // 닉네임 수정
-    public void updateNickname(String nickname) {
+    public void updateNickname(String nickname, LocalDateTime nowLocalTime) {
+        this.updatedDate = nowLocalTime;
         this.nickname = nickname;
     }
 
@@ -109,7 +112,8 @@ public class User implements Serializable {
     }
 
     // 상태메시지 수정
-    public void updateStatusMessage(String statusMessage) {
+    public void updateStatusMessage(String statusMessage, LocalDateTime nowLocalTime) {
+        this.updatedDate = nowLocalTime;
         this.statusMessage = statusMessage;
     }
 
