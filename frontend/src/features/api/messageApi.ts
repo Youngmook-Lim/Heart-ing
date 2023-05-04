@@ -1,5 +1,5 @@
 import { axios } from "./https";
-import { IMessageSendTypes } from "../../types/messageType";
+import { IMessageSendTypes, IResponseHeartTypes } from "../../types/messageType";
 
 export async function getReceived(userId: string) {
   try {
@@ -126,6 +126,18 @@ export async function getTotalHeartApi() {
   } catch (err) {
     console.log("오 토탈 하트 갯수 안왔는뎅~");
     console.log(err);
+    return null;
+  }
+}
+
+export async function responseHeartApi({messageId, emojiId}: IResponseHeartTypes) {
+  try {
+    const res = await axios.post(`api/v1/messages/${messageId}/emojis/${emojiId}`);
+    const status = res.data.status;
+    console.log("이모지 반응했어여~")
+    return status;
+  } catch (err) {
+    console.log("이모지 반응 못감", err);
     return null;
   }
 }
