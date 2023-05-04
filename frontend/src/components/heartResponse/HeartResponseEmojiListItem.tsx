@@ -1,26 +1,26 @@
+import { useRecoilState } from "recoil";
 import ResponseEmojiIcon from "../common/ResponseEmojiIcon"
 import { isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
-import { useRecoilState } from "recoil";
 
 interface propsType {
   id: number,
-  onEmojiHandler: (emojiId: number) => void;
 }
 
-function HeartResponseEmojiListItem({ id, onEmojiHandler }: propsType) {
+function HeartResponseEmojiListItem({ id }: propsType) {
 
   const [ isSelectedEmojiId, setIsSelectedEmojiId ] = useRecoilState(isSelectedEmojiIdAtom)
 
   const getEmojiId = () => {
-    onEmojiHandler(id)
     setIsSelectedEmojiId(id)
   }
 
   return (
     <>
-      <div className="relative z-10 flex justify-center" onClick={getEmojiId}>
-      { isSelectedEmojiId === id ? <div className="absolute w-8 h-8 bg-hrtColorLightPink rounded-full transform z-22"></div> : null }
-        <ResponseEmojiIcon id={id} />
+      <div className="relative flex justify-center" onClick={getEmojiId}>
+        <div className="absolute z-50">
+          <ResponseEmojiIcon id={id} />
+        </div>
+        { isSelectedEmojiId === id ? <div className="w-11 h-11 bg-hrtColorLightPink rounded-full transform"></div> : <div className="w-11 h-11"></div> }
       </div>
     </>
   )
