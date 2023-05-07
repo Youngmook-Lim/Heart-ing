@@ -31,6 +31,7 @@ function HeartwritingSelectHeart({ ...props }) {
               <div className="relative whitespace-no-wrap">
                 <HeartwritingSelectedHeartItem
                   heartInfo={heart}
+                  key={String(heart.heartId)}
                   id={String(heart.heartId)}
                   isSelected={props.isSelected}
                 />

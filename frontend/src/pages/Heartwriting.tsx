@@ -21,8 +21,7 @@ function Heartwriting() {
 
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
-  const socket = io("https://heart-ing.com", { path: "/ws" });
-
+  
   const getUserProfile = useCallback(
     async (userId: string | null) => {
       if (!userId) {
@@ -37,31 +36,32 @@ function Heartwriting() {
       }
     },
     [navigate]
-  );
-
-  const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsSelected(false)
-  }
-  const onSendHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!userId) return;
-    const messageInfo: IMessageSendTypes = {
-      heartId: Number(selectedHeartId),
-      senderId: getUserInfo().userId,
-      receiverId: userId,
-      title: title,
-      content: content,
-    };
-
-    const data = await sendMessageApi(messageInfo);
-    if (data.status === "success") {
-      alert("메세지가 전송되었습니다");
-      navigate(`/heartboard/user?id=${userId}`);
-      // if (socket && socket.connected) {
-      //   socket.emit("send-message", userId, data.data);
-      //   // console.log("알람보내용");
-      // } else {
-      //   // console.log("웹소켓 서버에 먼저 연결하세요");
-      // }
+    );
+    
+    const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+      setIsSelected(false)
+    }
+    const onSendHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!userId) return;
+      const messageInfo: IMessageSendTypes = {
+        heartId: Number(selectedHeartId),
+        senderId: getUserInfo().userId,
+        receiverId: userId,
+        title: title,
+        content: content,
+      };
+      
+      const data = await sendMessageApi(messageInfo);
+      if (data.status === "success") {
+        alert("메세지가 전송되었습니다");
+        navigate(`/heartboard/user?id=${userId}`);
+        const socket = io("https://heart-ing.com", { path: "/ws" });
+        if (socket && socket.connected) {
+            socket.emit("send-message", userId, data.data);
+            console.log("알람보내용");
+      } else {
+        console.log("웹소켓 서버에 먼저 연결하세요");
+      }
     }
   };
 
