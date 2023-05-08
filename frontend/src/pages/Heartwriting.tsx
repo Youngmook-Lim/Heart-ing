@@ -61,8 +61,10 @@ function Heartwriting() {
         //     }
         alert("메세지가 전송되었습니다");
         navigate(`/heartboard/user?id=${userId}`);
-        setIsLoading(false)
+      } else {
+        alert(`메세지가 전송되지 않았습니다.\n잠시 후 다시 시도해주세요.`);
       }
+      setIsLoading(false)
     },[isLoading]
   );
     
