@@ -7,11 +7,11 @@ function HeartwritingMessageForm({ ...props }) {
   const [countContent, setCountContent] = useState(0);
 
   const onTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value.length > 8) {
-      const currentTitle = e.currentTarget.value.substr(0, 8);
+    if (e.currentTarget.value.length > 12) {
+      const currentTitle = e.currentTarget.value.substr(0, 12);
       props.setTitle(currentTitle);
       setTitle(currentTitle);
-      setCountTitle(8);
+      setCountTitle(12);
     } else {
       const currentTitle = e.currentTarget.value;
       props.setTitle(currentTitle);
@@ -47,7 +47,7 @@ function HeartwritingMessageForm({ ...props }) {
         />
         {title ? (
           <span className="text-gray-400 absolute bottom-2 right-8">
-            {countTitle}/8
+            {countTitle}/12
           </span>
         ) : null}
       </div>
@@ -56,13 +56,13 @@ function HeartwritingMessageForm({ ...props }) {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="1.5"
+          strokeWidth="1.5"
           stroke="currentColor"
           className="inline w-4 h-4 mx-1 text-hrtColorPink"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
           />
         </svg>
