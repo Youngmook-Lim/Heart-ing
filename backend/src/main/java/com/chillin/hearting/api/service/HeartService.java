@@ -29,12 +29,14 @@ public class HeartService {
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
     private static final String HEART_TYPE_SPECIAL = "SPECIAL";
     private static final String HEART_TYPE_EVENT = "EVENT";
+    private static final String HEART_TYPE_ALL = "ALL";
     private static final int HEART_PLANET_MAX_VALUE = 5;
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
     private static final ArrayList<Long> defaultHeartList = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L, 5L));
     private static final ArrayList<Long> specialHeartList = new ArrayList<>(Arrays.asList(7L));
     private static final ArrayList<Long> eventHeartList = new ArrayList<>(Arrays.asList(6L));
+    private static final ArrayList<Long> allHeartList = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L));
 
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
@@ -52,7 +54,7 @@ public class HeartService {
      */
     public Data findAllHearts(User user) {
         log.debug("도감 하트 리스트 조회 - DB의 모든 하트를 조회한다.");
-        List<Heart> allHearts = heartRepository.findAll();
+        List<Heart> allHearts = getAllHeartInfo(HEART_TYPE_ALL);
 
         // 유저가 존재한다면, 획득한 하트를 가져옵니다.
         HashSet<Long> myHeartSet = new HashSet<>();
@@ -128,6 +130,9 @@ public class HeartService {
                 heartIdList = eventHeartList;
                 break;
 
+            case HEART_TYPE_ALL:
+                heartIdList = allHeartList;
+                break;
         }
 
         if (heartIdList != null) {
