@@ -7,6 +7,7 @@ import {
   selectedMessageIdAtom,
   isOpenEmojiListAtom,
   isSelectedEmojiIdAtom,
+  isSelectedEmojiUrlAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -31,7 +32,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
-  const [isSelectedEmojiId, setIsSelectedEmojiId] = useRecoilState(isSelectedEmojiIdAtom);
+  const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
+  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -59,6 +61,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
     const data = await responseHeartApi(EmojiInfo)
     if (data === 'success') {
+      // 나중에 확인하기
+      setIsSelectedEmojiUrl(data.emojiUrl)
     } else {
     }
   }
@@ -74,7 +78,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
 
       return () => {
         setIsOpenEmojiList(false)
-        setIsSelectedEmojiId(0);
+        setIsSelectedEmojiId(0)
+        setIsSelectedEmojiUrl("")
       }
     }, [mode, selectedMessageId]);
     
