@@ -35,7 +35,6 @@ import java.util.Date;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ROLE = "ROLE_USER";
 
