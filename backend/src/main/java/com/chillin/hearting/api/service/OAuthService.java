@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SocialLoginData;
+import com.chillin.hearting.api.data.SocialLoginResultData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -66,8 +67,10 @@ public class OAuthService {
         SocialLoginData socialLoginData = null;
 
         try {
-            User socialUser = getSocialUserInfo(socialAccessToken, provider);
-            log.debug("{}", socialUser);
+            SocialLoginResultData socialLoginResultData = getSocialUserInfo(socialAccessToken, provider);
+            log.debug("{}", socialLoginResultData);
+
+            User socialUser = socialLoginResultData.getUser();
 
             if (socialUser == null) {
                 throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
@@ -89,6 +92,7 @@ public class OAuthService {
                     .nickname(socialUser.getNickname())
                     .statusMessage(socialUser.getStatusMessage())
                     .accessToken(accessToken.getToken())
+                    .isFirst(socialLoginResultData.isFirst())
                     .build();
 
             log.debug("social 로그인 성공 후 반환 값 : {}", socialLoginData);
@@ -160,9 +164,10 @@ public class OAuthService {
 
     // 카카오에서 회원정보 받아오기
     @Transactional
-    public User getSocialUserInfo(String kakaoAccessToken, String provider) {
+    public SocialLoginResultData getSocialUserInfo(String kakaoAccessToken, String provider) {
 
         User user = null;
+        SocialLoginResultData socialLoginResultData = null;
 
         try {
             String userInfoUri = environment.getProperty(CLIENT_PROVIDER + provider + ".user-info-uri");
@@ -210,7 +215,13 @@ public class OAuthService {
                         log.debug("계정 일시 정지 해제 시간 : {}", nowLocalTime);
                         user.updateUserStatusToActive(nowLocalTime);
                         log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
-                        return userRepository.saveAndFlush(user);
+
+                        socialLoginResultData = SocialLoginResultData.builder()
+                                .user(userRepository.saveAndFlush(user))
+                                .isFirst(false)
+                                .build();
+
+                        return socialLoginResultData;
                     }
 
                     throw new UnAuthorizedException("pause");
@@ -218,6 +229,13 @@ public class OAuthService {
                 // 계정 영구 정지인 경우
                 else if (user.getStatus() == 'O') {
                     throw new UnAuthorizedException("out");
+                }
+                // 로그인 한 적 있는 정상 계정인 경우
+                else {
+                    socialLoginResultData = SocialLoginResultData.builder()
+                            .user(user)
+                            .isFirst(false)
+                            .build();
                 }
             } else {
                 log.debug(provider + " 로그인 최초입니다.");
@@ -239,7 +257,13 @@ public class OAuthService {
                 migrationService.migrateUserSentHeart(shortUuid);
 
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
-                return userRepository.saveAndFlush(user);
+
+                socialLoginResultData = SocialLoginResultData.builder()
+                        .user(userRepository.saveAndFlush(user))
+                        .isFirst(true)
+                        .build();
+
+                return socialLoginResultData;
             }
         } catch (UnAuthorizedException e) {
             log.error("로그인 한 회원 status : {}", e.getMessage());
@@ -247,7 +271,7 @@ public class OAuthService {
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());
         }
-        return user;
+        return socialLoginResultData;
     }
 
     public static String parseToShortUUID(String uuid) {

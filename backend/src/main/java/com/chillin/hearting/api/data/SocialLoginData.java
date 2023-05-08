@@ -1,14 +1,14 @@
 package com.chillin.hearting.api.data;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @Getter
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class SocialLoginData implements Data {
 
     // user 고유 코드
@@ -23,13 +23,17 @@ public class SocialLoginData implements Data {
     // accessToken
     private String accessToken;
 
-    @Builder
-    public SocialLoginData(String userId, String nickname, String statusMessage, String accessToken) {
+    // 회원가입 여부
+    @Getter(onMethod_ = {@JsonProperty("isFirst")})
+    private boolean isFirst;
 
-        this.userId = userId;
-        this.nickname = nickname;
-        this.statusMessage = statusMessage;
-        this.accessToken = accessToken;
-    }
+//    @Builder
+//    public SocialLoginData(String userId, String nickname, String statusMessage, String accessToken, bo) {
+//
+//        this.userId = userId;
+//        this.nickname = nickname;
+//        this.statusMessage = statusMessage;
+//        this.accessToken = accessToken;
+//    }
 
 }
