@@ -53,6 +53,7 @@ public class OAuthService {
     private final Environment environment;
     private final UserService userService;
     private final MigrationService migrationService;
+    private final MessageService messageService;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -75,6 +76,8 @@ public class OAuthService {
             if (socialUser == null) {
                 throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
             }
+
+            messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "", "", "");
 
             AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
 

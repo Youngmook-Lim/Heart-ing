@@ -27,13 +27,4 @@ public class SocialLoginData implements Data {
     @Getter(onMethod_ = {@JsonProperty("isFirst")})
     private boolean isFirst;
 
-//    @Builder
-//    public SocialLoginData(String userId, String nickname, String statusMessage, String accessToken, bo) {
-//
-//        this.userId = userId;
-//        this.nickname = nickname;
-//        this.statusMessage = statusMessage;
-//        this.accessToken = accessToken;
-//    }
-
 }
