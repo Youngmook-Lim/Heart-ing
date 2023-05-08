@@ -29,7 +29,7 @@ function HeartResponseEmojiListItem({ id, onEmojiHandler, messageEmojiId, onClos
         <div className="absolute z-50">
           <ResponseEmojiIcon id={id} />
         </div>
-        { isSelectedEmojiId === id ? <div className="w-11 h-11 bg-#F7DCEE rounded-full transform"></div> : <div className="w-11 h-11"></div> }
+        { isSelectedEmojiId === id ? <div className="w-11 h-11 bg-hrtColorSelectedEmoji rounded-full transform"></div> : <div className="w-11 h-11"></div> }
       </div>
     </>
   )
