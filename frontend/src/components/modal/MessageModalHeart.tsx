@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 
-import HeartItemIcon from "../common/HeartItemIcon";
 import TouchArrow from "../../assets/images/png/touch_arrow.png";
 
 function MessageModalHeart({ ...props }) {
@@ -26,9 +25,19 @@ function MessageModalHeart({ ...props }) {
           </div>
           <div className="relative">
             <div className="flex justify-center p-0 heartbeat">
-              <HeartItemIcon id={props.heartId} />
+              <img
+                className="mx-auto my-auto"
+                src={props.heartUrl}
+                alt="heartIcon"
+              />
             </div>
-            { props.emojiUrl ? <img className="absolute w-6 right-3 bottom-3" src={props.emojiUrl} alt="emoji" /> : null}
+            {props.emojiUrl ? (
+              <img
+                className="absolute w-6 right-3 bottom-3"
+                src={props.emojiUrl}
+                alt="emoji"
+              />
+            ) : null}
           </div>
         </button>
       ) : (
