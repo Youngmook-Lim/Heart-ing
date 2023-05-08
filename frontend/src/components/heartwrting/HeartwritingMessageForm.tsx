@@ -47,7 +47,7 @@ function HeartwritingMessageForm({ ...props }) {
         />
         {title ? (
           <span className="text-gray-400 absolute bottom-2 right-8">
-            {countTitle}/8
+            {countTitle}/12
           </span>
         ) : null}
       </div>

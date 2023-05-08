@@ -18,6 +18,7 @@ function Heartwriting() {
   const [selectedHeartInfo, setSelectedHeartInfo] = useState<IHeartInfoTypes>();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
@@ -36,12 +37,10 @@ function Heartwriting() {
       }
     },
     [navigate]
-    );
-    
-    const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-      setIsSelected(false)
-    }
-    const onSendHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  );
+
+  const sendMessage = useCallback(
+    async () => {
       if (!userId||!selectedHeartInfo) return;
       const messageInfo: IMessageSendTypes = {
         heartId: selectedHeartInfo.heartId,
@@ -50,41 +49,58 @@ function Heartwriting() {
         title: title,
         content: content,
       };
-      
+        
       const data = await sendMessageApi(messageInfo);
       if (data.status === "success") {
-        const socket = io("https://heart-ing.com", { path: "/ws" });
-        if (socket && socket.connected) {
-            socket.emit("send-message", userId, data.data);
-            console.log("알람보내용");
-          } else {
-              console.log("웹소켓 서버에 먼저 연결하세요");
-            }
+        // const socket = io("https://heart-ing.com", { path: "/ws" });
+        // if (socket && socket.connected) {
+        //     socket.emit("send-message", userId, data.data);
+        //     console.log("알람보내용");
+        //   } else {
+        //       console.log("웹소켓 서버에 먼저 연결하세요");
+        //     }
         alert("메세지가 전송되었습니다");
         navigate(`/heartboard/user?id=${userId}`);
-          }
-        };
+        setIsLoading(false)
+      }
+    },[isLoading]
+  );
+    
+  const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsSelected(false)
+  }
+
+  const onSendHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsLoading(true)
+  };
         
-        async function getHeartList() {
-          const data = await getMessageHeartApi();
-          if (data.status === "success") {
-            setHeartList(data.data.heartList);
-          }
-        }
+  async function getHeartList() {
+    const data = await getMessageHeartApi();
+    if (data.status === "success") {
+      setHeartList(data.data.heartList);
+    }
+  }
         
-        // function setHeartNumber(heartId: string) {
-        //   setSelectedHeartId(heartId);
-        // }
+    // function setHeartNumber(heartId: string) {
+    //   setSelectedHeartId(heartId);
+    // }
         
-        function setMode() {
-          setIsSelected(!isSelected);
-        }
+  function setMode() {
+    setIsSelected(!isSelected);
+  }
+
+  useEffect(() => {
+    getHeartList();
+    setIsSelected(false);
+    }, []);
         
+  useEffect(() => {
+    getUserProfile(userId);
+    }, [userId]);
+
         useEffect(() => {
-          getUserProfile(userId);
-          getHeartList();
-          setIsSelected(false);
-        }, [userId, getUserProfile]);
+          sendMessage();
+        }, [isLoading]);
         
         return (
           <div className="fullHeight container mx-auto px-6 fullHeight justify-between flex-col">
@@ -126,10 +142,13 @@ function Heartwriting() {
           </button>
           <button
             onClick={onSendHandler}
-            disabled={title ? false : true}
+            disabled={title && !isLoading ? false : true}
             className={`px-8 h-16 w-48 rounded-xl border-2 ${title ? 'bg-hrtColorYellow border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]' : 'bg-gray-200 border-gray-300 shadow-[0_4px_4px_rgba(182,182,182,1)] text-white'}`}
             >
-            <div className="text-2xl">전달하기</div>
+              {isLoading ? 
+              <div className="text-2xl">전달중...</div>
+              : <div className="text-2xl">전달하기</div>
+            }
           </button>
           </div>
         ) : (
