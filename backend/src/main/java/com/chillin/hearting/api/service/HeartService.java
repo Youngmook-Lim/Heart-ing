@@ -97,7 +97,7 @@ public class HeartService {
         if (user != null) {
             String userId = user.getId();
             log.debug("들어온 유저 아이디 : {}", userId);
-            List<UserHeart> myHearts = userHeartRepository.findAllByUserId(userId);
+            List<UserHeart> myHearts = userHeartRepository.findAllByUserIdOrderByHeartId(userId);
             for (UserHeart myHeart : myHearts) {
                 resHearts.add(HeartData.of(myHeart.getHeart(), false));
             }
