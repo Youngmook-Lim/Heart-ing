@@ -23,7 +23,7 @@ function HeartBoxList({ ...props }) {
         {copyInboxMessageList.map(
           ({
             messageId,
-            heartId,
+            heartUrl,
             title,
             emojiId,
             emojiUrl,
@@ -32,7 +32,7 @@ function HeartBoxList({ ...props }) {
             <HeartBoxListItem
               key={messageId}
               messageId={messageId}
-              heartId={heartId}
+              heartUrl={heartUrl}
               context={title}
               emojiId={emojiId}
               emojiUrl={emojiUrl}
