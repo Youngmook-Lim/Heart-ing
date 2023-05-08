@@ -7,8 +7,6 @@ import {
   selectedMessageIdAtom,
 } from "../../atoms/messageAtoms";
 
-import HeartItemIcon from "./HeartItemIcon";
-
 function HeartItem({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const setSelectedMessgeIdAtom = useSetRecoilState(selectedMessageIdAtom);
@@ -44,7 +42,11 @@ function HeartItem({ ...props }) {
             bounceAnimation();
           }}
         >
-          <HeartItemIcon id={props.heartId} />
+          <img
+            className="mx-auto my-auto"
+            src={props.heartUrl}
+            alt="heartIcon"
+          />
           {props.isRead || isRead ? null : (
             <div className="bg-hrtColorNewRed w-4	h-4	mx-4 my-3 rounded-full border-2	border-white absolute left-1/2 bottom-1/2	"></div>
           )}
@@ -56,7 +58,11 @@ function HeartItem({ ...props }) {
           }`}
           onClick={() => bounceAnimation()}
         >
-          <HeartItemIcon id={props.heartId} />
+          <img
+            className="w-2/6 mx-auto my-auto"
+            src={props.heartUrl}
+            alt="heartIcon"
+          />
         </div>
       )}
 

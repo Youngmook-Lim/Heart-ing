@@ -4,22 +4,22 @@ import { ReactComponent as SelectedHeart } from "../../assets/images/pixel/heart
 import HeartwritingSelectedHeartItem from "./HeartwritingSelectedHeartItem";
 
 function HeartwritingSelectHeart({ ...props }) {
-  const [selectedHeartId, setSelectedHeartId] = useState("");
-  const onSelectHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.currentTarget.id === selectedHeartId) {
-      setSelectedHeartId("");
+  const [selectedHeartInfo, setSelectedHeartInfo] = useState<IHeartInfoTypes|null>();
+  const onSelectHandler = (e: IHeartInfoTypes) => {
+    if (e === selectedHeartInfo) {
+      setSelectedHeartInfo(null);
     } else {
-      setSelectedHeartId(e.currentTarget.id);
+      setSelectedHeartInfo(e);
     }
   };
 
   useEffect(() => {
-    props.onHeartNumberHandler(selectedHeartId);
-  }, [props, selectedHeartId]);
+    props.setSelectedHeartInfo(selectedHeartInfo);
+  }, [props, selectedHeartInfo]);
 
   return (
     <div>
-      {selectedHeartId ? (
+      {selectedHeartInfo ? (
         <div className="my-5 text-xl text-hrtColorPink">선택 완료</div>
       ) : (
         <div className="my-5 text-xl">하트를 선택해주세요</div>
@@ -31,8 +31,8 @@ function HeartwritingSelectHeart({ ...props }) {
               <div className="relative whitespace-no-wrap">
                 <HeartwritingSelectedHeartItem
                   heartInfo={heart}
-                  key={String(heart.heartId)}
-                  id={String(heart.heartId)}
+                  key={heart.heartId}
+                  id={heart.heartId}
                   isSelected={props.isSelected}
                 />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2/3 text-xxs whitespace-no-wrap">
@@ -44,13 +44,13 @@ function HeartwritingSelectHeart({ ...props }) {
             ) : (
               <div
                 className="relative"
-                onClick={onSelectHandler}
+                onClick={()=>{onSelectHandler(heart)}}
                 id={String(heart.heartId)}
               >
                 <div className="relative z-10">
                   <HeartwritingSelectedHeartItem heartInfo={heart} />
                 </div>
-                {String(heart.heartId) === selectedHeartId ? (
+                {heart === selectedHeartInfo ? (
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2/3">
                     <SelectedHeart />
                   </div>

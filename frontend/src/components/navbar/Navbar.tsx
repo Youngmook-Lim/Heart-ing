@@ -24,7 +24,7 @@ function Navbar() {
   // const [notiIsOpen, notiRef, notiHandler] = useDetectClose(false)
   const [notiIsOpen, setNotiIsOpen] = useState(false);
   const [isNew, setIsNew] = useState(false);
-  const [receivedList, setReceivedList] = useState({ trueList: [], falseList: [] });
+  const [receivedList, setReceivedList] = useState({});
   const myId = getUserInfo().userId;
 
   const onNotiHandler = (e: MouseEvent) => {
@@ -42,7 +42,7 @@ function Navbar() {
 
   const getData = useCallback(async (userId: string | null) => {
     if (!userId) return;
-    // console.log(userId);
+    console.log(userId);
     const data = await getReceived(userId);
     if (data.status === "success") {
       const notiData: MyObject = { trueList: [], falseList: [] };
@@ -61,12 +61,6 @@ function Navbar() {
       setReceivedList(notiData);
     }
   }, []);
-
-  const updateData = (newData: IMessageInfoTypes) => {
-
-    const notiData: MyObject = { trueList: [receivedList.trueList], falseList: [newData, receivedList.falseList] };
-
-  }
 
   const onSocket = useCallback(async () => {
     if (isLogin) {
@@ -94,6 +88,8 @@ function Navbar() {
       getData(myId);
     }
   }, [isLogin, getData, myId, onSocket]);
+
+
 
   return (
     <div>
