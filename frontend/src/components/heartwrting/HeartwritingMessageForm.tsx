@@ -7,11 +7,11 @@ function HeartwritingMessageForm({ ...props }) {
   const [countContent, setCountContent] = useState(0);
 
   const onTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value.length > 8) {
-      const currentTitle = e.currentTarget.value.substr(0, 8);
+    if (e.currentTarget.value.length > 12) {
+      const currentTitle = e.currentTarget.value.substr(0, 12);
       props.setTitle(currentTitle);
       setTitle(currentTitle);
-      setCountTitle(8);
+      setCountTitle(12);
     } else {
       const currentTitle = e.currentTarget.value;
       props.setTitle(currentTitle);
