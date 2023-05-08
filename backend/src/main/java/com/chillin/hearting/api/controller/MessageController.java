@@ -119,14 +119,15 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedEmojiId = messageService.addEmoji(messageId, user.getId(), emojiId);
-        if (returnedEmojiId == null) {
+        Data returnedEmojiData = messageService.addEmoji(messageId, user.getId(), emojiId);
+        if (returnedEmojiData == null) {
             throw new EmojiFailException();
         }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("이모지가 성공적으로 변경되었습니다.")
+                .data(returnedEmojiData)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);

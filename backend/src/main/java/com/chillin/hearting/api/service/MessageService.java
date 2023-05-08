@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.EmojiData;
 import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
@@ -126,7 +127,7 @@ public class MessageService {
     }
 
     @Transactional
-    public Long addEmoji(long messageId, String userId, long emojiId) {
+    public EmojiData addEmoji(long messageId, String userId, long emojiId) {
 
         // Check if message, emoji exist
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
@@ -140,8 +141,10 @@ public class MessageService {
         message.updateEmoji(emoji);
 
         message = messageRepository.save(message);
+        
+//        return message.getEmoji().getId();
 
-        return message.getEmoji().getId();
+        return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).build();
     }
 
 
