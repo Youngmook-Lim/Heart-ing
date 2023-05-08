@@ -4,7 +4,6 @@ import {
   selectedMessageIdAtom,
 } from "../../atoms/messageAtoms";
 
-import HeartItemIcon from "../common/HeartItemIcon";
 import ResponseEmojiIcon from "../common/ResponseEmojiIcon";
 
 function HeartBoxListItem({ ...props }) {
@@ -24,7 +23,7 @@ function HeartBoxListItem({ ...props }) {
       onClick={() => readMessage(props.messageId)}
     >
       <div className="flex-none">
-        <HeartItemIcon id={props.heartId} />
+        <img className="mx-auto my-auto" src={props.heartUrl} alt="heartIcon" />
       </div>
       <div className="flex-auto text-xl">{props.context}</div>
       <div className="flex-none">
