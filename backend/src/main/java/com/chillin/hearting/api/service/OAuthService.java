@@ -77,7 +77,15 @@ public class OAuthService {
                 throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
             }
 
-            messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "", "", "");
+            if (socialLoginResultData.isFirst()) {
+                messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
+                        "하팅 개발진의 감사한 마음을 \n" +
+                        "모두 모아 첫 번째 하트를 \n" +
+                        "보냅니다.❤\uFE0F\uD83D\uDC9B\uD83D\uDC9A\uD83D\uDC99\uD83D\uDC9C\n" +
+                        "하트에 전달하고 싶은 마음, \n" +
+                        "감정을 담아 주고받아 보세요.\n" +
+                        "하팅!", "");
+            }
 
             AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
 
@@ -201,7 +209,7 @@ public class OAuthService {
             log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
             log.debug(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
-            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider).orElse(null);
+            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider.toUpperCase()).orElse(null);
 
             if (user != null) {
                 log.debug(provider + "로 로그인을 한 적이 있는 user입니다.");
