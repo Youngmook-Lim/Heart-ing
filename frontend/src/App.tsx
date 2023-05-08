@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 
@@ -15,8 +15,11 @@ import SentHeart from "./pages/SentHeart";
 import Setting from "./pages/Setting";
 import Navbar from "./components/navbar/Navbar";
 import Google from "./pages/Google";
+import { io } from "socket.io-client";
 
 function App() {
+  const socket = io("https://heart-ing.com", { path: "/ws" });
+
   function setScreenSize() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`); //"--vh"라는 속성으로 정의해준다.
@@ -29,13 +32,13 @@ function App() {
   return (
     <div className="App bg-hrtColorBackground text-hrtColorOutline">
       <BrowserRouter>
-        <Navbar />
+        <Navbar socket={socket}/>
         <Routes>
           <Route index element={<Home />} />
           <Route path="/*" element={<ErrorPage />} />
           <Route path="/heartboard/user" element={<HeartBoard />} />
           <Route path="/heartguide" element={<HeartGuide />} />
-          <Route path="/heartwriting" element={<Heartwriting />} />
+          <Route path="/heartwriting" element={<Heartwriting socket={socket}/>} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
           <Route path="/oauth2/code/google" element={<Google />} />
           <Route path="/manual" element={<Manual />} />
