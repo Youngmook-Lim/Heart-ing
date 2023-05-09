@@ -27,7 +27,7 @@ public class NotificationService {
     public NotificationListData getNotifications(String userId) {
         List<Notification> notificationDataList = notificationRepository.findByUserIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
 
-        NotificationListData notificationListData = NotificationListData.builder().notificationDataList(new ArrayList<>()).build();
+        NotificationListData notificationListData = NotificationListData.builder().notificationList(new ArrayList<>()).build();
 
         for (Notification n : notificationDataList) {
             processNotification(n, notificationListData);

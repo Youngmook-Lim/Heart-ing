@@ -12,5 +12,5 @@ import java.util.List;
 @ToString
 public class NotificationListData implements Data {
 
-    public List<NotificationData> notificationDataList;
+    public List<NotificationData> notificationList;
 }
