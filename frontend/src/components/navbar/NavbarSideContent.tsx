@@ -11,7 +11,7 @@ function NavbarSideContent({...props}) {
       </div>
       <div className="flex-1 bg-white border-gray-700 relative">
         <NavbarSideContentBody onOpenHandler={props.onOpenHandler} setIsSetting={props.setIsSetting}/>
-        <div className="absolute bottom-0 w-full">
+        <div className="absolute w-full">
           <NavbarSideContentFooter />
         </div>
       </div>
