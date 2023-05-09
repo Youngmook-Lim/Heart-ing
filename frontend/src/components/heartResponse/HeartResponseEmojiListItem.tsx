@@ -1,6 +1,7 @@
 import { useRecoilState } from "recoil";
 import ResponseEmojiIcon from "../common/ResponseEmojiIcon"
 import { isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
+import { useEffect } from "react";
 
 interface propsType {
   id: number,
@@ -12,9 +13,11 @@ interface propsType {
 function HeartResponseEmojiListItem({ id, onEmojiHandler, messageEmojiId, onCloseModalEmojiBoxHandler }: propsType) {
   const [ isSelectedEmojiId, setIsSelectedEmojiId ] = useRecoilState(isSelectedEmojiIdAtom)
   
-  if( isSelectedEmojiId === 0) {
-    setIsSelectedEmojiId(messageEmojiId)
-  }
+  useEffect(() => {
+    if( isSelectedEmojiId === 0) {
+      setIsSelectedEmojiId(messageEmojiId)
+    }
+  }, [])
 
 
   const getEmojiId = () => {

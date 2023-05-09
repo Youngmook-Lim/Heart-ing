@@ -60,9 +60,9 @@ function MessageModal({ mode }: IMessageModalTypes) {
       emojiId: emojiId,
     }
     const data = await responseHeartApi(EmojiInfo)
-    if (data === 'success') {
-      // 나중에 확인하기
-      setIsSelectedEmojiUrl(data.emojiUrl)
+    if (data.status === 'success') {
+      console.log("헤이~", data.data.emojiUrl)
+      setIsSelectedEmojiUrl(() => data.data.emojiUrl)
     } else {
     }
   }
