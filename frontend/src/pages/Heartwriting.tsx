@@ -9,8 +9,9 @@ import HeartwritingSelectHeart from "../components/heartwrting/HeartwritingSelec
 import HeartwritingMessage from "../components/heartwrting/HeartwritingMessage";
 import { getProfile } from "../features/api/userApi";
 import LogoEffect from "../assets/images/logo/logo_effect.png";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isFirstTimeAtom } from "../atoms/popupAtoms"
+import { isLoginAtom } from "../atoms/userAtoms"
 
 function Heartwriting({socket}:{socket:Socket|null}) {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function Heartwriting({socket}:{socket:Socket|null}) {
   const [isLoading, setIsLoading] = useState(false)
 
   const setIsFirstTime = useSetRecoilState(isFirstTimeAtom)
+  const isLogin = useRecoilValue(isLoginAtom)
 
   let params = new URL(document.URL).searchParams;
   let userId = params.get("id");
@@ -71,7 +73,9 @@ function Heartwriting({socket}:{socket:Socket|null}) {
           }
         alert("메세지가 전송되었습니다");
         navigate(`/heartboard/user?id=${userId}`);
-        setIsFirstTime(() => true);
+        if(!isLogin){
+          setIsFirstTime(() => true);
+        }
       } else {
         alert(`메세지가 전송되지 않았습니다.\n잠시 후 다시 시도해주세요.`);
         setIsLoading(false)
