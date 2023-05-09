@@ -11,7 +11,8 @@ import { savingUserInfo } from "../features/userInfo";
 
 function Google() {
   const navigate = useNavigate();
-
+  const userAgent = window.navigator.userAgent;
+  console.log(userAgent);
   const setIsLogin = useSetRecoilState(isLoginAtom);
   const setUserNickname = useSetRecoilState(userNicknameAtom);
   const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom);
@@ -20,6 +21,14 @@ function Google() {
   let code = params.get("code");
 
   useEffect(() => {
+    Object.defineProperties(navigator, {
+      userAgent: {
+        get: () =>
+          `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36`,
+      },
+    });
+    console.log(navigator.userAgent);
+
     async function kakaoLogin() {
       if (!code) return;
       const data = await login("google", code);
