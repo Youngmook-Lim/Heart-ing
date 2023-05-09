@@ -37,6 +37,7 @@ public class HeartService {
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
     private static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
+    private static final String KEY_HEART_LIST_PREFIX = "heartList:";
 
     private ArrayList<HeartConditionData> heartAcqConditions;
 
@@ -119,26 +120,8 @@ public class HeartService {
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         List<Heart> result = new ArrayList<>();
-        List<Object> heartIdList = null;
-        switch (type) {
-            case HEART_TYPE_DEFAULT:
-                heartIdList = listOperations.range("heartList:default", 0, -1);
-                break;
 
-            case HEART_TYPE_SPECIAL:
-                heartIdList = listOperations.range("heartList:special", 0, -1);
-                ;
-                break;
-
-            case HEART_TYPE_EVENT:
-                heartIdList = listOperations.range("heartList:event", 0, -1);
-                break;
-
-            case HEART_TYPE_ALL:
-                heartIdList = listOperations.range("heartList:all", 0, -1);
-                break;
-        }
-
+        List<Object> heartIdList = listOperations.range(KEY_HEART_LIST_PREFIX + type.toLowerCase(), 0, -1);
         if (heartIdList != null) {
             for (Object heartId : heartIdList) {
                 heartId = ((Integer) heartId).longValue();
