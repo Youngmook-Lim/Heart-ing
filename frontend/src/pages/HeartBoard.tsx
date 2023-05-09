@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isLoginAtom } from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
+import { isFirstTimeAtom, isPopupShowAtom } from "../atoms/popupAtoms";
 
 import { getUserInfo } from "../features/userInfo";
 import { getProfile } from "../features/api/userApi";
@@ -14,6 +15,7 @@ import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton"
 import MessageModal from "../components/modal/MessageModal";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
 import BackgroundHeart from "../assets/images/png/background_heart.png";
+import NonLoggedPopup from "../components/popup/NonLoggedPopup";
 
 function HeartBoard() {
   const navigate = useNavigate();
@@ -21,9 +23,12 @@ function HeartBoard() {
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
   // const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
+  const [totalCount, setTotalCount] = useState(0);
+  
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
-  const [totalCount, setTotalCount] = useState(0);
+  const [isPopupShow, setIsPopupShow] = useRecoilState(isPopupShowAtom)
+  const isFirstTime = useRecoilValue(isFirstTimeAtom);
 
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
 
@@ -58,9 +63,25 @@ function HeartBoard() {
   // 내 userId localStorage에서 가져오기
   const myId = getUserInfo().userId;
 
+  const checkPopupClose = (): boolean => {
+    const popupNoShow = localStorage.getItem("popupNoShow")
+    
+    if (popupNoShow !== "true") {
+        return true
+    } else {
+        return false
+    }
+  }
+
   useEffect(() => {
     // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
-    setIsMyBoard(isLogin && userId === myId ? true : false);
+    if (isLogin) {
+      setIsMyBoard(userId === myId ? true : false);
+    } else {
+      if(isFirstTime){
+        checkPopupClose() ? setIsPopupShow(true) : setIsPopupShow(false)
+      }
+    }
     getUserProfile(userId);
     getRecivedMessages(userId);
     setReadMessage(false);
@@ -91,6 +112,7 @@ function HeartBoard() {
 
   return (
     <div className="container fullHeight mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
+      { isPopupShow ? <NonLoggedPopup /> : null }
       <div
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
