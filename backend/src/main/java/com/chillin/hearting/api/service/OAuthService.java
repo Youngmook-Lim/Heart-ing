@@ -67,7 +67,7 @@ public class OAuthService {
 
         try {
             SocialLoginResultData socialLoginResultData = getSocialUserInfo(socialAccessToken, provider);
-            log.debug("{}", socialLoginResultData);
+            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
 
             User socialUser = socialLoginResultData.getUser();
 
@@ -147,7 +147,7 @@ public class OAuthService {
             bw.flush();
 
             int responseCode = conn.getResponseCode();
-            log.debug(provider + "에서 access token 받아오기 response code : {}  ", responseCode);
+            log.info(provider + "에서 access token 받아오기 response code : {}  ", responseCode);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -185,7 +185,7 @@ public class OAuthService {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
             int responseCode = conn.getResponseCode();
-            log.debug("responseCode : {} ", responseCode);
+            log.info(provider + "에서 사용자 정보 받아온 responseCode : {} ", responseCode);
 
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -197,20 +197,20 @@ public class OAuthService {
                 socialResponse.append(line);
             }
 
-            log.debug(provider + "에서 사용자 정보 가져오기 response body : {} ", socialResponse);
+            log.info(provider + "에서 사용자 정보 가져오기 response body : {} ", socialResponse);
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
             OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, (Map<String, Object>) jsonObject);
 
-            log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
-            log.debug(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
+            log.info("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
+            log.info(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
             user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider.toUpperCase()).orElse(null);
 
             if (user != null) {
-                log.debug(provider + "로 로그인을 한 적이 있는 user입니다.");
+                log.info(provider + "로 로그인을 한 적이 있는 user입니다.");
 
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
@@ -221,9 +221,9 @@ public class OAuthService {
                     if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {
                         LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
-                        log.debug("계정 일시 정지 해제 시간 : {}", nowLocalTime);
+                        log.info("계정 일시 정지 해제 시간 : {}", nowLocalTime);
                         user.updateUserStatusToActive(nowLocalTime);
-                        log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
+                        log.info("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
 
                         socialLoginResultData = SocialLoginResultData.builder()
                                 .user(userRepository.saveAndFlush(user))
@@ -247,18 +247,16 @@ public class OAuthService {
                             .build();
                 }
             } else {
-                log.debug(provider + " 로그인 최초입니다.");
+                log.info(provider + " 로그인 최초입니다.");
 
                 String nickname = "하팅" + (userRepository.count() + 1);
-                log.debug("nickname : {}", nickname);
 
                 UUID uuid = UUID.randomUUID();
                 String shortUuid = parseToShortUUID(uuid.toString());
-                log.debug("uuid long version : {}", uuid);
-                log.debug("uuid short version : {}", shortUuid);
+                log.info("uuid short version : {}", shortUuid);
 
                 if (userRepository.findById(shortUuid).isPresent()) {
-                    log.debug("uuid 중복입니다.");
+                    log.info("uuid 중복입니다.");
                     uuid = UUID.randomUUID();
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
