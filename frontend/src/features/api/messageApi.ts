@@ -141,11 +141,9 @@ export async function responseHeartApi({
     const res = await axios.post(
       `api/v1/messages/${messageId}/emojis/${emojiId}`
     );
-    const status = res.data.status;
-    // console.log("이모지 반응했어여~")
-    return status;
+    const data = res.data;
+    return data;
   } catch (err) {
-    // console.log("이모지 반응 못감", err);
     return null;
   }
 }
