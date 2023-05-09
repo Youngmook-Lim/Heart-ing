@@ -43,6 +43,11 @@ public class MessageController {
             throw new WrongUserException("본인에게 메시지를 보냈습니다.");
         }
 
+        // Check if title is longer than 12 characters
+        if (sendMessageReq.getTitle().trim().length() > 12) {
+            throw new TitleTooLongException();
+        }
+
         // Get client IP
         String clientIp = httpServletRequest.getHeader("X-Forwarded-For");
         if (clientIp == null || clientIp.isEmpty()) {

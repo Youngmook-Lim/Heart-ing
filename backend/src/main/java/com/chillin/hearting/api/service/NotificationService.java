@@ -50,7 +50,7 @@ public class NotificationService {
                     .expiredDate(n.getExpiredDate())
                     .isChecked(n.isChecked())
                     .isActive(n.isActive()).build();
-            notificationListData.getNotificationDataList().add(notificationData);
+            notificationListData.getNotificationList().add(notificationData);
         } else {
             // Expired, need to persist to DB
             n.deleteNotification();
