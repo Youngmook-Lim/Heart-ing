@@ -56,12 +56,8 @@ public class HeartService {
         // 유저가 존재한다면, 획득한 하트를 가져옵니다.
         HashSet<Long> myHeartSet = new HashSet<>();
         if (user != null) {
-            String userId = user.getId();
-            List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
-            log.info("들어온 유저 아이디 : {} 획득한 하트 개수 : {}", userId, userHearts.size());
-            for (UserHeart myHeart : userHearts) {
-                myHeartSet.add(myHeart.getHeart().getId());
-            }
+            myHeartSet = findUserHeartIds(user.getId());
+            log.info("들어온 유저 아이디 : {} 이미 획득한 스페셜 하트 개수 : {}", user.getId(), myHeartSet.size());
         }
 
         // 모든 하트를 반환하되, 기본 하트이거나 내가 획득한 하트는 잠금이 해제됩니다. 아직 잠긴 하트 중 내가 획득할 수 있는 하트인지 체크합니다.
@@ -76,6 +72,21 @@ public class HeartService {
     }
 
     /**
+     * 유저의 획득 하트 아이디 Set을 반환합니다.
+     *
+     * @param userId
+     * @return
+     */
+    private HashSet<Long> findUserHeartIds(String userId) {
+        HashSet<Long> myHeartSet = new HashSet<>();
+        List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
+        for (UserHeart myHeart : userHearts) {
+            myHeartSet.add(myHeart.getHeart().getId());
+        }
+        return myHeartSet;
+    }
+
+    /**
      * 메시지 전송용 하트 리스트를 조회합니다.
      * 기본 하트 - 모든 잠금이 해제되어있습니다. 비로그인 유저에 한해 두 개의 하트가 잠겨있습니다.
      * 스페셜 하트 - 로그인 유저 중 획득한 스페셜 하트가 제공됩니다.
@@ -83,7 +94,7 @@ public class HeartService {
      * @param user
      * @return
      */
-    public List<HeartData> findUserHearts(User user) {
+    public List<HeartData> findUserMessageHearts(User user) {
         log.info("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
         List<Heart> findHearts = getAllHeartInfo(HEART_TYPE_DEFAULT);
@@ -198,9 +209,18 @@ public class HeartService {
 
         // 스페셜 하트 달성 여부 체크
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
-        List<Object> specialHeartList = listOperations.range("heartList:default", 0, -1);
+        List<Object> specialHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + "special", 0, -1);
+        HashSet<Long> mySpecialHeartIds = new HashSet<>();
+        if (userId != null) {
+            mySpecialHeartIds = findUserHeartIds(userId);
+        }
+
         for (Object specialHeartId : specialHeartList) {
-            isAcquiredSpecialHeart(userId, ((Integer) specialHeartId).longValue(), false);
+            Long hId = ((Integer) specialHeartId).longValue();
+            if (!mySpecialHeartIds.contains(hId)) {
+                log.info("{}번 스페셜 하트를 아직 획득하지 못했습니다. 획득 조건을 검사합니다.", hId);
+                isAcquiredSpecialHeart(userId, hId, false);
+            }
         }
     }
 
@@ -271,6 +291,4 @@ public class HeartService {
         }
         return isAcquirable;
     }
-
-
 }
