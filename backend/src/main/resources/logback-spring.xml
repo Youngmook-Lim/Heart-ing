@@ -2,7 +2,7 @@
 
 <configuration>
     <!--로그 파일 저장 위치-->
-    <property name="LOG_DIR" value="src/main/resources/log"/>
+    <property name="LOG_DIR" value="${log.path:-src/main/resources/log}"/>
     <timestamp key="datestamp" datePattern="yyMMdd"/>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
