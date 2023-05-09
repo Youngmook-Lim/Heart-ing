@@ -11,7 +11,6 @@ import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@Slf4j // log 사용하기 위한 어노테이션
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserController {
 
     private static final String SUCCESS = "success";
-    private static final String REFRESH_TOKEN = "refreshToken";
 
     private final UserService userService;
 
