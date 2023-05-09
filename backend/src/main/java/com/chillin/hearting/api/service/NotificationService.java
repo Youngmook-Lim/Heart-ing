@@ -4,6 +4,7 @@ import com.chillin.hearting.api.data.NotificationData;
 import com.chillin.hearting.api.data.NotificationListData;
 import com.chillin.hearting.db.domain.Notification;
 import com.chillin.hearting.db.repository.NotificationRepository;
+import com.chillin.hearting.exception.NotificationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -56,5 +57,14 @@ public class NotificationService {
             n.deleteNotification();
             notificationRepository.save(n);
         }
+    }
+
+    @Transactional
+    public Long readNotification(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(NotificationNotFoundException::new);
+        notification.readNotification();
+        notificationRepository.save(notification);
+
+        return notification.getId();
     }
 }

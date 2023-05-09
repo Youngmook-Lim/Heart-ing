@@ -56,4 +56,8 @@ public class Notification implements Serializable {
     public void deleteNotification() {
         this.isActive = false;
     }
+
+    public void readNotification() {
+        this.isChecked = true;
+    }
 }
