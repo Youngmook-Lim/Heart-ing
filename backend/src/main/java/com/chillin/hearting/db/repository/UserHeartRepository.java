@@ -9,5 +9,7 @@ public interface UserHeartRepository extends JpaRepository<UserHeart, Long> {
 
     List<UserHeart> findAllByUserId(String userId);
 
+    List<UserHeart> findAllByUserIdOrderByHeartId(String userId);
+
     List<UserHeart> findByHeartIdAndUserId(Long heartId, String userId);
 }

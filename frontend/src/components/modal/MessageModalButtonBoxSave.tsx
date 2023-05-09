@@ -19,7 +19,7 @@ function MessageModalButtonBoxSave({ ...props }) {
     <>
       {isStored ? (
         <div className="modal-button bg-hrtColorLightPurple text-hrtColorOutline700">
-          저장중
+          저장 완료
         </div>
       ) : (
         <div

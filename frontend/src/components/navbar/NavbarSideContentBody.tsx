@@ -3,18 +3,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { deleteUserInfo, getUserInfo } from "../../features/userInfo";
-import NavbarSideContentHeaderProfile from "./NavbarSideContentHeaderProfile";
 import { logout } from "../../features/api/userApi";
 
 function NavbarSideContentBody({ ...props }) {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
-  const [isSetting, setIsSetting] = props.setIsSetting;
-
-  const onSettingHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsSetting(!isSetting);
-  };
 
   const onLogoutHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
     const status = await logout();
@@ -66,24 +60,19 @@ function NavbarSideContentBody({ ...props }) {
             사용설명서
           </NavLink>
           <hr />
+          <NavLink
+            to="/profilesettings"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
+            프로필설정
+          </NavLink>
           <div
             className="block text-left text-xl my-4"
             onClick={onLogoutHandler}
           >
             로그아웃
           </div>
-          <div
-            className="block text-left text-xl my-4"
-            onClick={onSettingHandler}
-          >
-            프로필수정
-          </div>
-          {isSetting ? (
-            <NavbarSideContentHeaderProfile
-              onOpenHandler={props.onOpenHandler}
-              setIsSetting={setIsSetting}
-            />
-          ) : null}
         </div>
       ) : (
         <div className="mb-3 mx-3 p-2">

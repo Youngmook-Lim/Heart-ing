@@ -13,8 +13,6 @@ import ManualHomeCount from "./ManualHomeCount";
 function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const navigate = useNavigate();
 
-  // console.log("홈 렌더링");
-
   const KAKAO_API = process.env.REACT_APP_KAKAO_API;
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
@@ -30,6 +28,10 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
 
   const onMyBoardHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
     navigate(`/heartboard/user?id=${userId}`);
+  };
+
+  const onGoogleLoginHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+    alert("다른 브라우저에서 이용 가능합니다.");
   };
 
   return (
@@ -70,13 +72,23 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                   className="p-2"
                 />
               </a>
-              <a href={GOOGLE_REQUEST}>
-                <img
-                  src={google_login_button}
-                  alt="google_login_button"
-                  className="p-2"
-                />
-              </a>
+              {navigator.userAgent.includes("KAKAOTALK") ? (
+                <div onClick={(e) => onGoogleLoginHandler(e)}>
+                  <img
+                    src={google_login_button}
+                    alt="google_login_button"
+                    className="p-2"
+                  />
+                </div>
+              ) : (
+                <a href={GOOGLE_REQUEST}>
+                  <img
+                    src={google_login_button}
+                    alt="google_login_button"
+                    className="p-2"
+                  />
+                </a>
+              )}
             </div>
           </div>
         )}

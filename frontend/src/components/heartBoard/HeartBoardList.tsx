@@ -27,11 +27,11 @@ function HeartBoardList({ ...props }) {
     return (
       <div className="grid grid-cols-3">
         {recentMessageList.map(
-          ({ messageId, heartId, title, isRead }: IMessageInfoTypes) => (
+          ({ messageId, heartUrl, title, isRead }: IMessageInfoTypes) => (
             <HeartItem
               key={messageId}
               messageId={messageId}
-              heartId={heartId}
+              heartUrl={heartUrl}
               context={title}
               isRead={isRead}
             />

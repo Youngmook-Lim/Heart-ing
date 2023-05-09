@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
+import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.api.request.ReportReq;
 import com.chillin.hearting.api.request.SendMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -30,7 +31,6 @@ public class MessageController {
     @PostMapping("")
     public ResponseEntity<ResponseDTO> sendMessage(@Valid @RequestBody SendMessageReq sendMessageReq, HttpServletRequest httpServletRequest) {
 
-
         User user = (User) httpServletRequest.getAttribute("user");
 
         // Check if logged-in user is same as sender
@@ -43,6 +43,11 @@ public class MessageController {
             throw new WrongUserException("본인에게 메시지를 보냈습니다.");
         }
 
+        // Check if title is longer than 12 characters
+        if (sendMessageReq.getTitle().trim().length() > 12) {
+            throw new TitleTooLongException();
+        }
+
         // Get client IP
         String clientIp = httpServletRequest.getHeader("X-Forwarded-For");
         if (clientIp == null || clientIp.isEmpty()) {
@@ -52,7 +57,11 @@ public class MessageController {
         }
         log.debug("Client request from : " + clientIp);
 
-        Data data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), clientIp);
+        SendMessageData data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), clientIp);
+
+        //////////////////
+        // 밑에서 보낸 유저가 알림을 갱신해야하는지 판별하고 data.isCheckSender를 true로 바꿔줘야 함
+        //////////////////
 
         if (user != null) heartService.updateHeartCondition(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
 
@@ -119,14 +128,15 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedEmojiId = messageService.addEmoji(messageId, user.getId(), emojiId);
-        if (returnedEmojiId == null) {
+        Data returnedEmojiData = messageService.addEmoji(messageId, user.getId(), emojiId);
+        if (returnedEmojiData == null) {
             throw new EmojiFailException();
         }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("이모지가 성공적으로 변경되었습니다.")
+                .data(returnedEmojiData)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);

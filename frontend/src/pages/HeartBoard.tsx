@@ -79,7 +79,8 @@ function HeartBoard() {
 
   useEffect(() => {
     getRecivedMessages(userId);
-  }, [getRecivedMessages, userId, readMessage]);
+    getUserProfile(userId);
+  }, [getRecivedMessages, getUserProfile, userId, readMessage]);
 
   const outsideHeightStyle = {
     height: `calc((var(--vh, 1vh) * 100) - ${isMyBoard ? 12 : 7}rem)`,
