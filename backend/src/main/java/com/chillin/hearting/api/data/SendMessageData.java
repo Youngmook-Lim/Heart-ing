@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,5 +19,6 @@ public class SendMessageData implements Data {
     @Getter(onMethod_ = {@JsonProperty("isRead")})
     private boolean isRead;
 
-
+    @Getter(onMethod_ = {@JsonProperty("isCheckSender")})
+    private boolean isCheckSender;
 }
