@@ -34,18 +34,22 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   };
 
   useEffect(() => {
-    const isKakao = navigator.userAgent.match("KAKAOTALK");
-    console.log(navigator.userAgent);
-    console.log(Boolean(isKakao));
-    if (Boolean(isKakao) === true) {
-      Object.defineProperties(navigator, {
-        userAgent: {
-          get: () =>
-            `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36`,
-        },
-      });
+    const isKakao = navigator.userAgent.includes("KAKAOTALK");
+
+    if (isKakao) {
+      const originalUserAgentGetter = Object.getOwnPropertyDescriptor(
+        Navigator.prototype,
+        "userAgent"
+      )?.get;
+
+      const customUserAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36`;
+
+      if (originalUserAgentGetter) {
+        Object.defineProperty(Navigator.prototype, "userAgent", {
+          get: () => customUserAgent,
+        });
+      }
     }
-    console.log(navigator.userAgent);
   }, []);
 
   return (
