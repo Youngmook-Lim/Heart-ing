@@ -42,9 +42,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class OAuthService {
 
-    private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
-    private static final String ROLE = "ROLE_USER";
     private static final String CLIENT_PROVIDER = "spring.security.oauth2.client.provider.";
     private static final String CLIENT_REGISTRATION = "spring.security.oauth2.client.registration.";
 
