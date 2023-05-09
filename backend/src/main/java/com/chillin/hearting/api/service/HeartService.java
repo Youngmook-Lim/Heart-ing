@@ -112,6 +112,12 @@ public class HeartService {
         return resHearts;
     }
 
+    /**
+     * REDIS에서 type에 맞는 모든 Heart Info를 찾아 반환한다.
+     *
+     * @param type
+     * @return
+     */
     private List<Heart> getAllHeartInfo(String type) {
         log.info("Redis로부터 {}타입의 HeartInfo를 조회합니다.", type);
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
