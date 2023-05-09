@@ -16,7 +16,7 @@ interface MyObject {
   [key: string]: any;
 }
 
-function Navbar({socket}:{socket:Socket}) {
+function Navbar({socket}:{socket:Socket|null}) {
   const navigate = useNavigate();
 
   const isLogin = useRecoilValue(isLoginAtom);
@@ -62,11 +62,16 @@ function Navbar({socket}:{socket:Socket}) {
   }, []);
 
   const onSocket = () => {
-    if (isLogin) {
-      socket.emit("join-room", getUserInfo().userId);
-      socket.on("receive-message", (data) => {
-        console.log("받은 메시지:", data);
-        getData(myId);
+    if (socket) {
+      if (isLogin) {
+        socket.emit("join-room", getUserInfo().userId);
+        socket.on("receive-message", (data) => {
+          console.log("받은 메시지:", data);
+          getData(myId);
+        });
+      }
+      socket.on("disconnect", () => {
+        console.log("웹소켓 서버 연결 해제");
       });
     }
   };
