@@ -29,6 +29,7 @@ import {
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
 function MessageModal({ mode }: IMessageModalTypes) {
+
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
@@ -43,6 +44,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const data = await getMessageDetail(selectedMessageId);
     if (data.status === "success") {
       setMessageData(data.data);
+      setIsSelectedEmojiUrl(data.data.emojiUrl)
     }
   }
 
@@ -61,9 +63,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
     const data = await responseHeartApi(EmojiInfo)
     if (data.status === 'success') {
-      console.log("헤이~", data.data.emojiUrl)
       setIsSelectedEmojiUrl(() => data.data.emojiUrl)
-    } else {
     }
   }
     
