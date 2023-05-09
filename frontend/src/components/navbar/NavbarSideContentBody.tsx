@@ -3,18 +3,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
 import { deleteUserInfo, getUserInfo } from "../../features/userInfo";
-import NavbarSideContentHeaderProfile from "./NavbarSideContentHeaderProfile";
 import { logout } from "../../features/api/userApi";
 
 function NavbarSideContentBody({ ...props }) {
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useRecoilState(isLoginAtom);
-  const [isSetting, setIsSetting] = props.setIsSetting;
-
-  const onSettingHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsSetting(!isSetting);
-  };
 
   const onLogoutHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
     const status = await logout();
