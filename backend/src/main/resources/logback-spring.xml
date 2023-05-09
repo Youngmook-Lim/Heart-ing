@@ -37,7 +37,8 @@
     </appender>
 
     <!-- INFO 이상의 레벨만 색깔을 지정해준다. -->
-    <logger name="org.springframework" level="INFO" additivity="false">
+    <logger name="com.chillin" level="INFO" additivity="false">
+        <appender-ref ref="TotalLog"/>
         <appender-ref ref="COLOR-CONSOLE"/>
     </logger>
 
