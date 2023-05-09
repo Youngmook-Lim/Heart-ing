@@ -15,7 +15,6 @@ import SentHeart from "./pages/SentHeart";
 import Settings from "./pages/Settings";
 import Navbar from "./components/navbar/Navbar";
 import Google from "./pages/Google";
-import NonLoggedPopup from "./components/popUp/NonLoggedPopup";
 import { Socket, io } from "socket.io-client";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "./atoms/userAtoms";
@@ -69,7 +68,6 @@ function App() {
           <Route path="/manual" element={<Manual />} />
           <Route path="/receivedheart" element={<ReceivedHeart />} />
           <Route path="/sentheart" element={<SentHeart />} />
-          <Route path="/popup" element={<NonLoggedPopup />} />
           <Route path="/profilesettings" element={<Settings />} />
         </Routes>
       </BrowserRouter>

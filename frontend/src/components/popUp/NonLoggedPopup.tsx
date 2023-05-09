@@ -1,51 +1,66 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 function NonLoggedPopup() {
 
-    const [isPopupShow, setIsPopupShow] = useState<boolean>(true)
+    const navigate = useNavigate();
+
+    const [isPopupShow, setIsPopupShow] = useState<boolean>(false)
     
-    const closePopup = (expireDays: number): void => {
-        let expire = new Date()
-        expire.setTime(expire.getTime() + (expireDays * 24 * 60 * 60 * 1000))
-        localStorage.setItem("popupNoShow", expire.getTime().toString())
+    const setPopupClosed = (): void => {
+        localStorage.setItem("popupNoShow", "true")
     }
 
+    
     const checkPopupClose = (): boolean => {
-        const expireDay = localStorage.getItem("popupNoShow")
-        let today = new Date()
-
-        if (today.getTime() > Number(expireDay)) {
-             // 이렇게 하면 localStorage에 아무것도 저장되어 있지 않을 경우 null 이므로 0이 되어 true값인 false 반환한다.
-            return false // popup을 띄운다. closePopup이 false
+        const popupNoShow = localStorage.getItem("popupNoShow")
+        
+        if (popupNoShow !== "true") {
+            return true
         } else {
-            return true // popup을 닫는다 closePopup이 true
+            return false
         }
     }
-
-    const closePopupToday = (): void => {
-        closePopup(1)
+    
+    const closePopupForever = (): void => {
+        setPopupClosed()
         setIsPopupShow(false)
     }
 
+    const goHome = () => {
+        navigate('/')
+    }
+
     useEffect(() => {
-        checkPopupClose() ? setIsPopupShow(false) : setIsPopupShow(true)
+        checkPopupClose() ? setIsPopupShow(true) : setIsPopupShow(false)
     }, [])
 
     return (
         <>
             {isPopupShow && (
-                <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-40">
-                    <div className="container modal border-hrtColorOutline m-6 max-w-xs maxFullHeight">
-                        <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
-                            <div className="flex-auto">정보</div>
+                <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center z-40">
+                    <div className="flex flex-col justify-end h-full">
+                        <div className="text-4xl textShadow">
+                            <p className="purple text-hrtColorYellow">Let's Heart-ing!</p>
                         </div>
-                        <div className="felx justify-center">
-                            <div onClick={closePopupToday}>
-                                <input type="checkbox" id="check" />
-                                <label htmlFor="check">오늘 하루 안 보기</label>
+                        <div className="container bg-white mx-auto maxFullHeight">
+                        <div className="h-8 bg-hrtColorNewPurple"></div>
+                            <div className="leading-8 my-8">
+                                <p>친구에게 하트가 전달 되었어요!<br></br>
+                                나도 하트판을 만들어 볼까요?</p>
                             </div>
-                            <div onClick={() => setIsPopupShow(false)}>
-                                <span>닫기</span>
+                            <div className="mx-auto my-auto mb-8 w-3/5 modal-button text-hrtColorOutline bg-hrtColorYellow border-hrtColorNewPurple"
+                                onClick={goHome}>
+                                <p>나의 하트판 만들러 가기</p>
+                            </div>
+                            <div className="flex items-center justify-between m-8">
+                                <div className="flex" onClick={closePopupForever}>
+                                    <label htmlFor="check" className="mr-2">다시 보지 않기</label>
+                                    <input type="checkbox" id="check" />
+                                </div>
+                                <div onClick={() => setIsPopupShow(false)}>
+                                    <span>닫기</span>
+                                </div>
                             </div>
                         </div>
                     </div>
