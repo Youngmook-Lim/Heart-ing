@@ -59,6 +59,12 @@ public class MessageService {
     public void sendScheduledMessageToAdmin() {
         User receiver = userRepository.findById(ADMIN_ID).orElseThrow(UserNotFoundException::new);
 
+        List<Message> messageList = messageRepository.findBySenderIp("ADMIN");
+        for (Message m : messageList) {
+            m.deleteMessage();
+            messageRepository.save(m);
+        }
+
         List<Integer> heartList = new ArrayList<>();
         List<Integer> sampleList = new ArrayList<>();
         for (int i = 0; i < SEND_TO_ADMIN_HEART_ID_LIST.length; i++) {
@@ -77,7 +83,7 @@ public class MessageService {
 
             Heart heart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
 
-            Message message = Message.builder().heart(heart).receiver(receiver).sender(null).title(sample.title).content(sample.content).build();
+            Message message = Message.builder().heart(heart).receiver(receiver).sender(null).title(sample.title).content(sample.content).senderIp("ADMIN").build();
             messageRepository.save(message);
 
             receiver.updateMessageTotal();
