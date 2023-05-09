@@ -12,4 +12,5 @@ import lombok.ToString;
 public class EmojiData implements Data {
 
     private String emojiUrl;
+    private String senderId;
 }

@@ -27,6 +27,7 @@ public class MessageService {
     private final BlockedUserRepository blockedUserRepository;
     private final ReportRepository reportRepository;
     private final EmojiRepository emojiRepository;
+    private final NotificationRepository notificationRepository;
 
 
     private static class Sample {
@@ -52,7 +53,8 @@ public class MessageService {
             new Sample("스페셜하트", "하팅!에는 감정하트 외에도 스페셜 하트들이 있습니다. 획득한 스페셜 하트들은 전달 할 수 있습니다. 다양한 스페셜 하트를 모아보세요~!")
     };
     private static final String ADMIN_ID = "3yqolax1ee";
-
+    private static final String NOTIFICATION_MESSAGE_SEND_MESSAGE = "새로운 하트를 받았습니다! 나의 수신함에서 확인 해보세요!";
+    private static final String NOTIFICATION_MESSAGE_EMOJI = "보낸 하트에 대한 반응이 달렸습니다!";
 
     @Scheduled(fixedRate = SEND_TO_ADMIN_INTERVAL_HOURS * 60 * 60000)
     @Transactional
@@ -109,6 +111,16 @@ public class MessageService {
         // Create message
         Message message = Message.builder().heart(heart).receiver(receiver).sender(sender).title(title).content(content).senderIp(senderIp).build();
         message = messageRepository.save(message);
+
+        // Add notification
+        // 알림 종류(R: 받은 하트 E:  보낸 하트 H: 도감)
+        Notification notification = Notification.builder()
+                .user(receiver)
+                .content(NOTIFICATION_MESSAGE_SEND_MESSAGE)
+                .type("R")
+                .build();
+
+        notificationRepository.save(notification);
 
         return SendMessageData.builder()
                 .messageId(message.getId())
@@ -210,9 +222,19 @@ public class MessageService {
 
         message = messageRepository.save(message);
 
+        // Add notification
+        // 알림 종류(R: 받은 하트 E:  보낸 하트 H: 도감)
+        Notification notification = Notification.builder()
+                .user(message.getSender())
+                .content(NOTIFICATION_MESSAGE_EMOJI)
+                .type("E")
+                .build();
+
+        notificationRepository.save(notification);
+
 //        return message.getEmoji().getId();
 
-        return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).build();
+        return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).senderId(message.getSender().getId()).build();
     }
 
 
