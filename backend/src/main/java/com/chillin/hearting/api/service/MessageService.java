@@ -7,8 +7,13 @@ import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -22,6 +27,63 @@ public class MessageService {
     private final BlockedUserRepository blockedUserRepository;
     private final ReportRepository reportRepository;
     private final EmojiRepository emojiRepository;
+
+
+    private static class Sample {
+        String title, content;
+
+        public Sample(String title, String content) {
+            this.title = title;
+            this.content = content;
+        }
+    }
+
+    private static final int SEND_TO_ADMIN_INTERVAL_HOURS = 24;
+    private static final int SEND_TO_ADMIN_MESSAGE_CNT = 5;
+    private static final Long[] SEND_TO_ADMIN_HEART_ID_LIST = {1L, 2L, 3L, 4L, 5L, 6L, 7L};
+    private static final Sample[] SEND_TO_ADMIN_MESSAGE_LIST = {
+            new Sample("하팅!은요~", "익명의 메세지 전달 서비스입니다. 하트에 전달고싶은 감정, 마음을 담아 상대방에게 전달해보세요!"),
+            new Sample("건의사항", "하팅!을 이용하시면서 건의하시고 싶은 것이나 불편한 사항이 있다면 아래의 링크나 하팅 공식 sns로 건의사항을 보내주세요. 하팅!의 개발진들은 여러분의 불편함을 개선하고자 항상 노력하겠습니다:)"),
+            new Sample("하트전달", "상대방에게 전달하고싶은 감정하트를 선택한 후, 전달하고 싶은 메세지가 있다면 함께 보내보세요. 전달한 하트는 24시간만 유지됩니다!"),
+            new Sample("보낸하트", "내가 전달한 하트들을 확인해보세요! 내가 전달한 하트에 대한 반응을 알 수 있습니다. 그러나 보낸 메시지들도 24시간 뒤에 사라진다는 것을 주의하세요!"),
+            new Sample("받은하트", "내가 받은 하트들을 볼 수 있습니다. 익명의 상대가 보낸 하트들을 눌러 하트의 메시지를 확인해보세요~! 이모티콘으로 메시지에 대한 반응도 남겨 줄 수 있습니다."),
+            new Sample("저장소", "받은 하트에서 24시간 뒤에도 사라지지 않았으면 하는 하트가 있다면 저장해보세요! 저장소의 하트는 영원히 간직 할 수 있습니다."),
+            new Sample("공유하기", "간단하고 다양한 방법으로 친구들에게 나의 하트판을 공유할 수 있습니다. 카카오톡 공유하기, url을 공유하여 많은 사람들과 하트를 주고받아 보세요!"),
+            new Sample("스페셜하트", "하팅!에는 감정하트 외에도 스페셜 하트들이 있습니다. 획득한 스페셜 하트들은 전달 할 수 있습니다. 다양한 스페셜 하트를 모아보세요~!")
+    };
+    private static final String ADMIN_ID = "3yqolax1ee";
+
+
+    @Scheduled(fixedRate = SEND_TO_ADMIN_INTERVAL_HOURS * 60 * 60000)
+    @Transactional
+    public void sendScheduledMessageToAdmin() {
+        User receiver = userRepository.findById(ADMIN_ID).orElseThrow(UserNotFoundException::new);
+
+        List<Integer> heartList = new ArrayList<>();
+        List<Integer> sampleList = new ArrayList<>();
+        for (int i = 0; i < SEND_TO_ADMIN_HEART_ID_LIST.length; i++) {
+            heartList.add(i);
+        }
+        for (int i = 0; i < SEND_TO_ADMIN_MESSAGE_LIST.length; i++) {
+            sampleList.add(i);
+        }
+        Collections.shuffle(heartList);
+        Collections.shuffle(sampleList);
+
+        for (int i = 0; i < SEND_TO_ADMIN_MESSAGE_CNT; i++) {
+
+            Long heartId = SEND_TO_ADMIN_HEART_ID_LIST[heartList.get(i)];
+            Sample sample = SEND_TO_ADMIN_MESSAGE_LIST[sampleList.get(i)];
+
+            Heart heart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
+
+            Message message = Message.builder().heart(heart).receiver(receiver).sender(null).title(sample.title).content(sample.content).build();
+            messageRepository.save(message);
+
+            receiver.updateMessageTotal();
+        }
+        userRepository.save(receiver);
+    }
 
     @Transactional
     public SendMessageData sendMessage(long heartId, String senderId, String receiverId, String title, String content, String senderIp) {
@@ -141,7 +203,7 @@ public class MessageService {
         message.updateEmoji(emoji);
 
         message = messageRepository.save(message);
-        
+
 //        return message.getEmoji().getId();
 
         return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).build();
