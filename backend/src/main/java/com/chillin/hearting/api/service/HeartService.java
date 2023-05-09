@@ -2,20 +2,26 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.*;
 import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.Notification;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
 import com.chillin.hearting.db.repository.HeartRepository;
+import com.chillin.hearting.db.repository.NotificationRepository;
 import com.chillin.hearting.db.repository.UserHeartRepository;
+import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
+import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,6 +31,8 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
     private final UserHeartRepository userHeartRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
     private final MigrationService migrationService;
 
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
@@ -200,13 +208,10 @@ public class HeartService {
      * 유저의 보낸 하트 개수를 업데이트하고 스페셜 하트 획득 조건을 만족하는지 체크합니다.
      *
      * @param userId
-     * @param heartId
      */
-    public void updateHeartCondition(String userId, Long heartId) {
-
-        // 하트 개수 업데이트
-        updateHeartCount(userId, heartId);
-
+    @Transactional
+    public boolean hasAcquirableHeart(String userId) {
+        boolean isAcq = false;
         // 스페셜 하트 달성 여부 체크
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         List<Object> specialHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + "special", 0, -1);
@@ -217,10 +222,37 @@ public class HeartService {
 
         for (Object specialHeartId : specialHeartList) {
             Long hId = ((Integer) specialHeartId).longValue();
-            if (!mySpecialHeartIds.contains(hId)) {
-                isAcquiredSpecialHeart(userId, hId, false);
+            if (!mySpecialHeartIds.contains(hId) && isAcquiredSpecialHeart(userId, hId, false)) {
+                ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+                String key = "user:" + userId + ":notifiedHeartId:" + hId;
+                if (valueOperations.get(key) == null) {
+                    saveHeartNotification(userId, hId);
+                    valueOperations.set(key, "true", 24L, TimeUnit.HOURS);
+                    isAcq = true;
+                    log.info("{}번째 하트 획득 가능!! 알림 저장", hId);
+                }
             }
         }
+
+        return isAcq;
+    }
+
+    /**
+     * 획득 가능한 하트가 있을 시, 알림 테이블에 저장한다.
+     *
+     * @param userId
+     * @param hId
+     */
+    @Transactional
+    private void saveHeartNotification(String userId, Long hId) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String heartName = (String) hashOperations.get(KEY_HEART_INFO_PREFIX + hId, "name");
+        User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        notificationRepository.save(Notification.builder()
+                .user(findUser)
+                .content(heartName + "하트를 획득할 수 있습니다!")
+                .type("H")
+                .build());
     }
 
     /**
@@ -229,7 +261,7 @@ public class HeartService {
      * @param userId
      * @param heartId
      */
-    private void updateHeartCount(String userId, Long heartId) {
+    public void updateHeartCount(String userId, Long heartId) {
         log.info("Redis에 userSentHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String key = KEY_SEND_HEARTS_PREFIX + userId;
