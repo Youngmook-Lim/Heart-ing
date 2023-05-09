@@ -25,7 +25,12 @@ function HeartResponseEmojiList({ messageEmojiId, onEmojiHandler }: propsType) {
         </div>
         <div className="grid grid-cols-5 py-2">
           {[1,2,3,4,5].map((id) => (
-            <HeartResponseEmojiListItem key={id} id={id} messageEmojiId={ messageEmojiId } onEmojiHandler={ onEmojiHandler } />
+            <HeartResponseEmojiListItem 
+            key={id} 
+            id={id} 
+            messageEmojiId={ messageEmojiId } 
+            onEmojiHandler={ onEmojiHandler } 
+            onCloseModalEmojiBoxHandler={ closeModalEmojiBox } />
           ))}
         </div>
       </div>

@@ -26,6 +26,11 @@ export const isOpenEmojiListAtom = atom<boolean>({
 })
 
 export const isSelectedEmojiIdAtom = atom<number>({
-  key: "isSelectedEmojiAtom",
+  key: "isSelectedEmojiId",
   default: 0,
+})
+
+export const isSelectedEmojiUrlAtom = atom<string>({
+  key: "isSelectedEmojiUrl",
+  default: ""
 })
