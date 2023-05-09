@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByReceiverIdAndIsActiveTrue(String userId, Sort sort);
+
+    List<Message> findBySenderIp(String senderIp);
 }

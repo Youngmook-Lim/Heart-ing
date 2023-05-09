@@ -1,5 +1,6 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.EmojiData;
 import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
@@ -45,6 +46,7 @@ class MessageServiceTest {
     private final String title = "title";
     private final String content = "content";
     private final String senderIp = "senderIp";
+    private final String emojiUrl = "emojiUrl";
     private final long messageId = 0L;
     private final long emojiId = 0L;
 
@@ -52,7 +54,7 @@ class MessageServiceTest {
     private final User sender = User.builder().id(senderId).build();
     private final Heart heart = Heart.builder().id(0L).name("testHeart").build();
     private final Message message = Message.builder().id(0L).sender(sender).receiver(receiver).build();
-    private final Emoji emoji = Emoji.builder().id(0L).build();
+    private final Emoji emoji = Emoji.builder().id(0L).imageUrl(emojiUrl).build();
 
     @BeforeEach
     public void setupIsActive() {
@@ -206,17 +208,18 @@ class MessageServiceTest {
     @Test
     void successAddEmoji() {
         //given
+        String emojiUrl = "emojiUrl";
         doReturn(Optional.of(message)).when(messageRepository).findById(messageId);
         doReturn(Optional.of(emoji)).when(emojiRepository).findById(emojiId);
         message.updateEmoji(emoji);
         doReturn(message).when(messageRepository).save(any(Message.class));
 
         // when
-        Long emojiId = messageService.addEmoji(messageId, receiverId, MessageServiceTest.this.emojiId);
+        EmojiData returned = messageService.addEmoji(messageId, receiverId, MessageServiceTest.this.emojiId);
 
         // then
-        assertNotNull(emojiId);
-        assertEquals(MessageServiceTest.this.emojiId, emojiId);
+        assertNotNull(returned);
+        assertEquals(MessageServiceTest.this.emojiUrl, returned.getEmojiUrl());
 
         // verify
         verify(messageRepository, times(1)).findById(messageId);
