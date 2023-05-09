@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import Manual from "./pages/Manual";
 import ReceivedHeart from "./pages/ReceivedHeart";
 import SentHeart from "./pages/SentHeart";
-import Setting from "./pages/Setting";
+import Settings from "./pages/Settings";
 import Navbar from "./components/navbar/Navbar";
 import Google from "./pages/Google";
 import { Socket, io } from "socket.io-client";
@@ -68,7 +68,7 @@ function App() {
           <Route path="/manual" element={<Manual />} />
           <Route path="/receivedheart" element={<ReceivedHeart />} />
           <Route path="/sentheart" element={<SentHeart />} />
-          <Route path="/setting" element={<Setting />} />
+          <Route path="/profilesettings" element={<Settings />} />
         </Routes>
       </BrowserRouter>
     </div>
