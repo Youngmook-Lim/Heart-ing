@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import { IHeartInfoTypes, IMessageSendTypes } from "../types/messageType";
 import { getUserInfo } from "../features/userInfo";
@@ -10,7 +10,7 @@ import HeartwritingMessage from "../components/heartwrting/HeartwritingMessage";
 import { getProfile } from "../features/api/userApi";
 import LogoEffect from "../assets/images/logo/logo_effect.png";
 
-function Heartwriting() {
+function Heartwriting({socket}:{socket:Socket|null}) {
   const navigate = useNavigate();
 
   const [heartList, setHeartList] = useState([]);
@@ -39,8 +39,7 @@ function Heartwriting() {
     [navigate]
   );
 
-  const sendMessage = useCallback(
-    async () => {
+  const sendMessage = async () => {
       if (!userId||!selectedHeartInfo) return;
       const messageInfo: IMessageSendTypes = {
         heartId: selectedHeartInfo.heartId,
@@ -51,22 +50,28 @@ function Heartwriting() {
       };
         
       const data = await sendMessageApi(messageInfo);
+      console.log('왜 에러', data)
       if (data.status === "success") {
-        // const socket = io("https://heart-ing.com", { path: "/ws" });
-        // if (socket && socket.connected) {
-        //     socket.emit("send-message", userId, data.data);
-        //     console.log("알람보내용");
-        //   } else {
-        //       console.log("웹소켓 서버에 먼저 연결하세요");
-        //     }
+        if (socket && socket.connected) {
+            socket.emit("send-message", userId, data.data);
+            console.log("알람보내용");
+          } else {
+            const anonymousSocket = io("https://heart-ing.com", { path: "/ws" })
+            anonymousSocket.on("connect", () => {
+              anonymousSocket.emit("send-message", userId, data.data);
+              disconnectSocket()
+            })
+            const disconnectSocket = () => {
+              anonymousSocket.close()
+            }
+          }
         alert("메세지가 전송되었습니다");
         navigate(`/heartboard/user?id=${userId}`);
       } else {
         alert(`메세지가 전송되지 않았습니다.\n잠시 후 다시 시도해주세요.`);
+        setIsLoading(false)
       }
-      setIsLoading(false)
-    },[isLoading]
-  );
+    }
     
   const onReturnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsSelected(false)
@@ -83,10 +88,6 @@ function Heartwriting() {
     }
   }
         
-    // function setHeartNumber(heartId: string) {
-    //   setSelectedHeartId(heartId);
-    // }
-        
   function setMode() {
     setIsSelected(!isSelected);
   }
@@ -100,9 +101,9 @@ function Heartwriting() {
     getUserProfile(userId);
     }, [userId]);
 
-        useEffect(() => {
-          sendMessage();
-        }, [isLoading]);
+  useEffect(() => {
+    sendMessage();
+  }, [isLoading]);
         
         return (
           <div className="fullHeight container mx-auto px-6 fullHeight justify-between flex-col">
