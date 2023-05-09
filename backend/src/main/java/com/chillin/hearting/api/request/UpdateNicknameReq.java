@@ -11,6 +11,6 @@ import javax.validation.constraints.Size;
 @ToString
 public class UpdateNicknameReq {
 
-    @Size(min = 1, max = 8)
+    @Size(min = 1, max = 12)
     private String nickname;
 }

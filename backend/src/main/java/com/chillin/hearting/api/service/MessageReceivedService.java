@@ -43,6 +43,7 @@ public class MessageReceivedService {
         }
 
         log.debug(receivedMessageData.toString());
+        log.info(userId + " 유저가 메시지 리스트를 조회했습니다. 총 " + receivedMessageData.getMessageList().size() + "개의 메시지가 조회되었습니다.");
 
         return receivedMessageData;
     }
@@ -98,6 +99,8 @@ public class MessageReceivedService {
 
         Heart heart = message.getHeart();
         Emoji emoji = message.getEmoji();
+
+        log.info(userId + " 유저가 " + messageId + " 메시지를 상세조회 했습니다.");
 
         return MessageData.builder()
                 .messageId(message.getId())

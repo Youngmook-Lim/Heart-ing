@@ -7,6 +7,7 @@ import {
   selectedMessageIdAtom,
   isOpenEmojiListAtom,
   isSelectedEmojiIdAtom,
+  isSelectedEmojiUrlAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -28,10 +29,12 @@ import {
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
 function MessageModal({ mode }: IMessageModalTypes) {
+
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
-  const [isSelectedEmojiId, setIsSelectedEmojiId] = useRecoilState(isSelectedEmojiIdAtom);
+  const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
+  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -41,6 +44,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const data = await getMessageDetail(selectedMessageId);
     if (data.status === "success") {
       setMessageData(data.data);
+      setIsSelectedEmojiUrl(data.data.emojiUrl)
     }
   }
 
@@ -58,8 +62,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
       emojiId: emojiId,
     }
     const data = await responseHeartApi(EmojiInfo)
-    if (data === 'success') {
-    } else {
+    if (data.status === 'success') {
+      setIsSelectedEmojiUrl(() => data.data.emojiUrl)
     }
   }
     
@@ -74,7 +78,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
 
       return () => {
         setIsOpenEmojiList(false)
-        setIsSelectedEmojiId(0);
+        setIsSelectedEmojiId(0)
+        setIsSelectedEmojiUrl("")
       }
     }, [mode, selectedMessageId]);
     

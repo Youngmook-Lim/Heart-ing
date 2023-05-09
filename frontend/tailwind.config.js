@@ -44,6 +44,7 @@ module.exports = {
         hrtColorNewRed: "#DB443A",
         hrtColorNewPurple: "#D5A7EA",
         hrtColorWhiteTrans: "rgba(255,255,255,0.8)",
+        hrtColorSelectedEmoji: "#F7DCEE",
       },
     },
   },

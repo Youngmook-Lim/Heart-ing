@@ -32,11 +32,11 @@ function Google() {
         };
         savingUserInfo(userInfo);
         setIsLogin(true);
-        if (data.data.nickname === "") {
-          navigate("/setting");
+        setUserNickname(data.data.nickname);
+        setUserStatusMessage(data.data.statusMessage);
+        if (data.data.isFirst) {
+          navigate("/profilesettings");
         } else {
-          setUserNickname(data.data.nickname);
-          setUserStatusMessage(data.data.statusMessage);
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {

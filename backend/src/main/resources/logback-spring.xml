@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!--로그 파일 저장 위치-->
+    <!--    <property name="LOG_DIR" value="${log.path:-src/main/resources/log}"/>-->
+    <springProperty scope="context" name="LOG_DIR" source="logging.directory"/>
+    <timestamp key="datestamp" datePattern="yyMMdd"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 로그 -->
+    <appender name="TotalLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- INFO 이상의 오류만 필터 (ERROR, WARN, INFO 만 보인다.) -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <!-- 로그파일 FULL PATH -->
+        <file>${LOG_DIR}/${datestamp}.1.log</file>
+
+        <!-- 로그파일 시간기반 롤링 설정 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- ${datestamp}에 의해 하루에 한 개씩 파일이 만들어지는데 파일 용량이 100MB가 넘어가면 새로운 파일이 생성된다. -->
+            <fileNamePattern>${LOG_DIR}/${datestamp}.%d{yyMMdd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+
+        <encoder>
+            <!-- 파일 내용 패턴 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 로그 레벨 별로 색깔 다르게 적용 -->
+    <appender name="COLOR-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- INFO 이상의 레벨만 색깔을 지정해준다. -->
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="COLOR-CONSOLE"/>
+    </logger>
+
+    <!-- 기본적으로 모든 로그에 대해서 INFO를 적용한다. -->
+    <root level="INFO">
+        <appender-ref ref="TotalLog"/>
+        <appender-ref ref="COLOR-CONSOLE"/>
+    </root>
+
+</configuration>
