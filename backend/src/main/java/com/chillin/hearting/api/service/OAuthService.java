@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SocialLoginData;
+import com.chillin.hearting.api.data.SocialLoginResultData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -41,9 +42,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class OAuthService {
 
-    private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
-    private static final String ROLE = "ROLE_USER";
     private static final String CLIENT_PROVIDER = "spring.security.oauth2.client.provider.";
     private static final String CLIENT_REGISTRATION = "spring.security.oauth2.client.registration.";
 
@@ -52,6 +51,7 @@ public class OAuthService {
     private final Environment environment;
     private final UserService userService;
     private final MigrationService migrationService;
+    private final MessageService messageService;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -66,11 +66,27 @@ public class OAuthService {
         SocialLoginData socialLoginData = null;
 
         try {
-            User socialUser = getSocialUserInfo(socialAccessToken, provider);
-            log.debug("{}", socialUser);
+            SocialLoginResultData socialLoginResultData = getSocialUserInfo(socialAccessToken, provider);
+            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
+
+            User socialUser = socialLoginResultData.getUser();
 
             if (socialUser == null) {
                 throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+            }
+
+            if (socialLoginResultData.isFirst()) {
+
+                // 레디스에 유저 보낸 하트 정보 등록
+                migrationService.migrateUserSentHeart(socialUser.getId());
+
+                messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
+                        "하팅 개발진의 감사한 마음을 \n" +
+                        "모두 모아 첫 번째 하트를 \n" +
+                        "보냅니다.❤\uFE0F\uD83D\uDC9B\uD83D\uDC9A\uD83D\uDC99\uD83D\uDC9C\n" +
+                        "하트에 전달하고 싶은 마음, \n" +
+                        "감정을 담아 주고받아 보세요.\n" +
+                        "하팅!", "");
             }
 
             AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
@@ -89,9 +105,10 @@ public class OAuthService {
                     .nickname(socialUser.getNickname())
                     .statusMessage(socialUser.getStatusMessage())
                     .accessToken(accessToken.getToken())
+                    .isFirst(socialLoginResultData.isFirst())
                     .build();
 
-            log.debug("social 로그인 성공 후 반환 값 : {}", socialLoginData);
+            log.info("social 로그인 성공 후 반환 값 : {}", socialLoginData);
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
             CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
@@ -134,7 +151,7 @@ public class OAuthService {
             bw.flush();
 
             int responseCode = conn.getResponseCode();
-            log.debug(provider + "에서 access token 받아오기 response code : {}  ", responseCode);
+            log.info(provider + "에서 access token 받아오기 response code : {}  ", responseCode);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -160,9 +177,10 @@ public class OAuthService {
 
     // 카카오에서 회원정보 받아오기
     @Transactional
-    public User getSocialUserInfo(String kakaoAccessToken, String provider) {
+    public SocialLoginResultData getSocialUserInfo(String kakaoAccessToken, String provider) {
 
         User user = null;
+        SocialLoginResultData socialLoginResultData = null;
 
         try {
             String userInfoUri = environment.getProperty(CLIENT_PROVIDER + provider + ".user-info-uri");
@@ -171,7 +189,7 @@ public class OAuthService {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
             int responseCode = conn.getResponseCode();
-            log.debug("responseCode : {} ", responseCode);
+            log.info(provider + "에서 사용자 정보 받아온 responseCode : {} ", responseCode);
 
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -183,20 +201,20 @@ public class OAuthService {
                 socialResponse.append(line);
             }
 
-            log.debug(provider + "에서 사용자 정보 가져오기 response body : {} ", socialResponse);
+            log.info(provider + "에서 사용자 정보 가져오기 response body : {} ", socialResponse);
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
             OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, (Map<String, Object>) jsonObject);
 
-            log.debug("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
-            log.debug(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
+            log.info("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
+            log.info(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
-            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider).orElse(null);
+            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider.toUpperCase()).orElse(null);
 
             if (user != null) {
-                log.debug(provider + "로 로그인을 한 적이 있는 user입니다.");
+                log.info(provider + "로 로그인을 한 적이 있는 user입니다.");
 
                 // 계정 일시 정지인 경우
                 if (user.getStatus() == 'P') {
@@ -207,10 +225,16 @@ public class OAuthService {
                     if (blockedUser.getEndDate().isBefore(locaDateTimeNow)) {
                         LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
 
-                        log.debug("계정 일시 정지 해제 시간 : {}", nowLocalTime);
+                        log.info("계정 일시 정지 해제 시간 : {}", nowLocalTime);
                         user.updateUserStatusToActive(nowLocalTime);
-                        log.debug("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
-                        return userRepository.saveAndFlush(user);
+                        log.info("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
+
+                        socialLoginResultData = SocialLoginResultData.builder()
+                                .user(userRepository.saveAndFlush(user))
+                                .isFirst(false)
+                                .build();
+
+                        return socialLoginResultData;
                     }
 
                     throw new UnAuthorizedException("pause");
@@ -219,27 +243,36 @@ public class OAuthService {
                 else if (user.getStatus() == 'O') {
                     throw new UnAuthorizedException("out");
                 }
+                // 로그인 한 적 있는 정상 계정인 경우
+                else {
+                    socialLoginResultData = SocialLoginResultData.builder()
+                            .user(user)
+                            .isFirst(false)
+                            .build();
+                }
             } else {
-                log.debug(provider + " 로그인 최초입니다.");
+                log.info(provider + " 로그인 최초입니다.");
 
                 String nickname = "하팅" + (userRepository.count() + 1);
-                log.debug("nickname : {}", nickname);
 
                 UUID uuid = UUID.randomUUID();
                 String shortUuid = parseToShortUUID(uuid.toString());
-                log.debug("uuid long version : {}", uuid);
-                log.debug("uuid short version : {}", shortUuid);
+                log.info("uuid short version : {}", shortUuid);
 
                 if (userRepository.findById(shortUuid).isPresent()) {
-                    log.debug("uuid 중복입니다.");
+                    log.info("uuid 중복입니다.");
                     uuid = UUID.randomUUID();
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
-                // 레디스에 유저 보낸 하트 정보 등록
-                migrationService.migrateUserSentHeart(shortUuid);
 
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
-                return userRepository.saveAndFlush(user);
+
+                socialLoginResultData = SocialLoginResultData.builder()
+                        .user(userRepository.saveAndFlush(user))
+                        .isFirst(true)
+                        .build();
+
+                return socialLoginResultData;
             }
         } catch (UnAuthorizedException e) {
             log.error("로그인 한 회원 status : {}", e.getMessage());
@@ -247,7 +280,7 @@ public class OAuthService {
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());
         }
-        return user;
+        return socialLoginResultData;
     }
 
     public static String parseToShortUUID(String uuid) {

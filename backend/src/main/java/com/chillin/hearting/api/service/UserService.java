@@ -1,9 +1,7 @@
 package com.chillin.hearting.api.service;
 
-import com.chillin.hearting.api.data.HeartBoardOwnerData;
-import com.chillin.hearting.api.data.ReissuedAccessTokenData;
-import com.chillin.hearting.api.data.UpdateNicknameData;
-import com.chillin.hearting.api.data.UpdateStatusMessageData;
+import com.chillin.hearting.api.data.*;
+import com.chillin.hearting.api.request.LoginTestReq;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.UnAuthorizedException;
@@ -35,13 +33,13 @@ import java.util.Date;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final String SUCCESS = "success";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ROLE = "ROLE_USER";
 
     private final UserRepository userRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
+    private final AuthTokenProvider authTokenProvider;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -53,8 +51,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-
-        log.debug("닉네임 수정 시간 : {}", nowLocalTime);
 
         user.updateNickname(nickname, nowLocalTime);
 
@@ -69,8 +65,6 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         LocalDateTime nowLocalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-
-        log.debug("상태메시지 수정 시간 : {}", nowLocalTime);
 
         user.updateStatusMessage(statusMessage, nowLocalTime);
 
@@ -116,7 +110,6 @@ public class UserService {
 
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
-//        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(UserNotFoundException::new);
         User user = principalDetails.getUser();
         String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
                 .map(Cookie::getValue)
@@ -137,7 +130,7 @@ public class UserService {
         long currentTime = System.currentTimeMillis() / 1000; // 현재 시간을 초 단위로 가져옵니다.
 
         if (expirationTime < currentTime || user.getRefreshToken() == null) {
-            log.debug("유효하지 않은 refresh token 입니다.");
+            log.info("유효하지 않은 refresh token 입니다.");
             deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
 
             throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
@@ -146,7 +139,7 @@ public class UserService {
 
         AuthToken accessToken = makeAccessToken(user.getId());
 
-        log.debug("정상적으로 액세스토큰 재발급!!!");
+        log.info("정상적으로 액세스토큰 재발급!!!");
 
 
         return ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
@@ -168,6 +161,41 @@ public class UserService {
         Date now = new Date();
 
         return tokenProvider.createAuthToken(new Date(now.getTime() + refreshTokenExpiry));
+    }
+
+    @Transactional
+    public SocialLoginData adminLogin(LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        User loginuser = userRepository.findById(loginReq.getId()).orElseThrow(UserNotFoundException::new);
+
+        Date now = new Date();
+
+        AuthToken accessToken = authTokenProvider.createAuthToken(
+                loginReq.getId(),
+                "ROLE_ADMIN",
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+        );
+
+        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+
+        AuthToken refreshToken = authTokenProvider.createAuthToken(
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
+
+        loginuser.saveRefreshToken(refreshToken.getToken());
+
+        SocialLoginData socialLoginData = SocialLoginData.builder().userId(loginuser.getId()).nickname(loginuser.getNickname()).accessToken(accessToken.getToken()).isFirst(false).build();
+
+        int cookieMaxAge = (int) refreshTokenExpiry / 60;
+
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, "refreshToken");
+
+        CookieUtil.addCookie(httpServletResponse, "refreshToken", refreshToken.getToken(), cookieMaxAge);
+
+        log.info("관리자용 로그인 성공! {}", socialLoginData);
+        
+        return socialLoginData;
+
     }
 
 
