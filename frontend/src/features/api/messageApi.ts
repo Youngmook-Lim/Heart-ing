@@ -142,10 +142,8 @@ export async function responseHeartApi({
       `api/v1/messages/${messageId}/emojis/${emojiId}`
     );
     const data = res.data;
-    console.log("이모지 반응했어여~", data)
     return data;
   } catch (err) {
-    console.log("이모지 반응 못감", err);
     return null;
   }
 }
