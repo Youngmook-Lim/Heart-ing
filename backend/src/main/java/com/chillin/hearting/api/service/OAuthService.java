@@ -106,7 +106,7 @@ public class OAuthService {
                     .isFirst(socialLoginResultData.isFirst())
                     .build();
 
-            log.debug("social 로그인 성공 후 반환 값 : {}", socialLoginData);
+            log.info("social 로그인 성공 후 반환 값 : {}", socialLoginData);
             int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
             CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
