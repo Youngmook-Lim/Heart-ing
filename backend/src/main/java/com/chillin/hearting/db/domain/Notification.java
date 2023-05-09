@@ -52,4 +52,8 @@ public class Notification implements Serializable {
         this.expiredDate = this.createdDate.plusHours(EXPIRY_TIME);
         this.isActive = true;
     }
+
+    public void deleteNotification() {
+        this.isActive = false;
+    }
 }
