@@ -76,6 +76,10 @@ public class OAuthService {
             }
 
             if (socialLoginResultData.isFirst()) {
+
+                // 레디스에 유저 보낸 하트 정보 등록
+                migrationService.migrateUserSentHeart(socialUser.getId());
+
                 messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
                         "하팅 개발진의 감사한 마음을 \n" +
                         "모두 모아 첫 번째 하트를 \n" +
@@ -260,8 +264,6 @@ public class OAuthService {
                     uuid = UUID.randomUUID();
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
-                // 레디스에 유저 보낸 하트 정보 등록
-                migrationService.migrateUserSentHeart(shortUuid);
 
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
 
