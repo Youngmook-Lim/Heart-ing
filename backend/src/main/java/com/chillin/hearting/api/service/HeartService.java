@@ -218,7 +218,6 @@ public class HeartService {
         for (Object specialHeartId : specialHeartList) {
             Long hId = ((Integer) specialHeartId).longValue();
             if (!mySpecialHeartIds.contains(hId)) {
-                log.info("{}번 스페셜 하트를 아직 획득하지 못했습니다. 획득 조건을 검사합니다.", hId);
                 isAcquiredSpecialHeart(userId, hId, false);
             }
         }
@@ -251,7 +250,7 @@ public class HeartService {
      * @return
      */
     private boolean isAcquiredSpecialHeart(String userId, Long heartId, boolean isSave) {
-        log.debug("스페셜 하트 획득 조건을 충족했는지 확인합니다. {}", heartId);
+        log.info("{}번 스페셜 하트 획득 조건을 충족했는지 확인합니다.", heartId);
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
 
         if (isSave) {
