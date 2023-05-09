@@ -26,13 +26,15 @@ public class NotificationService {
 
     @Transactional
     public NotificationListData getNotifications(String userId) {
-        List<Notification> notificationDataList = notificationRepository.findByUserIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
+        List<Notification> notificationList = notificationRepository.findByUserIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         NotificationListData notificationListData = NotificationListData.builder().notificationList(new ArrayList<>()).build();
 
-        for (Notification n : notificationDataList) {
+        for (Notification n : notificationList) {
             processNotification(n, notificationListData);
         }
+
+        log.info(userId + " 유저가 알림 리스트를 조회했습니다. 총 " + notificationListData.getNotificationList().size() + "개의 알림이 조회되었습니다.");
 
         return notificationListData;
     }
@@ -64,6 +66,8 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow(NotificationNotFoundException::new);
         notification.readNotification();
         notificationRepository.save(notification);
+
+        log.info(notificationId + " 알림을 읽었습니다.");
 
         return notification.getId();
     }

@@ -91,6 +91,8 @@ public class MessageService {
             receiver.updateMessageTotal();
         }
         userRepository.save(receiver);
+
+        log.info("스케줄러가 " + SEND_TO_ADMIN_INTERVAL_HOURS + "시간 주기로 ADMIN 계정에 샘플 메시지 " + SEND_TO_ADMIN_MESSAGE_CNT + "개를 발송했습니다.");
     }
 
     @Transactional
@@ -122,6 +124,8 @@ public class MessageService {
 
         notificationRepository.save(notification);
 
+        log.info(senderId + " 유저가 " + receiverId + " 유저에게 " + message.getId() + " 메시지를 발송했습니다.");
+
         return SendMessageData.builder()
                 .messageId(message.getId())
                 .heartId(message.getHeart().getId())
@@ -150,6 +154,8 @@ public class MessageService {
 
         message = messageRepository.save(message);
 
+        log.info(messageId + " 메시지가 삭제되었습니다.");
+
         return message.isActive();
     }
 
@@ -173,7 +179,6 @@ public class MessageService {
 
         // Update message
         message.reportMessage();
-
 
         // Update user and add to BlockedUser if necessary
 
@@ -202,6 +207,8 @@ public class MessageService {
         // Create Report
         Report report = Report.builder().message(message).reporter(reporter).reportedUser(reportedUser).content(content).build();
         report = reportRepository.save(report);
+
+        log.info(messageId + " 메시지가 신고되었습니다. 신고내역의 ID는 " + report.getId() + " 입니다.");
 
         return report.getId();
     }
@@ -233,6 +240,12 @@ public class MessageService {
         notificationRepository.save(notification);
 
 //        return message.getEmoji().getId();
+
+        if (emoji == null) {
+            log.info(messageId + " 메시지에 반응이 해제되었습니다.");
+        } else {
+            log.info(messageId + " 메시지에 " + emoji.getName() + " 반응이 추가되었습니다.");
+        }
 
         return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).senderId(message.getSender().getId()).build();
     }
