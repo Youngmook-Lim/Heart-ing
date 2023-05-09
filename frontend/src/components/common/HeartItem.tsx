@@ -59,7 +59,7 @@ function HeartItem({ ...props }) {
           onClick={() => bounceAnimation()}
         >
           <img
-            className="w-2/6 mx-auto my-auto"
+            className="mx-auto my-auto"
             src={props.heartUrl}
             alt="heartIcon"
           />
