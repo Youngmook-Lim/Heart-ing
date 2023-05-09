@@ -227,11 +227,11 @@ public class HeartService {
      */
     private void updateHeartCount(String userId, Long heartId) {
         log.info("Redis에 userSentHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
-        HashOperations<String, String, Long> hashOperations = redisTemplate.opsForHash();
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String key = KEY_SEND_HEARTS_PREFIX + userId;
         // update sent heart count
         if (redisTemplate.hasKey(key)) {
-            hashOperations.put(key, heartId.toString(), hashOperations.get(key, heartId.toString()) + 1);
+            hashOperations.put(key, heartId.toString(), ((Integer) hashOperations.get(key, heartId.toString())).longValue() + 1);
         } else {
             migrationService.migrateUserSentHeart(userId);
         }
