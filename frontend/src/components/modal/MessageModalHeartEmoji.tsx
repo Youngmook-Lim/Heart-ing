@@ -11,11 +11,10 @@ function MessageModalHeartEmoji ({emojiUrl}:propType) {
   const [ isSelectedEmojiUrl, setIsSelectedEmojiUrl ] = useRecoilState(isSelectedEmojiUrlAtom)
 
   useEffect(() => {
-    if(isSelectedEmojiUrlAtom === null) {
+    if(isSelectedEmojiUrl === null) {
       setIsSelectedEmojiUrl(() => emojiUrl)
     }
-    
-  }, [])
+  }, [isSelectedEmojiUrl])
 
   return (
     <>
