@@ -66,24 +66,19 @@ function NavbarSideContentBody({ ...props }) {
             사용설명서
           </NavLink>
           <hr />
+          <NavLink
+            to="/profilesettings"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
+            프로필설정
+          </NavLink>
           <div
             className="block text-left text-xl my-4"
             onClick={onLogoutHandler}
           >
             로그아웃
           </div>
-          <div
-            className="block text-left text-xl my-4"
-            onClick={onSettingHandler}
-          >
-            프로필수정
-          </div>
-          {isSetting ? (
-            <NavbarSideContentHeaderProfile
-              onOpenHandler={props.onOpenHandler}
-              setIsSetting={setIsSetting}
-            />
-          ) : null}
         </div>
       ) : (
         <div className="mb-3 mx-3 p-2">
