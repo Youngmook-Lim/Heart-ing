@@ -15,6 +15,7 @@ import SentHeart from "./pages/SentHeart";
 import Setting from "./pages/Setting";
 import Navbar from "./components/navbar/Navbar";
 import Google from "./pages/Google";
+import NonLoggedPopup from "./components/popUp/NonLoggedPopup";
 
 function App() {
   function setScreenSize() {
@@ -42,6 +43,7 @@ function App() {
           <Route path="/receivedheart" element={<ReceivedHeart />} />
           <Route path="/sentheart" element={<SentHeart />} />
           <Route path="/setting" element={<Setting />} />
+          <Route path="/popup" element={<NonLoggedPopup />} />
         </Routes>
       </BrowserRouter>
     </div>
