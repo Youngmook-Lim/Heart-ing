@@ -259,4 +259,15 @@ public class ControllerExceptionHandler {
                 .message(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(HeartNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseDTO handleHeartNotFoundException(HeartNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseDTO.builder()
+                .status(FAIL)
+                .message(e.getMessage())
+                .build();
+    }
 }
