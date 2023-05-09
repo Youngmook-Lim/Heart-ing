@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import google_login_button from "../../assets/images/social/google.png";
 import kakao_login_button from "../../assets/images/social/kakao.png";
@@ -13,8 +12,6 @@ import ManualHomeCount from "./ManualHomeCount";
 
 function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const navigate = useNavigate();
-  const userAgent = window.navigator.userAgent;
-  const [isKakao, setIsKakao] = useState(false);
 
   const KAKAO_API = process.env.REACT_APP_KAKAO_API;
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
@@ -33,18 +30,8 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
     navigate(`/heartboard/user?id=${userId}`);
   };
 
-  useEffect(() => {
-    const isKakao = navigator.userAgent.includes("KAKAOTALK");
-    if (isKakao) {
-      setIsKakao(true);
-    }
-  }, []);
-
   const onGoogleLoginHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isKakao === true) {
-      alert("다른 브라우저에서 이용 가능합니다.");
-      window.location.reload();
-    }
+    alert("다른 브라우저에서 이용 가능합니다.");
   };
 
   return (
@@ -85,7 +72,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                   className="p-2"
                 />
               </a>
-              {isKakao ? (
+              {navigator.userAgent.includes("KAKAOTALK") ? (
                 <div onClick={(e) => onGoogleLoginHandler(e)}>
                   <img
                     src={google_login_button}
