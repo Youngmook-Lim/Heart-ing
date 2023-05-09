@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import google_login_button from "../../assets/images/social/google.png";
 import kakao_login_button from "../../assets/images/social/kakao.png";
@@ -12,8 +13,8 @@ import ManualHomeCount from "./ManualHomeCount";
 
 function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const navigate = useNavigate();
-
-  // console.log("홈 렌더링");
+  const userAgent = window.navigator.userAgent;
+  console.log(userAgent);
 
   const KAKAO_API = process.env.REACT_APP_KAKAO_API;
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
@@ -31,6 +32,21 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const onMyBoardHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
     navigate(`/heartboard/user?id=${userId}`);
   };
+
+  useEffect(() => {
+    const isKakao = navigator.userAgent.match("KAKAOTALK");
+    console.log(navigator.userAgent);
+    console.log(Boolean(isKakao));
+    if (Boolean(isKakao) === true) {
+      Object.defineProperties(navigator, {
+        userAgent: {
+          get: () =>
+            `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36`,
+        },
+      });
+    }
+    console.log(navigator.userAgent);
+  }, []);
 
   return (
     <div className="flex flex-col items-center fullHeight">
