@@ -7,7 +7,6 @@ import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
 import com.chillin.hearting.api.service.OAuthService;
 import com.chillin.hearting.api.service.UserService;
-import com.chillin.hearting.api.service.UserTestService;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // 테스트용 service
-    private final UserTestService userTestService;
-
     private final OAuthService oAuthService;
 
 
@@ -49,13 +45,13 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/guests/test/login")
-    public ResponseEntity<ResponseDTO> testLogin(@RequestBody LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        Data socialLoginData = userTestService.testLogin(loginReq, httpServletRequest, httpServletResponse);
+    @PostMapping("/guests/admin/login")
+    public ResponseEntity<ResponseDTO> adminLogin(@RequestBody LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        Data socialLoginData = userService.adminLogin(loginReq, httpServletRequest, httpServletResponse);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
-                .message("테스트용 로그인 성공")
+                .message("admin 로그인 성공")
                 .data(socialLoginData)
                 .build();
 
