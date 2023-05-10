@@ -21,6 +21,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.social.oauth1.OAuth1Operations;
+import org.springframework.social.oauth1.OAuth1Parameters;
+import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +61,11 @@ public class OAuthService {
     private final MessageService messageService;
 
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final String CONSUMER_KEY = environment.getProperty("twitter.consumer-key");
+    private final String CONSUMER_SECRET = environment.getProperty("twitter.consumer-secret");
+
+    private final String TWITTER_REDIRECT_URI = environment.getProperty("twitter.redirect-uri");
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -305,6 +314,16 @@ public class OAuthService {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 algorithm not found", e);
         }
+    }
+
+    public String getTwitterRequestToken() {
+
+        OAuth1Operations oAuth1Operations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
+        OAuthToken requestToken = oAuth1Operations.fetchRequestToken(TWITTER_REDIRECT_URI, null);
+
+        String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
+
+        return authenticationUrl;
     }
 
 }
