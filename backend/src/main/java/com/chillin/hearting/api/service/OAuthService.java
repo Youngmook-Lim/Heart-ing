@@ -21,9 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.TwitterProfile;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -324,6 +328,20 @@ public class OAuthService {
         String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
         return authenticationUrl;
+    }
+
+    public void getTwitterUserInfo(String oauthToken, String oauthVerifier) {
+
+        OAuth1Operations oauthOperations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
+        OAuthToken requestToken = new OAuthToken(oauthToken, null);
+
+        OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
+
+        Twitter twitter = new TwitterTemplate(CONSUMER_KEY, CONSUMER_SECRET, accessToken.getValue(), accessToken.getSecret());
+
+        TwitterProfile twitterProfile = twitter.userOperations().getUserProfile();
+
+        log.info("트위터 로그인 한 유저 정보 : {}", twitterProfile.toString());
     }
 
 }
