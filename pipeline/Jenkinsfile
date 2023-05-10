@@ -14,6 +14,8 @@ pipeline {
 
         stage('Build') {
             steps {
+                sh "pwd"
+                sh "cat jenkins/deploy/k8s/*.yml"
                 withEnv(["PRODUCTION_VERSION=${env.PRODUCTION_VERSION}"]) {
                     sh "chmod +x -R ${env.WORKSPACE}"
                     sh './pipeline/jenkins/build/build.sh'
