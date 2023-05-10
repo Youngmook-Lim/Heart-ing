@@ -13,9 +13,10 @@ echo "**********************************"
 cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline/jenkins/deploy/k8s
 
 for file in hearting-back.yml hearting-front.yml hearting-websocket.yml; do
-  echo "${PRODUCTION_VERSION}"
+  echo "Before sed:"
+  cat $file
   sed -i "s/__PRODUCTION_VERSION__/${PRODUCTION_VERSION}/g" $file
-  echo "${PRODUCTION_VERSION}"
+  echo "After sed:"
   cat $file
 done
 
