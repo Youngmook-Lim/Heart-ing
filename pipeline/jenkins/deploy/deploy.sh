@@ -10,7 +10,7 @@ echo "**********************************"
 echo "*DEPLOYING KUBERNETES DEPLOYMENTS*"
 echo "**********************************"
 
-cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline/jenkins/deploy/k8s
+cd ${WORKSPACE}/pipeline/jenkins/deploy/k8s
 
 for file in hearting-back.yml hearting-front.yml hearting-websocket.yml; do
   echo "Before sed:"
