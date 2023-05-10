@@ -29,6 +29,20 @@
     -->
     <title>Heart-ing!</title>
     <!-- Hotjar Tracking Code for https://heart-ing.com/ -->
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-K67FXRP");
+    </script>
+    <!-- End Google Tag Manager -->
     <script>
       (function (h, o, t, j, a, r) {
         h.hj =
@@ -58,14 +72,15 @@
 
       gtag("config", "G-4SL7EBSPDP");
     </script>
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
-    integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx"
-    crossOrigin="anonymous"></script>
+    <script
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+      integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx"
+      crossorigin="anonymous"
+    ></script>
     <script>
-      Kakao.init('%REACT_APP_KAKAO_JAVASCRIPT_ID%');
+      Kakao.init("%REACT_APP_KAKAO_JAVASCRIPT_ID%");
       Kakao.isInitialized();
     </script>
-
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -81,4 +96,14 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript
+    ><iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-K67FXRP"
+      height="0"
+      width="0"
+      style="display: none; visibility: hidden"
+    ></iframe
+  ></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 </html>
