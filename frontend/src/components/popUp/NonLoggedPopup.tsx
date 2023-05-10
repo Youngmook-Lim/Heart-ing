@@ -1,30 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { isPopupShowAtom } from "../../atoms/popupAtoms";
+import usePopup from "../../features/hook/usePopup"
 
 function NonLoggedPopup() {
 
-    const navigate = useNavigate();
-
-    const setIsPopupShow = useSetRecoilState(isPopupShowAtom)
-    
-    const setPopupClosed = (): void => {
-        localStorage.setItem("popupNoShow", "true")
-    }
-
-    const closePopupForever = (): void => {
-        setPopupClosed()
-        setIsPopupShow(() => false)
-    }
-
-    const goHome = async() => {
-        setIsPopupShow(() => false)
-        navigate('/')
-    }
-
-    const onClosePopup = () => {
-        setIsPopupShow(() => false)
-    }
+    const { closePopupForever, goHome, onClosePopup } = usePopup()
 
     return (
         <>

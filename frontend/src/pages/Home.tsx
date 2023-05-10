@@ -1,18 +1,43 @@
-import ManualHome from "../components/Home/ManualHome";
+import { useRecoilState } from "recoil";
+import { isUpdateShowAtom } from "../atoms/popupAtoms"
 import { getTotalHeartApi } from "../features/api/messageApi";
+import ManualHome from "../components/Home/ManualHome";
+import UpdatePopup from "../components/popUp/UpdatePopup";
+import { useEffect } from "react";
 
 function Home() {
-  // console.log("매뉴얼 페이지 렌더링");
+  
+  const [isUpdateShow, setIsUpdateShow] = useRecoilState(isUpdateShowAtom)
+  
+  console.log("얍", isUpdateShow)
 
   async function onGetTotalHeart() {
     const totalCnt = await getTotalHeartApi();
     return totalCnt;
   }
 
+  const checkUpdateRead = () => {
+    const readUpdate = localStorage.getItem("readUpdate")
+    
+    if (readUpdate === "true") {
+      setIsUpdateShow(false)
+    } else {
+      setIsUpdateShow(true)
+    }
+  }
+
+  useEffect(() => {
+    checkUpdateRead()
+  }, [])
+  
+
   return (
-    <div className="h-[calc((var(--vh, 1vh) * 100)-8rem)]">
-      <ManualHome onGetTotalHeart={onGetTotalHeart} />
-    </div>
+    <>
+      {isUpdateShow ? <UpdatePopup /> : null }
+      <div className="h-[calc((var(--vh, 1vh) * 100)-8rem)]">
+        <ManualHome onGetTotalHeart={onGetTotalHeart} />
+      </div>
+    </>
   );
 }
 
