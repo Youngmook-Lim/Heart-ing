@@ -45,7 +45,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
       </div>
       <div className="flex flex-col h-1/3 pt-4 ">
         {isLogin ? (
-          <div className="h-1/2 my-auto">
+          <div className="h-1/2 my-auto slide-in-bottom">
             <button
               className="bg-hrtColorYellow px-8 h-16 rounded-xl border-2 border-hrtColorPink shadow-[0_4px_4px_rgba(251,139,176,1)]"
               onClick={onMyBoardHandler}
