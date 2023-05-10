@@ -2,6 +2,7 @@ package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.request.LoginTestReq;
+import com.chillin.hearting.api.request.TwitterLoginReq;
 import com.chillin.hearting.api.request.UpdateNicknameReq;
 import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -50,6 +51,12 @@ public class UserController {
     public void twitterLogin(HttpServletResponse httpServletResponse) throws IOException {
         String authenticationUrl = oAuthService.getTwitterRequestToken();
         httpServletResponse.sendRedirect(authenticationUrl);
+    }
+
+    @GetMapping("/guests/twitter/user-info")
+    public void getTwitterUserInfo(@RequestBody TwitterLoginReq twitterLoginReq) {
+
+        oAuthService.getTwitterUserInfo(twitterLoginReq.getOauthToken(), twitterLoginReq.getOauthVerifier());
     }
 
     @PostMapping("/guests/admin/login")

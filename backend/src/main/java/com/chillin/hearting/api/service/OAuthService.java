@@ -323,7 +323,11 @@ public class OAuthService {
     public String getTwitterRequestToken() {
 
         OAuth1Operations oAuth1Operations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
-        OAuthToken requestToken = oAuth1Operations.fetchRequestToken(TWITTER_REDIRECT_URI, null);
+
+        OAuth1Parameters params = new OAuth1Parameters();
+        params.set("include_email", "true");
+
+        OAuthToken requestToken = oAuth1Operations.fetchRequestToken(TWITTER_REDIRECT_URI, params);
 
         String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
