@@ -4,7 +4,7 @@ import Insta from "./../../assets/images/social/instagram.png";
 
 function NavbarSideContentFooter() {
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center mt-10">
       <a
         href="https://docs.google.com/forms/d/1OHC2Zc2gjh3zG-mv8iRpTwEMuYtsseykc1FQnBR_-AQ/edit?ts=645210b4"
         target="_blank"
