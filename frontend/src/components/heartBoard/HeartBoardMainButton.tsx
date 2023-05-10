@@ -1,47 +1,21 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isMyBoardAtom } from "../../atoms/messageAtoms";
 import { useNavigate } from "react-router-dom";
-import { userNicknameAtom } from "../../atoms/userAtoms";
+import { sharingAtom, userNicknameAtom } from "../../atoms/userAtoms";
+import SharingModal from "../modal/SharingModal";
 
 function BottomButton({ ...props }) {
   const navigate = useNavigate();
   const isMyBoard = useRecoilValue(isMyBoardAtom);
   const userNickname = useRecoilValue(userNicknameAtom);
+  const setIsSharing = useSetRecoilState(sharingAtom)
 
   const onNavigateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     navigate(`/heartwriting?id=${props.userId}`);
   };
 
   const onCopyHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (navigator.clipboard) {
-      // (IE는 사용 못하고, 크롬은 66버전 이상일때 사용 가능합니다.)
-      navigator.clipboard
-        .writeText(window.location.href)
-        .then(() => {
-          alert(
-            `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
-          );
-        })
-        .catch(() => {
-          alert("잠시 후 다시 시도해주세요.");
-        });
-    } else {
-      if (!document.queryCommandSupported("copy")) {
-        return alert("복사하기가 지원되지 않는 브라우저입니다.");
-      }
-
-      const textarea = document.createElement("textarea");
-      textarea.value = window.location.href;
-
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      alert(
-        `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
-      );
-    }
+    setIsSharing(true)
   };
 
   return (
