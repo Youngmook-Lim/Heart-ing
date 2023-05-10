@@ -14,7 +14,7 @@ echo "********Building Backend********"
 echo "********************************"
 
 # backend build
-cd /var/jenkins_home/workspace/hearting-pipeline-docker/backend
+cd ${WORKSPACE}/backend
 gradle clean build -x test
 
 echo "********************************"
@@ -22,7 +22,7 @@ echo "***Building Container Images***"
 echo "********************************"
 
 # docker container build
-cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline
+cd ${WORKSPACE}/pipeline
 docker compose build \
 --build-arg PRODUCTION_VERSION=$PRODUCTION_VERSION \
 --no-cache
