@@ -14,6 +14,7 @@ cd /var/jenkins_home/workspace/hearting-pipeline-docker/pipeline/jenkins/deploy/
 
 for file in hearting-back.yml hearting-front.yml hearting-websocket.yml; do
   sed -i "s/__PRODUCTION_VERSION__/${PRODUCTION_VERSION}/g" $file
+  echo "${PRODUCTION_VERSION}"
 done
 
 kubectl --kubeconfig=/var/jenkins_home/kubeconfig.yml apply -f .
