@@ -8,8 +8,6 @@ import { useEffect } from "react";
 function Home() {
   
   const [isUpdateShow, setIsUpdateShow] = useRecoilState(isUpdateShowAtom)
-  
-  console.log("얍", isUpdateShow)
 
   async function onGetTotalHeart() {
     const totalCnt = await getTotalHeartApi();

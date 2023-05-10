@@ -37,7 +37,7 @@ function MessageModalHeart({ ...props }) {
               />
             </div>
             <div className="absolute w-6 right-3 bottom-3">  
-              { props.emojiUrl && !isSelectedEmojiId ? <MessageModalHeartEmoji emojiUrl={props.emojiUrl} /> : null}
+              { props.emojiUrl ? <MessageModalHeartEmoji emojiUrl={props.emojiUrl} /> : null}
             </div>
           </div>
         </button>
