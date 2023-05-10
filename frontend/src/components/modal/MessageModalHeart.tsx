@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { isSelectedEmojiIdAtom } from "../../atoms/messageAtoms"
 
 import TouchArrow from "../../assets/images/png/touch_arrow.png";
 import MessageModalHeartEmoji from "./MessageModalHeartEmoji";
@@ -7,6 +9,7 @@ import MessageModalHeartEmoji from "./MessageModalHeartEmoji";
 function MessageModalHeart({ ...props }) {
 
   const [isIconMode, setIsIconMode] = useState(true);
+  const [ isSelectedEmojiId, setIsSelectedEmojiId ] = useRecoilState(isSelectedEmojiIdAtom)
 
   const switchInfoMode = () => {
     setIsIconMode(!isIconMode);
@@ -34,7 +37,7 @@ function MessageModalHeart({ ...props }) {
               />
             </div>
             <div className="absolute w-6 right-3 bottom-3">  
-              { props.emojiUrl ? <MessageModalHeartEmoji emojiUrl={props.emojiUrl} /> : null}
+              { props.emojiUrl && !isSelectedEmojiId ? <MessageModalHeartEmoji emojiUrl={props.emojiUrl} /> : null}
             </div>
           </div>
         </button>

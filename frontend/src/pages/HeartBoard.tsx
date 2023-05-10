@@ -15,7 +15,7 @@ import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton"
 import MessageModal from "../components/modal/MessageModal";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
 import BackgroundHeart from "../assets/images/png/background_heart.png";
-import NonLoggedPopup from "../components/popup/NonLoggedPopup";
+import NonLoggedPopup from "../components/popUp/NonLoggedPopup";
 
 function HeartBoard() {
   const navigate = useNavigate();
