@@ -53,6 +53,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const data = await getSentMessageDetailApi(selectedMessageId);
     if (data.status === "success") {
       setMessageData(data.data);
+      setIsSelectedEmojiUrl(data.data.emojiUrl)
     }
   }
 
