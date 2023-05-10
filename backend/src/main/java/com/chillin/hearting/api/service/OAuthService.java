@@ -103,14 +103,8 @@ public class OAuthService {
 
             ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
             String key = "userToken:" + socialUser.getId();
-//            if (valueOperations.get(key) == null) {
             valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
             log.info("refresh token redis에 저장했다?");
-//            }
-
-            socialUser.saveRefreshToken(refreshToken.getToken());
-            log.debug(provider + "User 리프레시 토큰 저장한 후 : {}", socialUser.getRefreshToken());
-            userRepository.saveAndFlush(socialUser);
 
 
             socialLoginData = SocialLoginData.builder()

@@ -12,10 +12,11 @@ import com.chillin.hearting.oauth.domain.AppProperties;
 import com.chillin.hearting.oauth.domain.PrincipalDetails;
 import com.chillin.hearting.util.CookieUtil;
 import com.chillin.hearting.util.HeaderUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -40,6 +42,8 @@ public class UserService {
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
     private final AuthTokenProvider authTokenProvider;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -111,30 +115,38 @@ public class UserService {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
         User user = principalDetails.getUser();
-        String refreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
+        String cookieRefreshToken = CookieUtil.getCookie(httpServletRequest, REFRESH_TOKEN)
                 .map(Cookie::getValue)
                 .orElse(null);
 
-        if (refreshToken == null || !refreshToken.equals(user.getRefreshToken())) {
-            deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
-            throw new UnAuthorizedException("DB에 저장되어 있는 refreshToken과 다릅니다. 다시 로그인 해주세요.");
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+
+        String key = "userToken:" + user.getId();
+        String redisRefreshToken = "";
+
+        try {
+            if (cookieRefreshToken == null) {
+                deleteUserToken(user.getId());
+                throw new UnAuthorizedException("쿠키에 refresh token이 없습니다. 다시 로그인 해주세요.");
+            }
+
+            redisRefreshToken = valueOperations.get(key).toString();
+
+            if (!cookieRefreshToken.equals(redisRefreshToken)) {
+                deleteUserToken(user.getId());
+                deleteCookieRefreshToken(httpServletRequest, httpServletResponse);
+                throw new UnAuthorizedException("redis에 저장되어 있는 refreshToken과 다릅니다. 다시 로그인 해주세요.");
+            }
+
+            log.info("redis에 저장한 리프레시 토큰 : {}", redisRefreshToken);
+
+        } catch (NullPointerException e) {
+            deleteUserToken(user.getId());
+            deleteCookieRefreshToken(httpServletRequest, httpServletResponse);
+            throw new UnAuthorizedException("refresh token이 만료되었습니다. 다시 로그인 해주세요.");
         }
 
-        log.debug("쿠키에 담긴 refreshToken : {}", refreshToken);
-
-        AuthToken authTokenRefreshToken = tokenProvider.convertAuthToken(refreshToken);
-
-        Claims refreshClaims = authTokenRefreshToken.getExpiredTokenClaims();
-
-        long expirationTime = refreshClaims.get("exp", Long.class); // "exp" 필드 값을 가져옵니다.
-        long currentTime = System.currentTimeMillis() / 1000; // 현재 시간을 초 단위로 가져옵니다.
-
-        if (expirationTime < currentTime || user.getRefreshToken() == null) {
-            log.info("유효하지 않은 refresh token 입니다.");
-            deleteRefreshToken(user.getId(), httpServletRequest, httpServletResponse);
-
-            throw new UnAuthorizedException("유효하지 않은 refresh token 입니다.");
-        }
+        log.debug("쿠키에 담긴 refreshToken : {}", cookieRefreshToken);
 
 
         AuthToken accessToken = makeAccessToken(user.getId());
@@ -167,6 +179,7 @@ public class UserService {
     public SocialLoginData adminLogin(LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         User loginuser = userRepository.findById(loginReq.getId()).orElseThrow(UserNotFoundException::new);
 
+
         Date now = new Date();
 
         AuthToken accessToken = authTokenProvider.createAuthToken(
@@ -182,7 +195,10 @@ public class UserService {
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        loginuser.saveRefreshToken(refreshToken.getToken());
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        String key = "userToken:" + loginuser.getId();
+        valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
+        log.info("refresh token redis에 저장했다?");
 
         SocialLoginData socialLoginData = SocialLoginData.builder().userId(loginuser.getId()).nickname(loginuser.getNickname()).accessToken(accessToken.getToken()).isFirst(false).build();
 
@@ -193,9 +209,17 @@ public class UserService {
         CookieUtil.addCookie(httpServletResponse, "refreshToken", refreshToken.getToken(), cookieMaxAge);
 
         log.info("관리자용 로그인 성공! {}", socialLoginData);
-        
+
         return socialLoginData;
 
+    }
+
+    public void deleteUserToken(String userId) {
+        redisTemplate.opsForValue().getOperations().delete("userToken:" + userId);
+    }
+
+    public void deleteCookieRefreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, "refreshToken");
     }
 
 
