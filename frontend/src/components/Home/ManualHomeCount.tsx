@@ -23,7 +23,7 @@ function ManualHomeCount({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   }, [handleGetTotalHeartCnt]);
 
   return (
-    <div className="text-xl textShadow my-12">
+    <div className="text-xl textShadow my-6">
       <p className="purple text-white">지금까지</p>
       <span className="flex justify-center text-white items-center textShadow my-2">
         <p className="mr-1 white text-hrtColorPink tracking-widest" id="number">
