@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import manual_home_intro_1 from "../../assets/images/png/manual_home_intro_1.png";
 import manual_home_intro_2 from "../../assets/images/png/manual_home_intro_2.png";
 import manual_home_scroll from "../../assets/images/png/manual_home_scroll.png";
+import { useHref } from "react-router-dom";
 
 function ManualHomeIntro() {
   const [scrollPosition, setScrollPosition] = useState(0);
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+  };
+
+  const introRef = useRef<HTMLDivElement>(null);
+  const onMoreClick = () => {
+    introRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -18,8 +24,9 @@ function ManualHomeIntro() {
     <div className="flex flex-col my-6 w-full">
       <div
         className={`flex justify-center items-center pt-2 ${
-          scrollPosition < 90 ? "heartbeat" : "scale-out-center hidden"
+          scrollPosition < 90 ? "shake-vertical" : "scale-out-center hidden"
         }`}
+        onClick={onMoreClick}
       >
         <img
           src={manual_home_scroll}
@@ -44,6 +51,7 @@ function ManualHomeIntro() {
         className={`mt-2 mb-6 ${
           scrollPosition > 100 ? "slide-in-bottom" : "collapse"
         }`}
+        ref={introRef}
       >
         <span className="text-xl flex justify-center text-white items-center textShadow ">
           <p className="mr-1 white text-hrtColorPink pr-2">
@@ -87,7 +95,7 @@ function ManualHomeIntro() {
         </div>
       </div>
       <a
-        className={`mx-8 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink heartbeat`}
+        className={`mx-8 mb-24 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink heartbeat`}
         href="https://heart-ing.com/heartboard/user?id=3yqolax1ee"
       >
         <p className="py-2 text-hrtColorPink">개발팀의 하트 수신함 보러가기</p>
