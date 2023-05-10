@@ -66,12 +66,12 @@ function Navbar({socket}:{socket:Socket|null}) {
       if (isLogin) {
         socket.emit("join-room", getUserInfo().userId);
         socket.on("receive-message", (data) => {
-          console.log("받은 메시지:", data);
+          // console.log("받은 메시지:", data);
           getData(myId);
         });
       }
       socket.on("disconnect", () => {
-        console.log("웹소켓 서버 연결 해제");
+        // console.log("웹소켓 서버 연결 해제");
       });
     }
   };
