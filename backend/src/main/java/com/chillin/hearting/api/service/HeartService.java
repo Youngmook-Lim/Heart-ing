@@ -2,19 +2,26 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.*;
 import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.Notification;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
 import com.chillin.hearting.db.repository.HeartRepository;
+import com.chillin.hearting.db.repository.NotificationRepository;
 import com.chillin.hearting.db.repository.UserHeartRepository;
+import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.HeartNotFoundException;
+import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +31,8 @@ public class HeartService {
 
     private final HeartRepository heartRepository;
     private final UserHeartRepository userHeartRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
     private final MigrationService migrationService;
 
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
@@ -33,14 +42,10 @@ public class HeartService {
     private static final int HEART_PLANET_MAX_VALUE = 5;
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
-    private static final ArrayList<Long> defaultHeartList = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L, 5L));
-    private static final ArrayList<Long> specialHeartList = new ArrayList<>(Arrays.asList(7L));
-    private static final ArrayList<Long> eventHeartList = new ArrayList<>(Arrays.asList(6L));
-    private static final ArrayList<Long> allHeartList = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L));
-
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
     private static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
+    private static final String KEY_HEART_LIST_PREFIX = "heartList:";
 
     private ArrayList<HeartConditionData> heartAcqConditions;
 
@@ -59,12 +64,8 @@ public class HeartService {
         // 유저가 존재한다면, 획득한 하트를 가져옵니다.
         HashSet<Long> myHeartSet = new HashSet<>();
         if (user != null) {
-            String userId = user.getId();
-            List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
-            log.info("들어온 유저 아이디 : {} 획득한 하트 개수 : {}", userId, userHearts.size());
-            for (UserHeart myHeart : userHearts) {
-                myHeartSet.add(myHeart.getHeart().getId());
-            }
+            myHeartSet = findUserHeartIds(user.getId());
+            log.info("들어온 유저 아이디 : {} 이미 획득한 스페셜 하트 개수 : {}", user.getId(), myHeartSet.size());
         }
 
         // 모든 하트를 반환하되, 기본 하트이거나 내가 획득한 하트는 잠금이 해제됩니다. 아직 잠긴 하트 중 내가 획득할 수 있는 하트인지 체크합니다.
@@ -79,6 +80,21 @@ public class HeartService {
     }
 
     /**
+     * 유저의 획득 하트 아이디 Set을 반환합니다.
+     *
+     * @param userId
+     * @return
+     */
+    private HashSet<Long> findUserHeartIds(String userId) {
+        HashSet<Long> myHeartSet = new HashSet<>();
+        List<UserHeart> userHearts = userHeartRepository.findAllByUserId(userId);
+        for (UserHeart myHeart : userHearts) {
+            myHeartSet.add(myHeart.getHeart().getId());
+        }
+        return myHeartSet;
+    }
+
+    /**
      * 메시지 전송용 하트 리스트를 조회합니다.
      * 기본 하트 - 모든 잠금이 해제되어있습니다. 비로그인 유저에 한해 두 개의 하트가 잠겨있습니다.
      * 스페셜 하트 - 로그인 유저 중 획득한 스페셜 하트가 제공됩니다.
@@ -86,7 +102,7 @@ public class HeartService {
      * @param user
      * @return
      */
-    public List<HeartData> findUserHearts(User user) {
+    public List<HeartData> findUserMessageHearts(User user) {
         log.info("메시지 전송용 하트 리스트 조회 - 기본 하트 + 내가 획득한 하트를 조회한다.");
         List<HeartData> resHearts = new ArrayList<>();
         List<Heart> findHearts = getAllHeartInfo(HEART_TYPE_DEFAULT);
@@ -121,28 +137,13 @@ public class HeartService {
     private List<Heart> getAllHeartInfo(String type) {
         log.info("Redis로부터 {}타입의 HeartInfo를 조회합니다.", type);
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         List<Heart> result = new ArrayList<>();
-        List<Long> heartIdList = null;
-        switch (type) {
-            case HEART_TYPE_DEFAULT:
-                heartIdList = defaultHeartList;
-                break;
 
-            case HEART_TYPE_SPECIAL:
-                heartIdList = specialHeartList;
-                break;
-
-            case HEART_TYPE_EVENT:
-                heartIdList = eventHeartList;
-                break;
-
-            case HEART_TYPE_ALL:
-                heartIdList = allHeartList;
-                break;
-        }
-
+        List<Object> heartIdList = listOperations.range(KEY_HEART_LIST_PREFIX + type.toLowerCase(), 0, -1);
         if (heartIdList != null) {
-            for (Long heartId : heartIdList) {
+            for (Object heartId : heartIdList) {
+                heartId = ((Integer) heartId).longValue();
                 Map<String, Object> entries = hashOperations.entries(KEY_HEART_INFO_PREFIX + heartId);
                 Heart heart = Heart.builder()
                         .id(((Integer) entries.get("id")).longValue())
@@ -207,16 +208,51 @@ public class HeartService {
      * 유저의 보낸 하트 개수를 업데이트하고 스페셜 하트 획득 조건을 만족하는지 체크합니다.
      *
      * @param userId
-     * @param heartId
      */
-    public void updateHeartCondition(String userId, Long heartId) {
-
-        // 하트 개수 업데이트
-        updateHeartCount(userId, heartId);
+    @Transactional
+    public boolean hasAcquirableHeart(String userId) {
+        boolean isAcq = false;
         // 스페셜 하트 달성 여부 체크
-        for (Long specialHeartId : specialHeartList) {
-            isAcquiredSpecialHeart(userId, specialHeartId, false);
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+        List<Object> specialHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
+        HashSet<Long> mySpecialHeartIds = new HashSet<>();
+        if (userId != null) {
+            mySpecialHeartIds = findUserHeartIds(userId);
         }
+
+        for (Object specialHeartId : specialHeartList) {
+            Long hId = ((Integer) specialHeartId).longValue();
+            if (!mySpecialHeartIds.contains(hId) && isAcquiredSpecialHeart(userId, hId, false)) {
+                ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+                String key = "user:" + userId + ":notifiedHeartId:" + hId;
+                if (valueOperations.get(key) == null) {
+                    saveHeartNotification(userId, hId);
+                    valueOperations.set(key, "true", 24L, TimeUnit.HOURS);
+                    isAcq = true;
+                    log.info("{}번째 하트 획득 가능!! 알림 저장", hId);
+                }
+            }
+        }
+
+        return isAcq;
+    }
+
+    /**
+     * 획득 가능한 하트가 있을 시, 알림 테이블에 저장한다.
+     *
+     * @param userId
+     * @param hId
+     */
+    @Transactional
+    private void saveHeartNotification(String userId, Long hId) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String heartName = (String) hashOperations.get(KEY_HEART_INFO_PREFIX + hId, "name");
+        User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        notificationRepository.save(Notification.builder()
+                .user(findUser)
+                .content(heartName + "하트를 획득할 수 있습니다!")
+                .type("H")
+                .build());
     }
 
     /**
@@ -225,7 +261,7 @@ public class HeartService {
      * @param userId
      * @param heartId
      */
-    private void updateHeartCount(String userId, Long heartId) {
+    public void updateHeartCount(String userId, Long heartId) {
         log.info("Redis에 userSentHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String key = KEY_SEND_HEARTS_PREFIX + userId;
@@ -246,7 +282,9 @@ public class HeartService {
      * @return
      */
     private boolean isAcquiredSpecialHeart(String userId, Long heartId, boolean isSave) {
-        log.debug("스페셜 하트 획득 조건을 충족했는지 확인합니다. {}", heartId);
+        log.info("{}번 스페셜 하트 획득 조건을 충족했는지 확인합니다.", heartId);
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+
         if (isSave) {
             heartAcqConditions = new ArrayList<>();
         }
@@ -262,7 +300,9 @@ public class HeartService {
                 log.info("무지개 하트 획득 조건 확인");
                 isAcquirable = true;
                 HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
-                for (Long defaultHeartId : defaultHeartList) {
+                List<Object> defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
+                for (Object defaultHeartId : defaultHeartList) {
+                    defaultHeartId = ((Integer) defaultHeartId).longValue();
                     if (((Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString())).longValue() < HEART_RAINBOW_MAX_VALUE) {
                         isAcquirable = false;
                         log.info("무지개 하트를 획득 불가 - {}번 하트 조건 미충족", defaultHeartId);
@@ -282,6 +322,4 @@ public class HeartService {
         }
         return isAcquirable;
     }
-
-
 }

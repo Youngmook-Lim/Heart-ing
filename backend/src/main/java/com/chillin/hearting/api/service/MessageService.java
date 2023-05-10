@@ -229,15 +229,21 @@ public class MessageService {
 
         message = messageRepository.save(message);
 
-        // Add notification
-        // 알림 종류(R: 받은 하트 E:  보낸 하트 H: 도감)
-        Notification notification = Notification.builder()
-                .user(message.getSender())
-                .content(NOTIFICATION_MESSAGE_EMOJI)
-                .type("E")
-                .build();
+        // 로그인 한 유저가 보낸 메시지에 반응하는 경우
+        if (message.getSender() != null) {
 
-        notificationRepository.save(notification);
+            // Add notification
+            // 알림 종류(R: 받은 하트 E:  보낸 하트 H: 도감)
+            Notification notification = Notification.builder()
+                    .user(message.getSender())
+                    .content(NOTIFICATION_MESSAGE_EMOJI)
+                    .type("E")
+                    .build();
+
+            notificationRepository.save(notification);
+
+        }
+
 
 //        return message.getEmoji().getId();
 
@@ -247,7 +253,7 @@ public class MessageService {
             log.info(messageId + " 메시지에 " + emoji.getName() + " 반응이 추가되었습니다.");
         }
 
-        return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).senderId(message.getSender().getId()).build();
+        return EmojiData.builder().emojiUrl(message.getEmoji().getImageUrl()).senderId((message.getSender() != null) ? message.getSender().getId() : null).build();
     }
 
 
