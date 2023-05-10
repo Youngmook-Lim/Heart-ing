@@ -63,7 +63,12 @@ public class MessageController {
         // 밑에서 보낸 유저가 알림을 갱신해야하는지 판별하고 data.isCheckSender를 true로 바꿔줘야 함
         //////////////////
 
-        if (user != null) heartService.updateHeartCondition(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
+        if (user != null) {
+            heartService.updateHeartCount(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
+            if (heartService.hasAcquirableHeart(sendMessageReq.getSenderId())) {
+                data.setCheckSender(true);
+            }
+        }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)

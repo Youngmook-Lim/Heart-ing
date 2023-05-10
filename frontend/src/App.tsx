@@ -19,6 +19,12 @@ import { Socket, io } from "socket.io-client";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "./atoms/userAtoms";
 
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 function App() {
   const isLogin = useRecoilValue(isLoginAtom)
 
