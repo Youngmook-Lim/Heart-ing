@@ -19,6 +19,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -52,6 +55,8 @@ public class OAuthService {
     private final UserService userService;
     private final MigrationService migrationService;
     private final MessageService messageService;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @Value("${app.auth.refresh-token-expiry}")
@@ -96,9 +101,17 @@ public class OAuthService {
             log.debug("accessToken : {}", accessToken.getToken());
             log.debug("refreshToken : {}", refreshToken.getToken());
 
+            ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+            String key = "userToken:" + socialUser.getId();
+//            if (valueOperations.get(key) == null) {
+            valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
+            log.info("refresh token redis에 저장했다?");
+//            }
+
             socialUser.saveRefreshToken(refreshToken.getToken());
             log.debug(provider + "User 리프레시 토큰 저장한 후 : {}", socialUser.getRefreshToken());
             userRepository.saveAndFlush(socialUser);
+
 
             socialLoginData = SocialLoginData.builder()
                     .userId(socialUser.getId())
