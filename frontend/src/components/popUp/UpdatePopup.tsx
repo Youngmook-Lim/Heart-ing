@@ -13,7 +13,7 @@ function UpdatePopup() {
                         <div className="flex-auto text-xl text-hrtColorOutline font-bold py-2">⭐ 업 데 이 트 &nbsp; 알 림 ⭐</div>
                     </div>
                     <div className="text-left px-16 py-2">
-                        <p className="pl-2 text-xl">v2.0.10 업데이트 사항</p>
+                        <p className="text-xl">v2.0.10 업데이트 사항</p>
                         <br></br>
                         <p>• 메세지 보내기 버그 해결</p>
                         <p>• 행성하트 지급 완료</p>
