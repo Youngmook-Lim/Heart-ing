@@ -14,7 +14,13 @@ function Settings() {
   const [myStatusMessage, setMyStatusMessage] = useRecoilState(userStautsMessageAtom);
   const [StatusMessage, setStatusMessage] = useState(myStatusMessage);
   const [countNickname, setCountNickname] = useState(myNickname.length);
-  const [countStatus, setCountStatus] = useState(myStatusMessage.length);
+  let initialLength;
+  if (myStatusMessage) {
+    initialLength = myStatusMessage.length
+  } else {
+    initialLength = 0;
+  } 
+  const [countStatus, setCountStatus] = useState(initialLength);
 
   const onNicknameHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.value.length > 12) {
