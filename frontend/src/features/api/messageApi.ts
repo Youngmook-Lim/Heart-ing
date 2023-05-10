@@ -147,3 +147,15 @@ export async function responseHeartApi({
     return null;
   }
 }
+
+export async function reportMessageApi(messageId: number, body: IMessageSendTypes) {
+  try {
+    const res = await axios.post(`api/v1/messages/${messageId}/reports`, body);
+    const data = res.data;
+      console.log("다 말해 다 일러", data)
+    return data;
+  } catch (err) {
+      console.log("오잉~", err)
+    return err;
+  }
+}
