@@ -20,3 +20,9 @@ export const userNicknameAtom = atom<string>({
   default: '',
   effects_UNSTABLE: [persistAtom],
 });
+
+export const sharingAtom = atom<boolean>({
+  key: 'sharing',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});

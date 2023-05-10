@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isLoginAtom } from "../atoms/userAtoms";
+import { isLoginAtom, sharingAtom } from "../atoms/userAtoms";
 import { isMyBoardAtom, readMessageAtom } from "../atoms/messageAtoms";
 import { isFirstTimeAtom, isPopupShowAtom } from "../atoms/popupAtoms";
 
@@ -15,7 +15,8 @@ import HeartBoardMainButton from "../components/heartBoard/HeartBoardMainButton"
 import MessageModal from "../components/modal/MessageModal";
 import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox";
 import BackgroundHeart from "../assets/images/png/background_heart.png";
-import NonLoggedPopup from "../components/popup/NonLoggedPopup";
+import NonLoggedPopup from "../components/popUp/NonLoggedPopup";
+import SharingModal from "../components/modal/SharingModal";
 
 function HeartBoard() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ function HeartBoard() {
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
   const [isPopupShow, setIsPopupShow] = useRecoilState(isPopupShowAtom)
   const isFirstTime = useRecoilValue(isFirstTimeAtom);
+  const isSharing = useRecoilValue(sharingAtom)
 
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
 
@@ -162,7 +164,7 @@ function HeartBoard() {
           </div>
         ) : null}
       </div>
-
+      {isSharing ? <SharingModal /> : null}
       {readMessage ? <MessageModal mode={"recent"} /> : null}
     </div>
   );
