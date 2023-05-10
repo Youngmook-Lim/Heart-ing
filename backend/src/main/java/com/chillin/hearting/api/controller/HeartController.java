@@ -42,7 +42,7 @@ public class HeartController {
     @GetMapping("/user-hearts")
     public ResponseEntity<ResponseDTO> findUserHearts(HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getAttribute("user");
-        List<HeartData> messageHearts = heartService.findUserHearts(user);
+        List<HeartData> messageHearts = heartService.findUserMessageHearts(user);
         ResponseDTO responseDTO = ResponseDTO.builder().status(MESSAGE_SUCCESS).message(FIND_MSGHEARTS_SUCCESS).data(HeartListData.builder().heartList(messageHearts).build()).build();
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
