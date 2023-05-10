@@ -16,7 +16,7 @@ function ManualSelectBoxSection({
       <div className="flex items-center h-1/2 m-3">
         <ManualSelectBoxSectionImg manualImg={manualImg} />
       </div>
-      <div className=" h-fit">
+      <div className="h-fit">
         <div className="m-4">
           <p className="text-lg font-bold mb-4">{name}</p>
           <p className="text-sm w-full mx-auto px-4">{content}</p>

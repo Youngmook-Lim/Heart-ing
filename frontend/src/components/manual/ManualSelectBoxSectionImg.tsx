@@ -30,8 +30,8 @@ function ManualSelectBoxSectionImg({
   return (
     <>
       <div className="text-center mx-auto flex justify-center h-full">
-        <div className="h-12">
-          <img src={manualImgList[index]} alt="설명서 이미지" className="h-56" />
+        <div className="h-18">
+          <img src={manualImgList[index]} alt="설명서 이미지" className="h-40" />
         </div>
       </div>
     </>
