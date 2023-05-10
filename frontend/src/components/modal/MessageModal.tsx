@@ -8,6 +8,7 @@ import {
   isOpenEmojiListAtom,
   isSelectedEmojiIdAtom,
   isSelectedEmojiUrlAtom,
+  reportContentAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -25,6 +26,7 @@ import {
   getMessageDetail,
   getSentMessageDetailApi,
   responseHeartApi,
+  reportMessageApi,
 } from "../../features/api/messageApi";
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
@@ -35,6 +37,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
   const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
   const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
+  const reportContent = useRecoilValue(reportContentAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -65,6 +68,15 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const data = await responseHeartApi(EmojiInfo)
     if (data.status === 'success') {
       setIsSelectedEmojiUrl(() => data.data.emojiUrl)
+    }
+  }
+
+  async function reportMessage(messageId:number) {
+    const body: string = reportContent
+
+    const data = await reportMessageApi(messageId, body)
+    if (data.status === 'success') {
+      console.log("너어~~ 나쁜 말 한거 다 말했어~!~!")
     }
   }
     
