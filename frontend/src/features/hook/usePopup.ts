@@ -29,7 +29,6 @@ function usePopup() {
     const closeUpdateForever = (): void => {
         localStorage.setItem("readUpdate", "true")
         setIsUpdateShow(() => true)
-        console.log("흠냐흠냐")
     }
     
     return {
