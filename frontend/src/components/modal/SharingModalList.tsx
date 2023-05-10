@@ -19,7 +19,7 @@ function SharingModalList({...props}) {
           );
         })
         .catch(() => {
-          alert("잠시 후 다시 시도해주세요.");
+          alert(`지원하지 않는 브라우저입니다.\n다른 브라우저로 접속해주세요.`);
         });
     } else {
       if (!document.queryCommandSupported("copy")) {
@@ -53,12 +53,39 @@ function SharingModalList({...props}) {
   }
 
   const shareKakao = (e: React.MouseEvent<HTMLDivElement>) => {
-    window.Kakao.Share.sendCustom({
-      templateId: 93587,
-      templateArgs: {
-        title: '본격 두근두근 마음 전달 서비스 Hearting!',
-        description: '하트를 보내주세요♡',
+    // window.Kakao.Share.sendCustom({
+    //   templateId: 93587,
+    //   templateArgs: {
+    //     title: '본격 두근두근 마음 전달 서비스 Hearting!',
+    //     description: '하트를 보내주세요♡',
+    //   },
+    // });
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '본격 두근두근 마음 전달 서비스, 하팅!',
+        description: '소중한 사람에게 마음을 전해주세요❤',
+        imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+        link: {
+          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+          mobileWebUrl: 'https://heart-ing.com',
+          webUrl: 'https://heart-ing.com',
+        },
       },
+      itemContent: {
+        profileText: 'Hearting!♡',
+        profileImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+        titleImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+      },
+      buttons: [
+        {
+          title: '하트 보내러가기',
+          link: {
+            mobileWebUrl: url,
+            webUrl: url,
+          },
+        },
+      ],
     });
     props.setSharingAtom(false)
   }
