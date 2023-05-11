@@ -50,7 +50,19 @@ const pubClient = createClient({
 });
 const subClient = pubClient.duplicate();
 
-io.adapter(createAdapter(pubClient, subClient));
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+});
+
+pubClient.on("error", (err) => {
+  console.error("Error with the Redis pubClient:", err);
+});
+
+subClient.on("error", (err) => {
+  console.error("Error with the Redis subClient:", err);
+});
+
+// io.adapter(createAdapter(pubClient, subClient));
 
 // console.log(pubClient);
 // console.log(subClient);
