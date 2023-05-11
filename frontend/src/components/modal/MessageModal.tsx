@@ -1,4 +1,5 @@
 import React from "react";
+import { AxiosError } from 'axios';
 import { useState, useEffect } from "react";
 
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
@@ -8,7 +9,7 @@ import {
   isOpenEmojiListAtom,
   isSelectedEmojiIdAtom,
   isSelectedEmojiUrlAtom,
-  reportContentAtom,
+  isOpenReportingAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -27,6 +28,7 @@ import {
   getSentMessageDetailApi,
   responseHeartApi,
   reportMessageApi,
+  deleteTemporaryMessageApi,
 } from "../../features/api/messageApi";
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
@@ -37,7 +39,8 @@ function MessageModal({ mode }: IMessageModalTypes) {
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
   const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
   const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
-  const reportContent = useRecoilValue(reportContentAtom)
+
+  const setIsOpenReporting = useSetRecoilState(isOpenReportingAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -71,14 +74,33 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
   }
 
+  async function onDeleteHandler() {
+    const status = await deleteTemporaryMessageApi(selectedMessageId);
+      if (status === "success") {
+        alert("메세지를 삭제했습니다");
+        setReadMessageAtom(false);
+    }
+  } 
+
   //신고하기 api
   async function reportMessage(content: string) {
-    const messageId = selectedMessageId
     const body: string = content
 
-    const data = await reportMessageApi(messageId, body)
+    const data = await reportMessageApi(selectedMessageId, body)
     if (data.status === 'success') {
-      console.log("너어~~ 나쁜 말 한거 다 말했어~!~!")
+      if (window.confirm("신고가 정상적으로 접수 되었습니다. 해당 메세지를 삭제하시겠습니까?")) {
+        onDeleteHandler()
+      }
+        setIsOpenReporting(false);
+      } else {
+      if (data && (data as AxiosError).response?.status === 400){
+        alert("해당 메세지는 이미 신고 되었습니다.")
+      } else if (data && (data as AxiosError).response?.status === 401){
+        alert("신고의 권한이 없습니다.")
+      } else {
+        alert("신고하기가 실패했습니다. 나중에 다시 시도해주세요.")
+      }
+      setIsOpenReporting(false)
     }
   }
     
