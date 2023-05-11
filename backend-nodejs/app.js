@@ -45,6 +45,10 @@ const pubClient = redis.createClient({
   port: 6380,
 });
 const subClient = pubClient.duplicate();
+
+console.log(pubClient);
+console.log(subClient);
+
 //////////////////////////////
 //////////////////////////////
 
