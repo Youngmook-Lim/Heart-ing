@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { useRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import { isSelectedEmojiUrlAtom } from "../../atoms/messageAtoms"
 
 interface propType { 
@@ -8,13 +7,7 @@ interface propType {
 
 function MessageModalHeartEmoji ({emojiUrl}:propType) {
 
-  const [ isSelectedEmojiUrl, setIsSelectedEmojiUrl ] = useRecoilState(isSelectedEmojiUrlAtom)
-
-  useEffect(() => {
-    if(isSelectedEmojiUrl === null) {
-      setIsSelectedEmojiUrl(() => emojiUrl)
-    }
-  }, [isSelectedEmojiUrl])
+  const isSelectedEmojiUrl = useRecoilValue(isSelectedEmojiUrlAtom)
 
   return (
     <>
