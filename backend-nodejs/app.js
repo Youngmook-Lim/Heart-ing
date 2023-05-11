@@ -38,9 +38,9 @@ const io = new Server(server, {
 //////////////////////////////
 // REDIS 부분
 const { createAdapter } = require("socket.io-redis");
-const { RedisClient } = require("redis");
+const redis = require("redis");
 
-const pubClient = new RedisClient({
+const pubClient = redis.createClient({
   host: "hearting-redis-cluster",
   port: 6380,
 });
