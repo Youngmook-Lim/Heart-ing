@@ -2,6 +2,7 @@ package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.Data;
 import com.chillin.hearting.api.request.LoginTestReq;
+import com.chillin.hearting.api.request.TwitterLoginReq;
 import com.chillin.hearting.api.request.UpdateNicknameReq;
 import com.chillin.hearting.api.request.UpdateStatusMessageReq;
 import com.chillin.hearting.api.response.ResponseDTO;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -43,6 +45,35 @@ public class UserController {
 
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/guests/twitter/redirect-url")
+    public ResponseEntity<ResponseDTO> twitterLogin(HttpServletResponse httpServletResponse) throws IOException {
+        Data authenticationUrl = oAuthService.getTwitterRequestToken();
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("트위터 로그인 redirect URL 얻어오기 성공!")
+                .data(authenticationUrl)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/guests/twitter/user-info")
+    public ResponseEntity<ResponseDTO> getTwitterUserInfo(@RequestBody TwitterLoginReq twitterLoginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+
+        Data socialLoginData = oAuthService.getTwitterUserInfo(httpServletRequest, httpServletResponse, twitterLoginReq.getOauthToken(), twitterLoginReq.getOauthVerifier(), "twitter");
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("트위터 로그인 성공!!")
+                .data(socialLoginData)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
     }
 
     @PostMapping("/guests/admin/login")
