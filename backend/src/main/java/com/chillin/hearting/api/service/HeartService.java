@@ -5,10 +5,7 @@ import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.Notification;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
-import com.chillin.hearting.db.repository.HeartRepository;
-import com.chillin.hearting.db.repository.NotificationRepository;
-import com.chillin.hearting.db.repository.UserHeartRepository;
-import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.db.repository.*;
 import com.chillin.hearting.exception.HeartNotFoundException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,17 +30,27 @@ public class HeartService {
     private final UserHeartRepository userHeartRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final MessageHeartConditionRepository messageHeartConditionRepository;
     private final MigrationService migrationService;
 
     private static final String HEART_TYPE_DEFAULT = "DEFAULT";
     private static final String HEART_TYPE_SPECIAL = "SPECIAL";
     private static final String HEART_TYPE_EVENT = "EVENT";
     private static final String HEART_TYPE_ALL = "ALL";
-    private static final int HEART_PLANET_MAX_VALUE = 5;
+
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
+    private static final int HEART_NOIR_MAX_VALUE = 2;
+    private static final int HEART_MINCHO_MAX_VALUE = 5;
+    private static final int HEART_SUNNY_MAX_VALUE = 5;
+    private static final int HEART_SHAMROCK_MAX_VALUE = 3;
+    private static final int HEART_FOUR_LEAF_MAX_VALUE = 4;
+    private static final int HEART_READING_GLASSES_MAX_VALUE = 3;
+
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
+
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
+    private static final String KEY_RECEIVED_HEARTS_PREFIX = "userReceivedHeart:";
     private static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
     private static final String KEY_HEART_LIST_PREFIX = "heartList:";
 
@@ -159,8 +166,6 @@ public class HeartService {
         } else {
             log.error("잘못한 하트 타입이 들어왔습니다.");
         }
-
-
         return result;
     }
 
@@ -205,9 +210,10 @@ public class HeartService {
     }
 
     /**
-     * 유저의 보낸 하트 개수를 업데이트하고 스페셜 하트 획득 조건을 만족하는지 체크합니다.
+     * 유저가 획득 가능한 스페셜 하트가 있는지 체크합니다.
      *
      * @param userId
+     * @return 알림이 필요한가 ? true : false
      */
     @Transactional
     public boolean hasAcquirableHeart(String userId) {
@@ -261,7 +267,7 @@ public class HeartService {
      * @param userId
      * @param heartId
      */
-    public void updateHeartCount(String userId, Long heartId) {
+    public void updateSentHeartCount(String userId, Long heartId) {
         log.info("Redis에 userSentHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String key = KEY_SEND_HEARTS_PREFIX + userId;
@@ -274,52 +280,162 @@ public class HeartService {
     }
 
     /**
+     * 유저가 받은 메시지를 바탕으로 받은 하트 개수를 업데이트합니다.
+     *
+     * @param userId
+     * @param heartId
+     */
+    public void updateReceivedHeartCount(String userId, Long heartId) {
+        log.info("Redis에 userReceivedHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String key = KEY_RECEIVED_HEARTS_PREFIX + userId;
+        // update Received heart count
+        if (redisTemplate.hasKey(key)) {
+            hashOperations.put(key, heartId.toString(), ((Integer) hashOperations.get(key, heartId.toString())).longValue() + 1);
+        } else {
+            migrationService.migrateUserReceivedHeart(userId);
+        }
+    }
+
+    /**
      * 스페셜 하트 획득 조건을 충족했는지 확인합니다.
      *
      * @param userId
      * @param heartId
      * @param isSave
-     * @return
+     * @return 유저가 해당 하트를 획득 가능한가 ? true : false
      */
     private boolean isAcquiredSpecialHeart(String userId, Long heartId, boolean isSave) {
         log.info("{}번 스페셜 하트 획득 조건을 충족했는지 확인합니다.", heartId);
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
-
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        List<Object> defaultHeartList = null;
+        int currentValue = 0;
         if (isSave) {
             heartAcqConditions = new ArrayList<>();
         }
 
-        boolean isAcquirable = false;
+        boolean isAcquirable = true;
         switch (heartId.intValue()) {
-            case 6:
-                log.info("행성 하트 획득 조건 확인.");
-//                int userCurrentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId);
-                break;
-
             case 7:
-                log.info("무지개 하트 획득 조건 확인");
-                isAcquirable = true;
-                HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
-                List<Object> defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
+                // 무지개 하트 - 모든 기본하트 1개 보내기
+                defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
                 for (Object defaultHeartId : defaultHeartList) {
-                    defaultHeartId = ((Integer) defaultHeartId).longValue();
-                    if (((Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString())).longValue() < HEART_RAINBOW_MAX_VALUE) {
+                    currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString());
+                    if (currentValue < HEART_RAINBOW_MAX_VALUE) {
                         isAcquirable = false;
                         log.info("무지개 하트를 획득 불가 - {}번 하트 조건 미충족", defaultHeartId);
                     }
                     if (isSave) {
-                        String heartKey = "heartInfo:" + defaultHeartId;
-                        heartAcqConditions.add(HeartConditionData.builder()
-                                .heartId(((Integer) hashOperations.get(heartKey, "id")).longValue())
-                                .name((String) hashOperations.get(heartKey, "name"))
-                                .heartUrl((String) hashOperations.get(heartKey, "imageUrl"))
-                                .currentValue(((Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString())).longValue())
-                                .maxValue(((Integer) HEART_RAINBOW_MAX_VALUE).longValue())
-                                .build()
-                        );
+                        saveHeartCondition(defaultHeartId, currentValue, HEART_RAINBOW_MAX_VALUE);
                     }
                 }
+            case 8:
+                // 민초 하트 - 파란색 하트 5개 보내기
+                String blueHeartId = "2";
+                currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, blueHeartId);
+                if (currentValue < HEART_MINCHO_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("민초 하트를 획득 불가 - {}번 하트 조건 미충족", blueHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(blueHeartId, currentValue, HEART_MINCHO_MAX_VALUE);
+                }
+                break;
+            case 9:
+                // 햇살 하트 - 노랑 하트 5개 보내기
+                String yellowHeartId = "1";
+                currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, yellowHeartId);
+                if (currentValue < HEART_SUNNY_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("햇살 하트를 획득 불가 - {}번 하트 조건 미충족", yellowHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(yellowHeartId, currentValue, HEART_SUNNY_MAX_VALUE);
+                }
+            case 10:
+                // 돋보기 하트 - 특정인에게 핑크 하트 3개 보내기
+                String pinkHeartId = "4";
+                currentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId, Long.parseLong(pinkHeartId));
+                if (currentValue < HEART_READING_GLASSES_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("돋보기 하트를 획득 불가 - {}번 하트 조건 미충족", pinkHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(pinkHeartId, currentValue, HEART_READING_GLASSES_MAX_VALUE);
+                }
+                break;
+            case 11:
+                // 아이스크림 하트  - 햇살 하트 3개 받기
+                String sunnyHeartId = "9";
+                currentValue = (Integer) hashOperations.get(KEY_RECEIVED_HEARTS_PREFIX + userId, sunnyHeartId);
+                if (currentValue < HEART_SUNNY_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("아이스크림 하트를 획득 불가 - {}번 하트 조건 미충족", sunnyHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(sunnyHeartId, currentValue, HEART_SUNNY_MAX_VALUE);
+                }
+                break;
+            case 12:
+                // 세잎클로버 하트 - 초록 하트 3개 보내기
+                String greenHeartId = "3";
+                currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, greenHeartId);
+                if (currentValue < HEART_SHAMROCK_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("세잎클로버 하트를 획득 불가 - {}번 하트 조건 미충족", greenHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(greenHeartId, currentValue, HEART_SHAMROCK_MAX_VALUE);
+                }
+                break;
+            case 13:
+                // 네잎클로버 하트 - 세잎클로버 하트 4개 받기
+                String shamrockHeartId = "12";
+                currentValue = (Integer) hashOperations.get(KEY_RECEIVED_HEARTS_PREFIX + userId, shamrockHeartId);
+                if (currentValue < HEART_FOUR_LEAF_MAX_VALUE) {
+                    isAcquirable = false;
+                    log.info("네잎클로버 하트를 획득 불가 - {}번 하트 조건 미충족", shamrockHeartId);
+                }
+                if (isSave) {
+                    saveHeartCondition(shamrockHeartId, currentValue, HEART_FOUR_LEAF_MAX_VALUE);
+                }
+                break;
+            case 14:
+                // 질투의 누아르 하트 - 모든 기본하트 2개 보내기
+                defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
+                for (Object defaultHeartId : defaultHeartList) {
+                    currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString());
+                    if (currentValue < HEART_NOIR_MAX_VALUE) {
+                        isAcquirable = false;
+                        log.info("누아르 하트를 획득 불가 - {}번 하트 조건 미충족", defaultHeartId);
+                    }
+                    if (isSave) {
+                        saveHeartCondition(defaultHeartId, currentValue, HEART_NOIR_MAX_VALUE);
+                    }
+                }
+                break;
         }
         return isAcquirable;
+    }
+
+    /**
+     * 특정 하트 획득 상세 조건을 전역 변수에 저장한다.
+     *
+     * @param defaultHeartId
+     * @param currentValue
+     * @param maxValue
+     */
+    private void saveHeartCondition(Object defaultHeartId, Integer currentValue, Integer maxValue) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String heartKey = KEY_HEART_INFO_PREFIX + defaultHeartId;
+        heartAcqConditions.add(HeartConditionData.builder()
+                .heartId(((Integer) hashOperations.get(heartKey, "id")).longValue())
+                .name((String) hashOperations.get(heartKey, "name"))
+                .heartUrl((String) hashOperations.get(heartKey, "imageUrl"))
+                .currentValue(currentValue.longValue())
+                .maxValue(maxValue.longValue())
+                .build()
+        );
     }
 }
