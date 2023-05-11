@@ -6,9 +6,7 @@ export async function login(provider: string, code: string) {
     const data = res.data
     return data
   } catch(err) {
-    // console.log('소셜 안됐단다')
-    // console.log(err)
-    return null
+    return err
   }
 }
 
@@ -18,8 +16,7 @@ export async function modifyNickname(nickname: object) {
     const status = res.data.status
     return status
   } catch(err) {
-    // console.log('닉넴 못바꿧어용')
-    // return err
+    return err
   }
 }
 
@@ -29,7 +26,6 @@ export async function modifyStatusMessage(statusMessage: object) {
     const status = res.data.status
     return status
   } catch(err) {
-    // console.log('상메 못바꿧어용')
     return err
   }
 }
@@ -40,8 +36,7 @@ export async function logout() {
     const status = res.data.status
     return status
   } catch(err) {
-    // console.log('로그아웃 안됐단다')
-    return null
+    return err
   }
 }
 
@@ -51,7 +46,6 @@ export async function getProfile(userId:string) {
     const data = res.data
     return data
   } catch(err) {
-    // console.log('없는 유저')
     return err
   }
 }
@@ -62,7 +56,16 @@ export async function reissueTokenApi() {
     const data = res.data
     return data
   } catch(err) {
-    // console.log('쫓아낸다ㅋ')
     return err
+  }
+}
+
+export async function getNotification() {
+  try{
+    const res = await axios.get('/api/v1/notifications')
+    const data = res.data
+    return data
+  } catch(err) {
+    return(err)
   }
 }

@@ -11,6 +11,7 @@ import { getUserInfo } from "../../features/userInfo";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
 import { getReceived } from "../../features/api/messageApi";
+import { getNotification } from "../../features/api/userApi";
 
 interface MyObject {
   [key: string]: any;
@@ -39,27 +40,22 @@ function Navbar({socket}:{socket:Socket|null}) {
     navigate("/");
   };
 
-  const getData = useCallback(async (userId: string | null) => {
-    if (!userId) return;
-    // console.log(userId);
-    const data = await getReceived(userId);
-    if (data.status === "success") {
+  const getData = async () => {
+    if (!isLogin) return;
+    const data = await getNotification();
+    console.log(data)
+    if (data.status === 'success') {
       const notiData: MyObject = { trueList: [], falseList: [] };
-      const listLength = Math.min(
-        20,
-        Object.keys(data.data.messageList).length
-      );
-      for (let i = 0; i < listLength; i++) {
-        if (data.data.messageList[i].isRead) {
-          notiData.trueList[i] = data.data.messageList[i];
+      for (let i = 0; i < Object.keys(data.data.notificationList).length; i++) {
+        if (data.data.notificationList[i].isChecked) {
+          notiData.trueList[i] = data.data.notificationList[i];
         } else {
-          setIsNew(true);
-          notiData.falseList[i] = data.data.messageList[i];
+          notiData.falseList[i] = data.data.notificationList[i];
         }
       }
       setReceivedList(notiData);
     }
-  }, []);
+  };
 
   const onSocket = () => {
     if (socket) {
@@ -67,7 +63,7 @@ function Navbar({socket}:{socket:Socket|null}) {
         socket.emit("join-room", getUserInfo().userId);
         socket.on("receive-message", (data) => {
           // console.log("받은 메시지:", data);
-          getData(myId);
+          getData();
         });
       }
       socket.on("disconnect", () => {
@@ -77,9 +73,9 @@ function Navbar({socket}:{socket:Socket|null}) {
   };
 
   useEffect(() => {
-    onSocket();
+    // onSocket();
     if (isLogin) {
-      getData(myId);
+      getData();
     }
   }, [isLogin]);
 

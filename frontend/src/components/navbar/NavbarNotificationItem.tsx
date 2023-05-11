@@ -39,8 +39,9 @@ function NavbarNotificationItem({...props}) {
   }
   return (
     <div className='text-sm ml-2 mb-1' onClick={props.onClickHandler}>
-      <img src={props.messageInfo.heartUrl} alt='heart' className='w-4 h-4 mr-1 inline'/>
-      <span>{props.messageInfo.heartName} 하트를 받았습니다</span>
+      {/* <img src={props.messageInfo.heartUrl} alt='heart' className='w-4 h-4 mr-1 inline'/>
+      <span>{props.messageInfo.heartName} 하트를 받았습니다</span> */}
+      <span>{props.messageInfo.content}</span>
       <span className='text-hrtColorGray'> {timer()}</span>
     </div>
   )
