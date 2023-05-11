@@ -34,17 +34,21 @@ const io = new Server(server, {
   },
 });
 
-// app.get("/socket.io.js", (req, res) => {
-//   res.sendFile(
-//     path.join(
-//       __dirname,
-//       "node_modules",
-//       "socket.io",
-//       "client-dist",
-//       "socket.io.js"
-//     )
-//   );
-// });
+//////////////////////////////
+//////////////////////////////
+// REDIS 부분
+const { createAdapter } = require("socket.io-redis");
+const { RedisClient } = require("redis");
+
+const pubClient = new RedisClient({
+  host: "hearting-redis-cluster",
+  port: 6380,
+});
+const subClient = pubClient.duplicate();
+//////////////////////////////
+//////////////////////////////
+
+io.adapter(createAdapter(pubClient, subClient));
 
 // 샘플 FE 코드 위치 설정
 app.use("/wssample", express.static(`${__dirname}/public`));
