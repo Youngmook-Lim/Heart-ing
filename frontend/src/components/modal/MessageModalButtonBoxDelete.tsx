@@ -35,7 +35,7 @@ function MessageModalButtonBoxDelete({ ...props }) {
   };
 
   return (
-    <div className="modal-button text-hrtColorNewRed" onClick={onDeleteHandler}>
+    <div className="modal-button text-hrtColorNewRed cursor-pointer" onClick={onDeleteHandler}>
       삭제
     </div>
   );
