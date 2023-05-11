@@ -47,16 +47,33 @@ public class UserController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/guests/twitter/login")
-    public void twitterLogin(HttpServletResponse httpServletResponse) throws IOException {
-        String authenticationUrl = oAuthService.getTwitterRequestToken();
-        httpServletResponse.sendRedirect(authenticationUrl);
+    @GetMapping("/guests/twitter/redirect-url")
+    public ResponseEntity<ResponseDTO> twitterLogin(HttpServletResponse httpServletResponse) throws IOException {
+        Data authenticationUrl = oAuthService.getTwitterRequestToken();
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("트위터 로그인 redirect URL 얻어오기 성공!")
+                .data(authenticationUrl)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
     }
 
-    @GetMapping("/guests/twitter/user-info")
-    public void getTwitterUserInfo(@RequestBody TwitterLoginReq twitterLoginReq) {
+    @PostMapping("/guests/twitter/user-info")
+    public ResponseEntity<ResponseDTO> getTwitterUserInfo(@RequestBody TwitterLoginReq twitterLoginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
-        oAuthService.getTwitterUserInfo(twitterLoginReq.getOauthToken(), twitterLoginReq.getOauthVerifier());
+        Data socialLoginData = oAuthService.getTwitterUserInfo(httpServletRequest, httpServletResponse, twitterLoginReq.getOauthToken(), twitterLoginReq.getOauthVerifier(), "twitter");
+
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(SUCCESS)
+                .message("트위터 로그인 성공!!")
+                .data(socialLoginData)
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
     }
 
     @PostMapping("/guests/admin/login")
