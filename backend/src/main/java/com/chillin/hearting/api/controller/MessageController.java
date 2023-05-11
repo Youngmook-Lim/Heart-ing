@@ -63,8 +63,9 @@ public class MessageController {
         // 밑에서 보낸 유저가 알림을 갱신해야하는지 판별하고 data.isCheckSender를 true로 바꿔줘야 함
         //////////////////
 
+        heartService.updateReceivedHeartCount(sendMessageReq.getReceiverId(), sendMessageReq.getHeartId());
         if (user != null) {
-            heartService.updateHeartCount(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
+            heartService.updateSentHeartCount(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
             if (heartService.hasAcquirableHeart(sendMessageReq.getSenderId())) {
                 data.setCheckSender(true);
             }
