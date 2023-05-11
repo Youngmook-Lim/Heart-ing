@@ -31,4 +31,4 @@ logging:
     root: info
     com:
       chillin: debug
-  directory: src/main/resources/log
+  directory: /app/logs
