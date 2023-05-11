@@ -12,6 +12,11 @@ spec:
       labels:
         app: hearting-back
     spec:
+      volumes:
+        - name: log-volume
+          hostPath:
+            path: /var/log/hearting-back
+            type: DirectoryOrCreate
       containers:
         - name: hearting-back
           image: youngmookk/hearting-backend:__PRODUCTION_VERSION__
@@ -21,6 +26,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: hearting-back-configmap
+          volumeMounts:
+            - name: log-volume
+              mountPath: /app/logs
 
 ---
 apiVersion: v1
