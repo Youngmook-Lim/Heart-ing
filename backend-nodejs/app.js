@@ -37,20 +37,20 @@ const io = new Server(server, {
 //////////////////////////////
 //////////////////////////////
 // REDIS 부분
-const redisAdapter = require("socket.io-redis");
-const { createClient } = require("redis");
-const { createAdapter } = require("@socket.io/redis-adapter");
+// const redisAdapter = require("socket.io-redis");
+// const { createClient } = require("redis");
+// const { createAdapter } = require("@socket.io/redis-adapter");
 
+// // const pubClient = createClient({
+// //   host: "hearting-redis-cluster",
+// //   port: 6380,
+// // });
 // const pubClient = createClient({
-//   host: "hearting-redis-cluster",
-//   port: 6380,
+//   url: "redis://hearting-redis-cluster:6380",
 // });
-const pubClient = createClient({
-  url: "redis://hearting-redis-cluster:6380",
-});
-const subClient = pubClient.duplicate();
+// const subClient = pubClient.duplicate();
 
-io.adapter(createAdapter(pubClient, subClient));
+// io.adapter(createAdapter(pubClient, subClient));
 
 // console.log(pubClient);
 // console.log(subClient);
