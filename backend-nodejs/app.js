@@ -38,26 +38,32 @@ const io = new Server(server, {
 //////////////////////////////
 // REDIS 부분
 const redisAdapter = require("socket.io-redis");
-// const { RedisClient } = require("redis");
+const { createClient } = require("redis");
+const { createAdapter } = require("@socket.io/redis-adapter");
 
-// const pubClient = redis.createClient({
+// const pubClient = createClient({
 //   host: "hearting-redis-cluster",
 //   port: 6380,
 // });
-// const subClient = pubClient.duplicate();
+const pubClient = createClient({
+  url: "redis://hearting-redis-cluster:6380",
+});
+const subClient = pubClient.duplicate();
+
+io.adapter(createAdapter(pubClient, subClient));
 
 // console.log(pubClient);
 // console.log(subClient);
 
-//////////////////////////////
-//////////////////////////////
+// io.adapter(
+//   redisAdapter({
+//     host: "hearting-redis-cluster",
+//     port: 6380,
+//   })
+// );
 
-io.adapter(
-  redisAdapter({
-    host: "hearting-redis-cluster",
-    port: 6380,
-  })
-);
+//////////////////////////////
+//////////////////////////////
 
 // 샘플 FE 코드 위치 설정
 app.use("/wssample", express.static(`${__dirname}/public`));
