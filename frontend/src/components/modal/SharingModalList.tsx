@@ -67,9 +67,8 @@ function SharingModalList({...props}) {
         description: '소중한 사람에게 마음을 전해주세요❤',
         imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
         link: {
-          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-          mobileWebUrl: 'https://heart-ing.com',
-          webUrl: 'https://heart-ing.com',
+          mobileWebUrl: url,
+          webUrl: url,
         },
       },
       itemContent: {

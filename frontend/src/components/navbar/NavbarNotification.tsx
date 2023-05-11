@@ -1,7 +1,7 @@
 import React from "react";
 
 import { getUserInfo } from "../../features/userInfo";
-import { IGetMessageListTypes } from "../../types/messageType";
+import { IGetNotificationListTypes } from "../../types/messageType";
 import NavbarNotificationItem from "./NavbarNotificationItem";
 import PurpleCloseButton from "../../assets/images/pixel/button/close_purple_1.svg";
 import { useNavigate } from "react-router";
@@ -13,9 +13,17 @@ function NavbarNotification({ ...props }) {
     props.setNotiIsOpen(false);
   };
 
-  const onClickHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onClickHandler = (e: IGetNotificationListTypes) => {
     props.setNotiIsOpen(false);
-    navigate(`/heartboard/user?id=${getUserInfo().userId}`);
+    if (e.type === 'R') {
+      navigate(`/heartboard/user?id=${getUserInfo().userId}`);
+    } else {
+      if (e.type === 'E') {
+        navigate('/sentheart')
+      } else {
+        navigate('/heartguide')
+      }
+    }
   };
 
   // useEffect(() => {
@@ -51,11 +59,11 @@ function NavbarNotification({ ...props }) {
             {Object.keys(props.notiData.falseList).length ? (
               <div>
                 {props.notiData.falseList.map(
-                  (message: IGetMessageListTypes) => (
-                    <NavbarNotificationItem
-                      messageInfo={message}
-                      onClickHandler={onClickHandler}
-                    />
+                  (message: IGetNotificationListTypes) => (
+                    <div onClick={() =>{onClickHandler(message)}}>
+                      <NavbarNotificationItem
+                        messageInfo={message} />
+                    </div>
                   )
                 )}
               </div>
@@ -65,12 +73,10 @@ function NavbarNotification({ ...props }) {
           </div>
           <div className="flex flex-col items-start">
             <p className="text-xs">• 지난 알림</p>
-            {props.notiData.trueList.map((message: IGetMessageListTypes) => (
-              <div>
+            {props.notiData.trueList.map((message: IGetNotificationListTypes) => (
+              <div onClick={() =>{onClickHandler(message)}}>
                 <NavbarNotificationItem
-                  messageInfo={message}
-                  onClickHandler={onClickHandler}
-                />
+                  messageInfo={message} />
               </div>
             ))}
           </div>
