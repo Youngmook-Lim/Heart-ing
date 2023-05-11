@@ -71,8 +71,10 @@ function MessageModal({ mode }: IMessageModalTypes) {
     }
   }
 
-  async function reportMessage(messageId:number) {
-    const body: string = reportContent
+  //신고하기 api
+  async function reportMessage(content: string) {
+    const messageId = selectedMessageId
+    const body: string = content
 
     const data = await reportMessageApi(messageId, body)
     if (data.status === 'success') {
@@ -136,8 +138,10 @@ function MessageModal({ mode }: IMessageModalTypes) {
               mode={mode}
             />
             <MessageModalTextbox
+              mode={mode}
               title={messageData.title}
               content={messageData.content}
+              onReportMessage={reportMessage}
             />
             <div className="absolute top-40 w-full h-auto">
               {isOpenEmojiList ? <HeartResponseEmojiList messageEmojiId={ messageData.emojiId } onEmojiHandler={ onEmojiHandler }/> : null }

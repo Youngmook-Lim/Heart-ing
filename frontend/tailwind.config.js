@@ -8,6 +8,7 @@ module.exports = {
     fontSize: {
       'xxs': '.5rem',
       'xs': '.75rem',
+      '1xs': '.70rem',
       'sm': '.875rem',
       'tiny': '.875rem',
       'base': '1rem',
@@ -43,6 +44,7 @@ module.exports = {
         hrtColorLightPink: "#F9ECF5",
         hrtColorNewRed: "#DB443A",
         hrtColorNewPurple: "#D5A7EA",
+        hrtColorNewGray: "#D3D3D3",
         hrtColorWhiteTrans: "rgba(255,255,255,0.8)",
         hrtColorSelectedEmoji: "#F7DCEE",
       },

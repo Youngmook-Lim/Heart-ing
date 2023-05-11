@@ -39,3 +39,8 @@ export const reportContentAtom = atom<string>({
   key: "reportContent",
   default:"",
 })
+
+export const isOpenReportingAtom = atom<boolean>({
+  key: 'isOpenReporting',
+  default: false,
+});
