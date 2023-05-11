@@ -17,8 +17,9 @@ import HeartBoardProfileBox from "../components/heartBoard/HeartBoardProfileBox"
 import BackgroundHeart from "../assets/images/png/background_heart.png";
 import NonLoggedPopup from "../components/popUp/NonLoggedPopup";
 import SharingModal from "../components/modal/SharingModal";
+import { Socket } from "socket.io-client";
 
-function HeartBoard() {
+function HeartBoard({socket}:{socket:Socket|null}) {
   const navigate = useNavigate();
 
   const [userProfile, setUserProfile] = useState({});
@@ -165,7 +166,7 @@ function HeartBoard() {
         ) : null}
       </div>
       {isSharing ? <SharingModal /> : null}
-      {readMessage ? <MessageModal mode={"recent"} /> : null}
+      {readMessage ? <MessageModal mode={"recent"}  socket={socket}/> : null}
     </div>
   );
 }

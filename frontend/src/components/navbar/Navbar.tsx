@@ -43,7 +43,6 @@ function Navbar({socket}:{socket:Socket|null}) {
   const getData = async () => {
     if (!isLogin) return;
     const data = await getNotificationApi();
-    console.log(data)
     if (data.status === 'success') {
       const notiData: MyObject = { trueList: [], falseList: [] };
       for (let i = 0; i < Object.keys(data.data.notificationList).length; i++) {
@@ -77,7 +76,7 @@ function Navbar({socket}:{socket:Socket|null}) {
   };
 
   useEffect(() => {
-    // onSocket();
+    onSocket();
     if (isLogin) {
       getData();
     }

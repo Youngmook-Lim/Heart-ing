@@ -7,8 +7,9 @@ import { getSent } from "../features/api/messageApi";
 import HeartBoxHeader from "../components/heartBox/HeartBoxHeader";
 import HeartBoxList from "../components/heartBox/HeartBoxList";
 import MessageModal from "../components/modal/MessageModal";
+import { Socket } from "socket.io-client";
 
-function SentHeart() {
+function SentHeart({socket}:{socket:Socket|null}) {
   const [inboxList, setInboxList] = useState({});
   const readMessage = useRecoilValue(readMessageAtom); // 메시지 읽는 모달 on/off
 
@@ -27,7 +28,7 @@ function SentHeart() {
     <div className="container mx-auto px-6 fullHeight overflow-auto">
       <HeartBoxHeader mode={"sent"} />
       <HeartBoxList inboxList={inboxList} />
-      {readMessage ? <MessageModal mode={"sent"} /> : null}
+      {readMessage ? <MessageModal mode={"sent"} socket={socket}/> : null}
     </div>
   );
 }

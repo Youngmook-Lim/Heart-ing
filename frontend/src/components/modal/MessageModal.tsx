@@ -28,7 +28,7 @@ import {
 } from "../../features/api/messageApi";
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
-function MessageModal({ mode }: IMessageModalTypes) {
+function MessageModal({...props}) {
 
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
@@ -65,12 +65,15 @@ function MessageModal({ mode }: IMessageModalTypes) {
     const data = await responseHeartApi(EmojiInfo)
     if (data.status === 'success') {
       setIsSelectedEmojiUrl(() => data.data.emojiUrl)
+      if (props.socket && props.socket.connected) {
+        props.socket.emit("send-message", data.data.senderId, data.data);
+      }
     }
   }
     
     useEffect(() => {
       // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
-      if (mode === "sent") {
+      if (props.mode === "sent") {
         getSentMessageDetail(selectedMessageId);
         
       } else {
@@ -82,7 +85,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
         setIsSelectedEmojiId(0)
         setIsSelectedEmojiUrl("")
       }
-    }, [mode, selectedMessageId]);
+    }, [props.mode, selectedMessageId]);
     
     // 메시지 모달을 닫습니다
     const closeModal = () => {
@@ -121,7 +124,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
               kr_curr={kr_curr}
               createdDate={messageData.createdDate}
               expiredDate={messageData.expiredDate}
-              mode={mode}
+              mode={props.mode}
             />
             <MessageModalTextbox
               title={messageData.title}
@@ -131,7 +134,7 @@ function MessageModal({ mode }: IMessageModalTypes) {
               {isOpenEmojiList ? <HeartResponseEmojiList messageEmojiId={ messageData.emojiId } onEmojiHandler={ onEmojiHandler }/> : null }
             </div>
             <MessageModalButtonBox
-              mode={mode}
+              mode={props.mode}
               isExpired={isExpired}
               isStored={messageData?.isStored}
             />
