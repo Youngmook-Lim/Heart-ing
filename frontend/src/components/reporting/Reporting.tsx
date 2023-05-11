@@ -42,13 +42,13 @@ function Reporting({ onReportMessage }: propsType) {
         <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex items-center justify-center z-40">
             <div className="container bg-white border-2 border-hrtColorNewRed m-10 max-w-xs maxFullHeight">
                 <div className="bg-hrtColorNewRed border-hrtColorNewRed flex">
-                    <div className="flex-auto text-left text-white text-xl mx-2 my-1">신고</div>
-                    <button className="flex-none w-6 m-1 mr-2" onClick={onCloseReporting}>
+                    <div className="flex-auto text-left text-white text-xl mx-2 my-1 cursor-default">신고</div>
+                    <button className="flex-none w-6 m-1 mr-2 cursor-pointer" onClick={onCloseReporting}>
                         <img src={close_yellow} alt="close button" />
                     </button>
                     </div>
                     <div className="mx-7 mt-5">
-                        <div className="flex text-left">신고사유</div>
+                        <div className="flex text-left cursor-default">신고사유</div>
                         <div className="pt-2 text-right">
                             <textarea
                                 value={content}
@@ -56,7 +56,7 @@ function Reporting({ onReportMessage }: propsType) {
                                 onChange={onContentHandler}
                                 placeholder="신고 사유를 입력해주세요"
                             />
-                            <span className="text-gray-400 mr-1">{countContent}/500</span>
+                            <span className="text-gray-400 mr-1 cursor-default">{countContent}/500</span>
                         </div>
                             <div className="text-left mb-2">
                             <svg
@@ -73,18 +73,18 @@ function Reporting({ onReportMessage }: propsType) {
                                     d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
                                 />
                                 </svg>
-                            <span className="text-hrtColorNewRed">주의</span>
-                            <div className="text-1xs text-hrtColorOutline my-1">
+                            <span className="text-hrtColorNewRed cursor-default">주의</span>
+                            <div className="text-1xs text-hrtColorOutline my-1 cursor-default">
                                 <p>신고 누적될 경우, 해당 계정은 정지됩니다.<br></br>
                                     접수 후에는 취소할 수 없으니 신중히 사용해주세요.</p>
                             </div>
                             </div>
                     </div>
                     <div className="flex mx-7 mb-2">
-                        <div className="mx-auto my-auto mt-5 mb-4 mr-4 modal-button text-hrtColorOutline" onClick={onCloseReporting}>
+                        <div className="mx-auto my-auto mt-5 mb-4 mr-4 modal-button text-hrtColorOutline cursor-pointer" onClick={onCloseReporting}>
                             취소
                             </div>
-                            <div className="mx-auto my-auto mt-5 mb-4 modal-button bg-hrtColorNewRed text-white" onClick={onReportMessageHandler}>
+                            <div className="mx-auto my-auto mt-5 mb-4 modal-button bg-hrtColorNewRed text-white cursor-pointer" onClick={onReportMessageHandler}>
                             신고
                         </div>
                     </div>
