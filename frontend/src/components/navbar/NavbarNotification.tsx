@@ -14,7 +14,9 @@ function NavbarNotification({ ...props }) {
   };
 
   const onClickHandler = (e: IGetNotificationListTypes) => {
+    console.log(e)
     props.setNotiIsOpen(false);
+    props.readNotification(e.notificationId)
     if (e.type === 'R') {
       navigate(`/heartboard/user?id=${getUserInfo().userId}`);
     } else {

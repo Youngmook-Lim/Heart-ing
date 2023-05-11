@@ -11,7 +11,7 @@ import { getUserInfo } from "../../features/userInfo";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
 import { getReceived } from "../../features/api/messageApi";
-import { getNotification } from "../../features/api/userApi";
+import { getNotificationApi, readNotificationApi } from "../../features/api/userApi";
 
 interface MyObject {
   [key: string]: any;
@@ -42,7 +42,7 @@ function Navbar({socket}:{socket:Socket|null}) {
 
   const getData = async () => {
     if (!isLogin) return;
-    const data = await getNotification();
+    const data = await getNotificationApi();
     console.log(data)
     if (data.status === 'success') {
       const notiData: MyObject = { trueList: [], falseList: [] };
@@ -56,6 +56,10 @@ function Navbar({socket}:{socket:Socket|null}) {
       setReceivedList(notiData);
     }
   };
+
+  const readNotification = async (notificationId: number) => {
+    const data = await readNotificationApi(notificationId);
+  }
 
   const onSocket = () => {
     if (socket) {
@@ -112,6 +116,7 @@ function Navbar({socket}:{socket:Socket|null}) {
                 <NavbarNotification
                   onNotiHandler={onNotiHandler}
                   setNotiIsOpen={setNotiIsOpen}
+                  readNotification={readNotification}
                   notiData={receivedList}
                 />
               ) : null}

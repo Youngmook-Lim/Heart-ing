@@ -60,9 +60,19 @@ export async function reissueTokenApi() {
   }
 }
 
-export async function getNotification() {
+export async function getNotificationApi() {
   try{
     const res = await axios.get('/api/v1/notifications')
+    const data = res.data
+    return data
+  } catch(err) {
+    return(err)
+  }
+}
+
+export async function readNotificationApi(notificationId: number) {
+  try{
+    const res = await axios.post(`/api/v1/notifications/${notificationId}`)
     const data = res.data
     return data
   } catch(err) {
