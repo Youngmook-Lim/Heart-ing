@@ -111,15 +111,6 @@ function MessageModal({ ...props }) {
     const onOpenReporting = () => {
       setIsOpenReporting(true)
     }
-    
-    useEffect(() => {
-      // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
-      if (props.mode === "sent") {
-        getSentMessageDetail(selectedMessageId);
-        
-      } else {
-        getRecivedMessages(selectedMessageId);
-      }
 
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
