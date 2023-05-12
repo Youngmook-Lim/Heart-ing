@@ -73,24 +73,24 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                     <img
                       src={kakao_login_button}
                       alt="kakao_login_button"
-                      className="p-2 px-4"
+                      className="p-2 px-8"
                     />
                   </a>
                   {/* 트위터 로그인 링크가 들어갑니다 */}
-                  <a href={KAKAO_REQUEST}>
+                  {/* <a href={KAKAO_REQUEST}>
                     <img
                       src={twitter_login_button}
                       alt="twitter_login_button"
                       className="p-2 px-4"
                     />
-                  </a>
+                  </a> */}
                   {/* 페이스북 로그인이 생긴다면 a>img의 클래스 태그 중 px-4를 없애고 mx-12 => mx-8로 수정합니다 */}
                   {navigator.userAgent.includes("KAKAOTALK") ? (
                     <div onClick={(e) => onGoogleLoginHandler(e)}>
                       <img
                         src={google_login_button}
                         alt="google_login_button"
-                        className="p-2 px-4"
+                        className="p-2 px-8"
                       />
                     </div>
                   ) : (
@@ -98,7 +98,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                       <img
                         src={google_login_button}
                         alt="google_login_button"
-                        className="p-2 px-4"
+                        className="p-2 px-8"
                       />
                     </a>
                   )}
