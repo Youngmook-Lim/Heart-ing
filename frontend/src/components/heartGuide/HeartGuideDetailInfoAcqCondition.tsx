@@ -20,11 +20,11 @@ function HeartGuideDetailInfoAcqCondition({
   return (
     <>
       <div className="textShadow mt-4">
-        <p className="purple text-white text-left tracking-wider mx-1">
+        <p className="purple text-white text-left tracking-wider mx-1 cursor-default">
           획득조건
         </p>
       </div>
-      <div className="border-2 border-hrtColorNewPurple p-4 mt-1 text-start rounded-sm">
+      <div className="border-2 border-hrtColorNewPurple p-4 mt-1 text-start rounded-sm cursor-default">
         {!isLogin && type !== "DEFAULT" ? (
           <p>로그인 후 확인 가능합니다.</p>
         ) : (
