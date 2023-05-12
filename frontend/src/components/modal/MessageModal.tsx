@@ -32,8 +32,7 @@ import {
 } from "../../features/api/messageApi";
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
-function MessageModal({...props}) {
-
+function MessageModal({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
   const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
@@ -50,7 +49,7 @@ function MessageModal({...props}) {
     const data = await getMessageDetail(selectedMessageId);
     if (data.status === "success") {
       setMessageData(data.data);
-      setIsSelectedEmojiUrl(data.data.emojiUrl)
+      setIsSelectedEmojiUrl(data.data.emojiUrl);
     }
   }
 
@@ -59,18 +58,18 @@ function MessageModal({...props}) {
     const data = await getSentMessageDetailApi(selectedMessageId);
     if (data.status === "success") {
       setMessageData(data.data);
-      setIsSelectedEmojiUrl(data.data.emojiUrl)
+      setIsSelectedEmojiUrl(data.data.emojiUrl);
     }
   }
 
-  async function onEmojiHandler(emojiId:number) {
+  async function onEmojiHandler(emojiId: number) {
     const EmojiInfo: IResponseHeartTypes = {
       messageId: selectedMessageId,
       emojiId: emojiId,
-    }
-    const data = await responseHeartApi(EmojiInfo)
-    if (data.status === 'success') {
-      setIsSelectedEmojiUrl(() => data.data.emojiUrl)
+    };
+    const data = await responseHeartApi(EmojiInfo);
+    if (data.status === "success") {
+      setIsSelectedEmojiUrl(() => data.data.emojiUrl);
       if (data.data.senderId) {
         if (props.socket && props.socket.connected) {
           props.socket.emit("send-message", data.data.senderId, data.data);
@@ -118,19 +117,26 @@ function MessageModal({...props}) {
         getRecivedMessages(selectedMessageId);
       }
 
-      return () => {
-        setIsOpenEmojiList(false)
-        setIsSelectedEmojiId(0)
-        setIsSelectedEmojiUrl("")
-      }
-    }, [props.mode, selectedMessageId]);
-    
-    // 메시지 모달을 닫습니다
-    const closeModal = () => {
-      setReadMessageAtom(false);
-      setIsOpenEmojiList(false)
+  useEffect(() => {
+    // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
+    if (props.mode === "sent") {
+      getSentMessageDetail(selectedMessageId);
+    } else {
+      getRecivedMessages(selectedMessageId);
+    }
+
+    return () => {
+      setIsOpenEmojiList(false);
+      setIsSelectedEmojiId(0);
+      setIsSelectedEmojiUrl("");
     };
-    
+  }, [props.mode, selectedMessageId]);
+
+  // 메시지 모달을 닫습니다
+  const closeModal = () => {
+    setReadMessageAtom(false);
+    setIsOpenEmojiList(false);
+  };
 
   const curr = new Date();
   const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
@@ -140,13 +146,36 @@ function MessageModal({...props}) {
   if (messageData) {
     const expiredDate = new Date(messageData.expiredDate);
     const isExpired = kr_curr > expiredDate; // 현재 시간보다 만료 시간이 더 과거이면 만료됨
+    console.log(messageData.heartId);
+
+    let color = "bg-[#43316b] shadow-[0_0_0_0.25rem_#43316b]";
+    let borderColor = "shadow-[0_0_0_0.25rem_#43316b]";
+    if (messageData.heartId === 1) {
+      color = "bg-[#FF9904] shadow-[0_0_0_0.25rem_#FF9904]";
+      borderColor = "shadow-[0_0_0_0.25rem_#FF9904]";
+    } else if (messageData.heartId === 2) {
+      borderColor = "shadow-[0_0_0_0.25rem_#5365D7]";
+      color = "bg-[#5365D7] shadow-[0_0_0_0.25rem_#5365D7]";
+    } else if (messageData.heartId === 3) {
+      borderColor = "shadow-[0_0_0_0.25rem_#50CA19]";
+      color = "bg-[#50CA19] shadow-[0_0_0_0.25rem_#50CA19]";
+    } else if (messageData.heartId === 4) {
+      color = "bg-[#FF62A1] shadow-[0_0_0_0.25rem_#FF62A1]";
+      borderColor = "shadow-[0_0_0_0.25rem_#FF62A1]";
+    } else if (messageData.heartId === 5) {
+      color = "bg-[#F2303C] shadow-[0_0_0_0.25rem_#F2303C]";
+      borderColor = "shadow-[0_0_0_0.25rem_#F2303C]";
+    }
+
     return (
       <div className="App w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center flex  items-center justify-center z-40">
-        <div className="container modal border-hrtColorOutline m-6 max-w-xs">
-          <div className="modal-header bg-hrtColorOutline border-hrtColorOutline mb-4 flex">
+        <div className={`container bg-white ${borderColor} m-6 max-w-xs`}>
+          <div
+            className={`modal-header ${borderColor} ${color} border-hrtColorOutline mb-4 flex`}
+          >
             <div className="flex-auto">하트 읽기</div>
             <button onClick={() => closeModal()} className="flex-none">
-              <ButtonIcon id={0} />
+              <ButtonIcon id={1} />
             </button>
           </div>
           {/* <p>{selectedMessageId} 메시지 / 지금은 더미데이터</p> */}
@@ -171,7 +200,12 @@ function MessageModal({...props}) {
               onReportMessage={reportMessage}
             />
             <div className="absolute top-40 w-full h-auto">
-              {isOpenEmojiList ? <HeartResponseEmojiList messageEmojiId={ messageData.emojiId } onEmojiHandler={ onEmojiHandler }/> : null }
+              {isOpenEmojiList ? (
+                <HeartResponseEmojiList
+                  messageEmojiId={messageData.emojiId}
+                  onEmojiHandler={onEmojiHandler}
+                />
+              ) : null}
             </div>
             <MessageModalButtonBox
               mode={props.mode}
