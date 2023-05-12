@@ -4,6 +4,7 @@ export interface IHeartInfoTypes {
   heartUrl: string;
   type: string;
   isLocked: boolean;
+  isAcq: boolean;
 }
 
 export interface IHeartConditionsTypes {
