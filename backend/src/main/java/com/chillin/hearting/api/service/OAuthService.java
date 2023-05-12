@@ -2,6 +2,7 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.SocialLoginData;
 import com.chillin.hearting.api.data.SocialLoginResultData;
+import com.chillin.hearting.api.data.TwitterRedirectData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.repository.BlockedUserRepository;
@@ -12,6 +13,7 @@ import com.chillin.hearting.exception.UserNotFoundException;
 import com.chillin.hearting.jwt.AuthToken;
 import com.chillin.hearting.oauth.info.OAuth2Attribute;
 import com.chillin.hearting.util.CookieUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -21,8 +23,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.oauth1.AuthorizedRequestToken;
+import org.springframework.social.oauth1.OAuth1Operations;
+import org.springframework.social.oauth1.OAuth1Parameters;
+import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.TwitterProfile;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
+import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +70,15 @@ public class OAuthService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+    @Value("${twitter.consumer-key}")
+    private String CONSUMER_KEY;
+
+    @Value("${twitter.consumer-secret}")
+    private String CONSUMER_SECRET;
+
+    @Value("${twitter.redirect-uri}")
+    private String TWITTER_REDIRECT_URI;
+
 
     @Value("${app.auth.refresh-token-expiry}")
     private long refreshTokenExpiry;
@@ -74,52 +95,8 @@ public class OAuthService {
             SocialLoginResultData socialLoginResultData = getSocialUserInfo(socialAccessToken, provider);
             log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
 
-            User socialUser = socialLoginResultData.getUser();
+            socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
 
-            if (socialUser == null) {
-                throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
-            }
-
-            if (socialLoginResultData.isFirst()) {
-
-                // 레디스에 유저 보낸 하트 정보 등록
-                migrationService.migrateUserSentHeart(socialUser.getId());
-
-                messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
-                        "하팅 개발진의 감사한 마음을 \n" +
-                        "모두 모아 첫 번째 하트를 \n" +
-                        "보냅니다.❤\uFE0F\uD83D\uDC9B\uD83D\uDC9A\uD83D\uDC99\uD83D\uDC9C\n" +
-                        "하트에 전달하고 싶은 마음, \n" +
-                        "감정을 담아 주고받아 보세요.\n" +
-                        "하팅!", "");
-            }
-
-            AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
-
-            AuthToken refreshToken = userService.makeRefreshToken();
-
-            log.debug("accessToken : {}", accessToken.getToken());
-            log.debug("refreshToken : {}", refreshToken.getToken());
-
-            ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-            String key = "userToken:" + socialUser.getId();
-            valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
-            log.info("refresh token redis에 저장했다?");
-
-
-            socialLoginData = SocialLoginData.builder()
-                    .userId(socialUser.getId())
-                    .nickname(socialUser.getNickname())
-                    .statusMessage(socialUser.getStatusMessage())
-                    .accessToken(accessToken.getToken())
-                    .isFirst(socialLoginResultData.isFirst())
-                    .build();
-
-            log.info("social 로그인 성공 후 반환 값 : {}", socialLoginData);
-            int cookieMaxAge = (int) refreshTokenExpiry / 60;
-
-            CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
-            CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
@@ -218,7 +195,102 @@ public class OAuthService {
             log.info("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
             log.info(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
-            user = userRepository.findByEmailAndType(oAuth2Attribute.getEmail(), provider.toUpperCase()).orElse(null);
+
+            socialLoginResultData = checkSocialUserInfoFromDB(oAuth2Attribute.getEmail(), provider);
+        } catch (UnAuthorizedException e) {
+            log.error("로그인 한 회원 status : {}", e.getMessage());
+            throw new UnAuthorizedException(e.getMessage());
+        } catch (IOException | ParseException e) {
+            log.error(e.getMessage());
+        }
+        return socialLoginResultData;
+    }
+
+    public static String parseToShortUUID(String uuid) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(uuid.getBytes(StandardCharsets.UTF_8));
+            BigInteger number = new BigInteger(1, digest);
+            StringBuilder sb = new StringBuilder(number.toString(36));
+
+            while (sb.length() < 10) {
+                sb.insert(0, '0');
+            }
+
+            return sb.substring(0, 10);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not found", e);
+        }
+    }
+
+    public TwitterRedirectData getTwitterRequestToken() {
+
+        log.info("트위터 request token 얻으러 들어옴.");
+
+        // spring에서 twitter api를 사용하기 위해 oauth1 타입의 트위터 연결 생성
+        OAuth1Operations oAuth1Operations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
+
+        // 이메일 정보를 받아오기 위해 파라미터 설정
+        OAuth1Parameters params = new OAuth1Parameters();
+        params.set("include_email", "true");
+
+        // 사용자 인증 후 리다이렉트할 주소를 담아서 request token 요청하여 받아옴.
+        OAuthToken requestToken = oAuth1Operations.fetchRequestToken(TWITTER_REDIRECT_URI, params);
+
+        // request token을 담아서 사용자 인증 url 생성(트위터 로그인 화면창)
+        String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
+
+
+        TwitterRedirectData twitterRedirectData = TwitterRedirectData.builder().redirectUrl(authenticationUrl).build();
+
+        return twitterRedirectData;
+    }
+
+    @Transactional
+    public SocialLoginData getTwitterUserInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String oauthToken, String oauthVerifier, String provider) {
+
+        // spring에서 twitter api를 사용하기 위해 oauth1 타입의 트위터 연결 생성
+        OAuth1Operations oauthOperations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
+
+        // access token 받아올 때에도 request token이 필요하기 때문에 OAuthToken 객체 생성
+        OAuthToken requestToken = new OAuthToken(oauthToken, null);
+
+        // access token 받아옴
+        OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
+
+        // 이제 트위터에서 제공하는 api에 접근할 때 마다 항상 같이 가져가야 하는 친구들을 모두 담아서 TwitterTemplate 객체 생성
+        Twitter twitter = new TwitterTemplate(CONSUMER_KEY, CONSUMER_SECRET, accessToken.getValue(), accessToken.getSecret());
+
+        // 현재 인증된 사용자의 트위터 프로필 가져옴. -> 여기엔 이메일 없음.
+        TwitterProfile twitterProfile = twitter.userOperations().getUserProfile();
+
+        log.info("트위터 로그인 한 유저 정보 : {}", twitterProfile.getId());
+
+        // Get email address
+        RestTemplate restTemplate = ((TwitterTemplate) twitter).getRestTemplate();
+        ResponseEntity<JsonNode> response = restTemplate.getForEntity("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true", JsonNode.class);
+        JsonNode jsonResponse = response.getBody();
+        String email = jsonResponse.get("email").asText();
+
+        log.info("트위터 로그인 한 유저의 이메일 정보 : {}", email);
+
+        SocialLoginResultData socialLoginResultData = checkSocialUserInfoFromDB(email, provider);
+
+        SocialLoginData socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
+
+
+        return socialLoginData;
+
+    }
+
+    @Transactional
+    public SocialLoginResultData checkSocialUserInfoFromDB(String email, String provider) {
+
+        User user = userRepository.findByEmailAndType(email, provider.toUpperCase()).orElse(null);
+
+        SocialLoginResultData socialLoginResultData = null;
+
+        try {
 
             if (user != null) {
                 log.info(provider + "로 로그인을 한 적이 있는 user입니다.");
@@ -272,7 +344,7 @@ public class OAuthService {
                     shortUuid = parseToShortUUID(uuid.toString());
                 }
 
-                user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(oAuth2Attribute.getEmail()).nickname(nickname).build();
+                user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(email).nickname(nickname).build();
 
                 socialLoginResultData = SocialLoginResultData.builder()
                         .user(userRepository.saveAndFlush(user))
@@ -284,27 +356,71 @@ public class OAuthService {
         } catch (UnAuthorizedException e) {
             log.error("로그인 한 회원 status : {}", e.getMessage());
             throw new UnAuthorizedException(e.getMessage());
-        } catch (IOException | ParseException e) {
-            log.error(e.getMessage());
         }
         return socialLoginResultData;
     }
 
-    public static String parseToShortUUID(String uuid) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(uuid.getBytes(StandardCharsets.UTF_8));
-            BigInteger number = new BigInteger(1, digest);
-            StringBuilder sb = new StringBuilder(number.toString(36));
+    @Transactional
+    public SocialLoginData issueTokenCookie(SocialLoginResultData socialLoginResultData, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
-            while (sb.length() < 10) {
-                sb.insert(0, '0');
+        SocialLoginData socialLoginData = null;
+
+        try {
+            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
+
+            User socialUser = socialLoginResultData.getUser();
+
+            if (socialUser == null) {
+                throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
             }
 
-            return sb.substring(0, 10);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 algorithm not found", e);
+            if (socialLoginResultData.isFirst()) {
+
+                // 레디스에 유저 보낸 하트 정보 등록
+                migrationService.migrateUserSentHeart(socialUser.getId());
+
+                messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
+                        "하팅 개발진의 감사한 마음을 \n" +
+                        "모두 모아 첫 번째 하트를 \n" +
+                        "보냅니다.❤\uFE0F\uD83D\uDC9B\uD83D\uDC9A\uD83D\uDC99\uD83D\uDC9C\n" +
+                        "하트에 전달하고 싶은 마음, \n" +
+                        "감정을 담아 주고받아 보세요.\n" +
+                        "하팅!", "");
+            }
+
+            AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
+
+            AuthToken refreshToken = userService.makeRefreshToken();
+
+            log.debug("accessToken : {}", accessToken.getToken());
+            log.debug("refreshToken : {}", refreshToken.getToken());
+
+            ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+            String key = "userToken:" + socialUser.getId();
+            valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
+            log.info("refresh token redis에 저장했다?");
+
+
+            socialLoginData = SocialLoginData.builder()
+                    .userId(socialUser.getId())
+                    .nickname(socialUser.getNickname())
+                    .statusMessage(socialUser.getStatusMessage())
+                    .accessToken(accessToken.getToken())
+                    .isFirst(socialLoginResultData.isFirst())
+                    .build();
+
+            log.info("social 로그인 성공 후 반환 값 : {}", socialLoginData);
+            int cookieMaxAge = (int) refreshTokenExpiry / 60;
+
+            CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
+            CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        } catch (IllegalArgumentException e) {
+            log.error("로그인 실패 : {}", e.getMessage());
+            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+        } catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
         }
+        return socialLoginData;
     }
 
 }

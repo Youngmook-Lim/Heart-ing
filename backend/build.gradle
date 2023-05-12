@@ -54,6 +54,10 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // twitter
+    implementation group: 'org.springframework.social', name: 'spring-social-twitter', version: '1.1.2.RELEASE'
+
+
 }
 
 tasks.named('test') {

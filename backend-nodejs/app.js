@@ -34,17 +34,48 @@ const io = new Server(server, {
   },
 });
 
-// app.get("/socket.io.js", (req, res) => {
-//   res.sendFile(
-//     path.join(
-//       __dirname,
-//       "node_modules",
-//       "socket.io",
-//       "client-dist",
-//       "socket.io.js"
-//     )
-//   );
+//////////////////////////////
+//////////////////////////////
+// REDIS 부분
+// const redisAdapter = require("socket.io-redis");
+const { createClient } = require("redis");
+const { createAdapter } = require("@socket.io/redis-adapter");
+
+// const pubClient = createClient({
+//   host: "hearting-redis-cluster",
+//   port: 6380,
 // });
+const pubClient = createClient({
+  url: "redis://hearting-redis-cluster:6380",
+});
+const subClient = pubClient.duplicate();
+
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+});
+
+pubClient.on("error", (err) => {
+  console.error("Error with the Redis pubClient:", err);
+});
+
+subClient.on("error", (err) => {
+  console.error("Error with the Redis subClient:", err);
+});
+
+// io.adapter(createAdapter(pubClient, subClient));
+
+// console.log(pubClient);
+// console.log(subClient);
+
+// io.adapter(
+//   redisAdapter({
+//     host: "hearting-redis-cluster",
+//     port: 6380,
+//   })
+// );
+
+//////////////////////////////
+//////////////////////////////
 
 // 샘플 FE 코드 위치 설정
 app.use("/wssample", express.static(`${__dirname}/public`));

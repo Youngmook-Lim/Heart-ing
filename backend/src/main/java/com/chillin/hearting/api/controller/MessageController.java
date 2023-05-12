@@ -110,14 +110,15 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedReportId = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
-        if (returnedReportId == null) {
+        Data data = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
+        if (data == null) {
             throw new ReportFailException();
         }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("메시지가 성공적으로 신고되었습니다.")
+                .data(data)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);

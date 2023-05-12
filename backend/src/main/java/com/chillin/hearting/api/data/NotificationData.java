@@ -15,17 +15,13 @@ import java.time.LocalDateTime;
 public class NotificationData implements Data {
 
     private Long notificationId;
-    private String userId;
-    private String content;
+    private String heartName;
+    private String heartUrl;
+    private Long messageId;
     private LocalDateTime createdDate;
-    private LocalDateTime expiredDate;
     private String type;
 
     @Getter(onMethod_ = {@JsonProperty("isChecked")})
     @Setter(onMethod_ = {@JsonProperty("isChecked")})
     private boolean isChecked;
-
-    @Getter(onMethod_ = {@JsonProperty("isActive")})
-    @Setter(onMethod_ = {@JsonProperty("isActive")})
-    private boolean isActive;
 }

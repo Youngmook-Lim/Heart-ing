@@ -51,7 +51,6 @@ function ManualHomeIntro() {
         className={`mt-2 mb-6 ${
           scrollPosition > 100 ? "slide-in-bottom" : "collapse"
         }`}
-        ref={introRef}
       >
         <span className="text-xl flex justify-center text-white items-center textShadow ">
           <p className="mr-1 white text-hrtColorPink pr-2">
@@ -77,6 +76,7 @@ function ManualHomeIntro() {
         className={`mt-2 mb-4 ${
           scrollPosition > 330 ? "slide-in-bottom" : "collapse"
         }`}
+        ref={introRef}
       >
         <div className="flex flex-col items-center mx-8">
           <span className="text-lg flex justify-center text-white items-center textShadow my-2 ">
