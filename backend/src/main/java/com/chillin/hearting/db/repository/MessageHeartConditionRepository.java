@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 public interface MessageHeartConditionRepository extends JpaRepository<Message, Long> {
 
     @Query(value = "select count(*) from message " +
-            "where sender_id= :userId and heart_id= :heartId" +
+            "where sender_id= :userId and heart_id= :heartId " +
             "group by receiver_id " +
             "order by count(*) desc " +
             "limit 1", nativeQuery = true)
-    public int findMaxMessageCountToSameUser(@Param(value = "userId") String userId, @Param(value = "heartId") Long heartId);
+    public Integer findMaxMessageCountToSameUser(@Param(value = "userId") String userId, @Param(value = "heartId") Long heartId);
 }
