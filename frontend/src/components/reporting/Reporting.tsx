@@ -74,7 +74,7 @@ function Reporting({ onReportMessage }: propsType) {
                                 />
                                 </svg>
                             <span className="text-hrtColorNewRed cursor-default">주의</span>
-                            <div className="text-1xs text-hrtColorOutline my-1 cursor-default">
+                            <div className="text-2xs text-hrtColorOutline my-1 cursor-default">
                                 <p>신고 누적될 경우, 해당 계정은 정지됩니다.<br></br>
                                     접수 후에는 취소할 수 없으니 신중히 사용해주세요.</p>
                             </div>
