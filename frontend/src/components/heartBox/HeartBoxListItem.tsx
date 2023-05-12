@@ -25,7 +25,7 @@ function HeartBoxListItem({ ...props }) {
       <div className="flex-none">
         <img className="mx-auto my-auto" src={props.heartUrl} alt="heartIcon" />
       </div>
-      <div className="flex-auto text-xl">{props.context}</div>
+      <div className="flex-auto text-xl cursor-default">{props.context}</div>
       <div className="flex-none">
         <ResponseEmojiIcon id={props.emojiId} />
       </div>

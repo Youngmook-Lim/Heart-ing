@@ -11,7 +11,7 @@ function MessageModalButtonBoxClose() {
   };
 
   return (
-    <div className="modal-button" onClick={() => closeModal()}>
+    <div className="modal-button cursor-pointer" onClick={() => closeModal()}>
       닫기
     </div>
   );

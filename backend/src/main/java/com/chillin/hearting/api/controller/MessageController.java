@@ -62,9 +62,16 @@ public class MessageController {
         //////////////////
         // 밑에서 보낸 유저가 알림을 갱신해야하는지 판별하고 data.isCheckSender를 true로 바꿔줘야 함
         //////////////////
+        
+        // receiver 하트 획득 조건 체크
+        log.info("receiver 하트 획득 조건 체크");
+        heartService.updateReceivedHeartCount(sendMessageReq.getReceiverId(), sendMessageReq.getHeartId());
+        heartService.hasAcquirableHeart(sendMessageReq.getReceiverId());
 
+        // sender 하트 획득 조건 체크 + 알림 필요한지 체크
+        log.info("sender 하트 획득 조건 체크");
         if (user != null) {
-            heartService.updateHeartCount(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
+            heartService.updateSentHeartCount(sendMessageReq.getSenderId(), sendMessageReq.getHeartId());
             if (heartService.hasAcquirableHeart(sendMessageReq.getSenderId())) {
                 data.setCheckSender(true);
             }
@@ -110,14 +117,15 @@ public class MessageController {
             throw new UnAuthorizedException();
         }
 
-        Long returnedReportId = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
-        if (returnedReportId == null) {
+        Data data = messageService.reportMessage(messageId, user.getId(), reportReq.getContent());
+        if (data == null) {
             throw new ReportFailException();
         }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(SUCCESS)
                 .message("메시지가 성공적으로 신고되었습니다.")
+                .data(data)
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);

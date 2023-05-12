@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.EmojiData;
+import com.chillin.hearting.api.data.ReportData;
 import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
@@ -120,6 +121,8 @@ public class MessageService {
                 .user(receiver)
                 .content(NOTIFICATION_MESSAGE_SEND_MESSAGE)
                 .type("R")
+                .heart(heart)
+                .message(message)
                 .build();
 
         notificationRepository.save(notification);
@@ -160,12 +163,19 @@ public class MessageService {
     }
 
     @Transactional
-    public Long reportMessage(long messageId, String userId, String content) {
+    public ReportData reportMessage(long messageId, String userId, String content) {
 
         // Check if message, reportedUser, reporter exist
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
-        User reportedUser = userRepository.findById(message.getSender().getId()).orElseThrow(UserNotFoundException::new);
         User reporter = userRepository.findById(message.getReceiver().getId()).orElseThrow(UserNotFoundException::new);
+        User reportedUser;
+        try {
+            reportedUser = userRepository.findById(message.getSender().getId()).orElseThrow(UserNotFoundException::new);
+        } catch (NullPointerException e) {
+            reportedUser = null;
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException();
+        }
 
         // Check if userId matches the receiverId
         if (!message.getReceiver().getId().equals(userId)) {
@@ -180,8 +190,13 @@ public class MessageService {
         // Update message
         message.reportMessage();
 
-        // Update user and add to BlockedUser if necessary
 
+        // If reportedUser is not a logged in user
+        if (reportedUser == null) {
+            return ReportData.builder().isLoggedInUser(false).build();
+        }
+
+        // Update user and add to BlockedUser if necessary
         reportedUser.reportUser();
 
         int reportedCnt = reportedUser.getReportedCount();
@@ -210,7 +225,7 @@ public class MessageService {
 
         log.info(messageId + " 메시지가 신고되었습니다. 신고내역의 ID는 " + report.getId() + " 입니다.");
 
-        return report.getId();
+        return ReportData.builder().isLoggedInUser(true).build();
     }
 
     @Transactional
@@ -238,6 +253,8 @@ public class MessageService {
                     .user(message.getSender())
                     .content(NOTIFICATION_MESSAGE_EMOJI)
                     .type("E")
+                    .heart(message.getHeart())
+                    .message(message)
                     .build();
 
             notificationRepository.save(notification);

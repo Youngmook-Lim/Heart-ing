@@ -15,7 +15,7 @@ function HeartGuideDetailInfoAcqConditionItem({
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex items-center cursor-default">
         {condition.heartId ? (
           <img
             className="w-6 mr-2"

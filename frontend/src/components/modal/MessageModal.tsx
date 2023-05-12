@@ -1,4 +1,5 @@
 import React from "react";
+import { AxiosError } from 'axios';
 import { useState, useEffect } from "react";
 
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
@@ -8,6 +9,7 @@ import {
   isOpenEmojiListAtom,
   isSelectedEmojiIdAtom,
   isSelectedEmojiUrlAtom,
+  isOpenReportingAtom,
 } from "../../atoms/messageAtoms";
 
 import {
@@ -25,17 +27,20 @@ import {
   getMessageDetail,
   getSentMessageDetailApi,
   responseHeartApi,
+  reportMessageApi,
+  deleteTemporaryMessageApi,
 } from "../../features/api/messageApi";
 import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 
 function MessageModal({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
-  const [isOpenEmojiList, setIsOpenEmojiList] =
-    useRecoilState(isOpenEmojiListAtom);
-  const setIsSelectedEmojiUrl = useSetRecoilState(isSelectedEmojiUrlAtom);
-  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom);
+  const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
+  const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
+  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
 
+  const setIsOpenReporting = useSetRecoilState(isOpenReportingAtom)
+  
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
   // selectedMessageId로 상세 메시지 정보 가져오기
@@ -72,6 +77,45 @@ function MessageModal({ ...props }) {
       }
     }
   }
+
+  async function onDeleteHandler() {
+    const status = await deleteTemporaryMessageApi(selectedMessageId);
+      if (status === "success") {
+        alert("메세지를 삭제했습니다");
+        setReadMessageAtom(false);
+    }
+  } 
+
+  //신고하기 api
+  async function reportMessage(content: string) {
+    const body: string = content
+
+    const data = await reportMessageApi(selectedMessageId, body)
+    if (data.status === 'success') {
+        if (window.confirm("신고가 정상적으로 요청 되었습니다. 해당 메세지를 삭제하시겠습니까?")) {
+          onDeleteHandler()
+        }
+        setIsOpenReporting(false);
+      } else {
+      if (data && (data as AxiosError).response?.status === 400){
+        alert("해당 메세지는 이미 신고 되었습니다.")
+      } else if (data && (data as AxiosError).response?.status === 401){
+        alert("신고의 권한이 없습니다.")
+      } else {
+        alert("신고하기가 실패했습니다. 나중에 다시 시도해주세요.")
+      }
+      setIsOpenReporting(false)
+    }
+  }
+    
+    useEffect(() => {
+      // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
+      if (props.mode === "sent") {
+        getSentMessageDetail(selectedMessageId);
+        
+      } else {
+        getRecivedMessages(selectedMessageId);
+      }
 
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
@@ -150,8 +194,10 @@ function MessageModal({ ...props }) {
               mode={props.mode}
             />
             <MessageModalTextbox
+              mode={props.mode}
               title={messageData.title}
               content={messageData.content}
+              onReportMessage={reportMessage}
             />
             <div className="absolute top-40 w-full h-auto">
               {isOpenEmojiList ? (
