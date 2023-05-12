@@ -32,7 +32,6 @@ function App() {
   
   if (isLogin) {
     socket = io("https://heart-ing.com", { path: "/ws" });
-    console.log('콘솔연결~')
   } else {
     socket = null
   }
