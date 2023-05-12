@@ -10,7 +10,7 @@ function MessageModalButtonBoxEmoji() {
   }
 
   return (
-        <div className={`border-2 rounded border-hrtColorOutline w-10 h-10 leading-9 flex-none p-1 justify-center items-center ${
+        <div className={`cursor-pointer border-2 rounded border-hrtColorOutline w-10 h-10 leading-9 flex-none p-1 justify-center items-center ${
           isOpenEmojiList ? "bg-hrtColorPink" : "bg-hrtColorYellow"
         }`}
           onClick={onSetIsOpenEmojiList}>

@@ -147,3 +147,13 @@ export async function responseHeartApi({
     return null;
   }
 }
+
+export async function reportMessageApi(messageId: number, body: string) {
+  try {
+    const res = await axios.post(`api/v1/messages/${messageId}/reports`, body);
+    const data = res.data;
+    return data;
+  } catch (err) {
+    return err;
+  }
+}

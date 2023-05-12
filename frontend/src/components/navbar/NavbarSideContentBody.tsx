@@ -68,7 +68,7 @@ function NavbarSideContentBody({ ...props }) {
             프로필설정
           </NavLink>
           <div
-            className="block text-left text-xl my-4"
+            className="block text-left text-xl my-4 cursor-pointer"
             onClick={onLogoutHandler}
           >
             로그아웃
@@ -78,7 +78,7 @@ function NavbarSideContentBody({ ...props }) {
         <div className="mb-3 mx-3 p-2">
           <NavLink
             to="/"
-            className="block text-left text-xl my-4"
+            className="block text-left text-xl my-4 cursor-pointer"
             onClick={props.onOpenHandler}
           >
             로그인

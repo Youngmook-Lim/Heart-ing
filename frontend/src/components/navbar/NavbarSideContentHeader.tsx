@@ -19,7 +19,7 @@ function NavbarSideContentHeader({ ...props }) {
       {isLogin ? (
         <div>
           <div className="flex justify-between align-middle p-2">
-            <span onClick={onMyBoardHandler} className="text-2xl px-2 mr-2">
+            <span onClick={onMyBoardHandler} className="text-2xl px-2 mr-2 cursor-pointer">
               {userNickname}
             </span>
             {/* <button onClick={onSettingHandler}>

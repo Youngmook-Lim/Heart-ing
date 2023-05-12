@@ -22,7 +22,7 @@ function HeartGuideListItem({
   return (
     <div onClick={() => openDetailInfo()} className="p-2">
       <img className="mx-auto" src={heartInfo.heartUrl} alt="heartIcon" />
-      <div>{heartInfo.name}</div>
+      <div className="cursor-default">{heartInfo.name}</div>
     </div>
   );
 }
