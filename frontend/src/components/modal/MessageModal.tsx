@@ -165,7 +165,7 @@ function MessageModal({...props}) {
               mode={props.mode}
             />
             <MessageModalTextbox
-              mode={mode}
+              mode={props.mode}
               title={messageData.title}
               content={messageData.content}
               onReportMessage={reportMessage}
