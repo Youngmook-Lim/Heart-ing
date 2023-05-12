@@ -39,7 +39,7 @@ function MessageModal({ ...props }) {
   const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
   const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
 
-  const setIsOpenReporting = useSetRecoilState(isOpenReportingAtom)
+  const [isOpenReporting, setIsOpenReporting] = useRecoilState(isOpenReportingAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
@@ -107,6 +107,10 @@ function MessageModal({ ...props }) {
       setIsOpenReporting(false)
     }
   }
+
+    const onOpenReporting = () => {
+      setIsOpenReporting(true)
+    }
     
     useEffect(() => {
       // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
@@ -193,6 +197,7 @@ function MessageModal({ ...props }) {
               expiredDate={messageData.expiredDate}
               mode={props.mode}
             />
+            { props.mode === "sent" ? null : <div className="text-2xs text-right text-hrtColorNewGray cursor-pointer" onClick={onOpenReporting}>신고하기</div> }
             <MessageModalTextbox
               mode={props.mode}
               title={messageData.title}

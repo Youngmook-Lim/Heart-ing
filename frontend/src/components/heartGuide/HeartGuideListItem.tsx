@@ -21,8 +21,12 @@ function HeartGuideListItem({
 
   return (
     <div onClick={() => openDetailInfo()} className="p-2">
-      <img className="mx-auto" src={heartInfo.heartUrl} alt="heartIcon" />
-      <div className="cursor-default">{heartInfo.name}</div>
+        <div className="flex justify-center relative">
+        <img className="mx-auto" src={heartInfo.heartUrl} alt="heartIcon" />
+        { heartInfo.isAcq && heartInfo.isLocked ? <div className="bg-hrtColorNewRed w-4	h-4	mx-4 my-3 rounded-full border-2	border-white absolute left-1/2 bottom-1/2	"></div> : null }
+        </div>
+      <div className="cursor-default">
+        {heartInfo.heartId === 14 && heartInfo.isLocked ? "??" : heartInfo.name}</div>
     </div>
   );
 }
