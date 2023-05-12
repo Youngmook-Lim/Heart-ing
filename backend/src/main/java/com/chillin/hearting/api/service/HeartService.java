@@ -39,12 +39,13 @@ public class HeartService {
     private static final String HEART_TYPE_ALL = "ALL";
 
     private static final int HEART_RAINBOW_MAX_VALUE = 1;
-    private static final int HEART_NOIR_MAX_VALUE = 2;
     private static final int HEART_MINCHO_MAX_VALUE = 5;
     private static final int HEART_SUNNY_MAX_VALUE = 5;
+    private static final int HEART_READING_GLASSES_MAX_VALUE = 3;
+    private static final int HEART_ICECREAM_MAX_VALUE = 3;
     private static final int HEART_SHAMROCK_MAX_VALUE = 3;
     private static final int HEART_FOUR_LEAF_MAX_VALUE = 4;
-    private static final int HEART_READING_GLASSES_MAX_VALUE = 3;
+    private static final int HEART_NOIR_MAX_VALUE = 2;
 
     private static final HashSet<Long> lockedHeartSet = new HashSet<>(Arrays.asList(4L, 5L));
 
@@ -195,7 +196,7 @@ public class HeartService {
                     heartDetailData.setIsLocked(false);
                 } else {
                     if (isAcquiredSpecialHeart(userId, heartId, true)) {
-                        log.info("{}님의 {}하트는 획득 가능합니다.");
+                        log.info("{}님의 {}하트는 획득 가능합니다.", userId, heartId);
                         heartDetailData.setIsAcq(true);
                     }
                     List<HeartConditionData> conditionList = heartAcqConditions;
@@ -254,9 +255,11 @@ public class HeartService {
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         String heartName = (String) hashOperations.get(KEY_HEART_INFO_PREFIX + hId, "name");
         User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Heart findHeart = heartRepository.findById(hId).orElseThrow(HeartNotFoundException::new);
         notificationRepository.save(Notification.builder()
                 .user(findUser)
                 .content(heartName + "하트를 획득할 수 있습니다!")
+                .heart(findHeart)
                 .type("H")
                 .build());
     }
@@ -310,7 +313,7 @@ public class HeartService {
         ListOperations<String, Object> listOperations = redisTemplate.opsForList();
         HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
         List<Object> defaultHeartList = null;
-        int currentValue = 0;
+        Integer currentValue = 0;
         if (isSave) {
             heartAcqConditions = new ArrayList<>();
         }
@@ -357,6 +360,7 @@ public class HeartService {
                 // 돋보기 하트 - 특정인에게 핑크 하트 3개 보내기
                 String pinkHeartId = "4";
                 currentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId, Long.parseLong(pinkHeartId));
+                if (currentValue == null) currentValue = 0;
                 if (currentValue < HEART_READING_GLASSES_MAX_VALUE) {
                     isAcquirable = false;
                     log.info("돋보기 하트를 획득 불가 - {}번 하트 조건 미충족", pinkHeartId);
@@ -369,12 +373,12 @@ public class HeartService {
                 // 아이스크림 하트  - 햇살 하트 3개 받기
                 String sunnyHeartId = "9";
                 currentValue = (Integer) hashOperations.get(KEY_RECEIVED_HEARTS_PREFIX + userId, sunnyHeartId);
-                if (currentValue < HEART_SUNNY_MAX_VALUE) {
+                if (currentValue < HEART_ICECREAM_MAX_VALUE) {
                     isAcquirable = false;
                     log.info("아이스크림 하트를 획득 불가 - {}번 하트 조건 미충족", sunnyHeartId);
                 }
                 if (isSave) {
-                    saveHeartCondition(sunnyHeartId, currentValue, HEART_SUNNY_MAX_VALUE);
+                    saveHeartCondition(sunnyHeartId, currentValue, HEART_ICECREAM_MAX_VALUE);
                 }
                 break;
             case 12:
