@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hearting-websocket
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: hearting-websocket
@@ -31,3 +31,7 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

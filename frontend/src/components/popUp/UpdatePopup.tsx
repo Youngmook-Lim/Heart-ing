@@ -14,7 +14,7 @@ function UpdatePopup() {
                     </div>
                     <div className="flex justify-center">
                         <div className="text-left py-2">
-                            <p className="text-xl">v2.0.10 업데이트 사항</p>
+                            <p className="text-xl">v2.1.0 업데이트 사항</p>
                             <br></br>
                             <p>• 메세지 보내기 버그 해결</p>
                             <p>• 행성하트 지급 완료</p>

@@ -66,14 +66,14 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="/*" element={<ErrorPage />} />
-          <Route path="/heartboard/user" element={<HeartBoard />} />
+          <Route path="/heartboard/user" element={<HeartBoard socket={socket}/>} />
           <Route path="/heartguide" element={<HeartGuide />} />
           <Route path="/heartwriting" element={<Heartwriting socket={socket}/>} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
           <Route path="/oauth2/code/google" element={<Google />} />
           <Route path="/manual" element={<Manual />} />
-          <Route path="/receivedheart" element={<ReceivedHeart />} />
-          <Route path="/sentheart" element={<SentHeart />} />
+          <Route path="/receivedheart" element={<ReceivedHeart socket={socket}/>} />
+          <Route path="/sentheart" element={<SentHeart socket={socket}/>} />
           <Route path="/profilesettings" element={<Settings />} />
         </Routes>
       </BrowserRouter>

@@ -17,8 +17,10 @@ public class SendMessageData implements Data {
     private String heartUrl;
 
     @Getter(onMethod_ = {@JsonProperty("isRead")})
+    @Setter(onMethod_ = {@JsonProperty("isRead")})
     private boolean isRead;
 
     @Getter(onMethod_ = {@JsonProperty("isCheckSender")})
+    @Setter(onMethod_ = {@JsonProperty("isCheckSender")})
     private boolean isCheckSender;
 }
