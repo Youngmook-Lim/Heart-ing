@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.EmojiData;
+import com.chillin.hearting.api.data.ReportData;
 import com.chillin.hearting.api.data.SendMessageData;
 import com.chillin.hearting.db.domain.*;
 import com.chillin.hearting.db.repository.*;
@@ -160,11 +161,11 @@ class MessageServiceTest {
         doReturn(Report.builder().id(1L).build()).when(reportRepository).save(any(Report.class));
 
         // when
-        Long reportId = messageService.reportMessage(messageId, receiverId, content);
+        ReportData data = messageService.reportMessage(messageId, receiverId, content);
 
         // then
-        assertNotNull(reportId);
-        assertEquals(1L, reportId);
+        assertNotNull(data);
+        assertTrue(data.isLoggedInUser());
 
         // verify
         verify(messageRepository, times(1)).findById(messageId);
