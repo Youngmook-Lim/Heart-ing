@@ -356,6 +356,7 @@ public class HeartService {
                 if (isSave) {
                     saveHeartCondition(yellowHeartId, currentValue, HEART_SUNNY_MAX_VALUE);
                 }
+                break;
             case 10:
                 // 돋보기 하트 - 특정인에게 핑크 하트 3개 보내기
                 String pinkHeartId = "4";
