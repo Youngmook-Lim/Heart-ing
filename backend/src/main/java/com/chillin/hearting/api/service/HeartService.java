@@ -333,6 +333,7 @@ public class HeartService {
                         saveHeartCondition(defaultHeartId, currentValue, HEART_RAINBOW_MAX_VALUE);
                     }
                 }
+                break;
             case 8:
                 // 민초 하트 - 파란색 하트 5개 보내기
                 String blueHeartId = "2";
