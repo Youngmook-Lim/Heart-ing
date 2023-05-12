@@ -57,22 +57,15 @@ export interface ITotalHeartPropsTypes {
   onGetTotalHeart: () => Promise<number>;
 }
 
-export interface IGetMessageListTypes {
-  content: string|null;
+export interface IGetNotificationListTypes {
+  notificationId: number;
+  userId: number;
+  content: string;
   createdDate: string;
-  emojiId: number;
-  emojiName: string;
-  emojiUrl: string;
   expiredDate: string;
-  heartId: number;
-  heartName: string;
-  heartUrl: string;
-  isRead: boolean;
-  isReported: boolean;
-  isStored: boolean;
-  messageId: number;
-  shortDescrption: string;
-  title: string;
+  type: string;
+  isChecked: boolean;
+  isActive: boolean;
 }
 
 export interface IResponseHeartTypes {
