@@ -318,10 +318,12 @@ public class HeartService {
             heartAcqConditions = new ArrayList<>();
         }
 
-        boolean isAcquirable = true;
+
+        boolean isAcquirable = false;
         switch (heartId.intValue()) {
             case 7:
                 // 무지개 하트 - 모든 기본하트 1개 보내기
+                isAcquirable = true;
                 defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
                 for (Object defaultHeartId : defaultHeartList) {
                     currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString());
@@ -336,6 +338,7 @@ public class HeartService {
                 break;
             case 8:
                 // 민초 하트 - 파란색 하트 5개 보내기
+                isAcquirable = true;
                 String blueHeartId = "2";
                 currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, blueHeartId);
                 if (currentValue < HEART_MINCHO_MAX_VALUE) {
@@ -348,6 +351,7 @@ public class HeartService {
                 break;
             case 9:
                 // 햇살 하트 - 노랑 하트 5개 보내기
+                isAcquirable = true;
                 String yellowHeartId = "1";
                 currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, yellowHeartId);
                 if (currentValue < HEART_SUNNY_MAX_VALUE) {
@@ -360,6 +364,7 @@ public class HeartService {
                 break;
             case 10:
                 // 돋보기 하트 - 특정인에게 핑크 하트 3개 보내기
+                isAcquirable = true;
                 String pinkHeartId = "4";
                 currentValue = messageHeartConditionRepository.findMaxMessageCountToSameUser(userId, Long.parseLong(pinkHeartId));
                 if (currentValue == null) currentValue = 0;
@@ -373,6 +378,7 @@ public class HeartService {
                 break;
             case 11:
                 // 아이스크림 하트  - 햇살 하트 3개 받기
+                isAcquirable = true;
                 String sunnyHeartId = "9";
                 currentValue = (Integer) hashOperations.get(KEY_RECEIVED_HEARTS_PREFIX + userId, sunnyHeartId);
                 if (currentValue < HEART_ICECREAM_MAX_VALUE) {
@@ -385,6 +391,7 @@ public class HeartService {
                 break;
             case 12:
                 // 세잎클로버 하트 - 초록 하트 3개 보내기
+                isAcquirable = true;
                 String greenHeartId = "3";
                 currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, greenHeartId);
                 if (currentValue < HEART_SHAMROCK_MAX_VALUE) {
@@ -397,6 +404,7 @@ public class HeartService {
                 break;
             case 13:
                 // 네잎클로버 하트 - 세잎클로버 하트 4개 받기
+                isAcquirable = true;
                 String shamrockHeartId = "12";
                 currentValue = (Integer) hashOperations.get(KEY_RECEIVED_HEARTS_PREFIX + userId, shamrockHeartId);
                 if (currentValue < HEART_FOUR_LEAF_MAX_VALUE) {
@@ -409,6 +417,7 @@ public class HeartService {
                 break;
             case 14:
                 // 질투의 누아르 하트 - 모든 기본하트 2개 보내기
+                isAcquirable = true;
                 defaultHeartList = listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
                 for (Object defaultHeartId : defaultHeartList) {
                     currentValue = (Integer) hashOperations.get(KEY_SEND_HEARTS_PREFIX + userId, defaultHeartId.toString());
