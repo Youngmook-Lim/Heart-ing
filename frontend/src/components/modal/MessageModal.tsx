@@ -88,9 +88,9 @@ function MessageModal({ mode }: IMessageModalTypes) {
 
     const data = await reportMessageApi(selectedMessageId, body)
     if (data.status === 'success') {
-      if (window.confirm("신고가 정상적으로 접수 되었습니다. 해당 메세지를 삭제하시겠습니까?")) {
-        onDeleteHandler()
-      }
+        if (window.confirm("신고가 정상적으로 요청 되었습니다. 해당 메세지를 삭제하시겠습니까?")) {
+          onDeleteHandler()
+        }
         setIsOpenReporting(false);
       } else {
       if (data && (data as AxiosError).response?.status === 400){
