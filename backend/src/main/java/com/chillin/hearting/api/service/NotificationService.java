@@ -29,7 +29,7 @@ public class NotificationService {
     @Transactional
     public NotificationListData getNotifications(String userId) {
         List<Notification> notificationList = notificationRepository.findByUserIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
-        System.out.println(notificationList.get(0));
+//        System.out.println(notificationList.get(0));
         NotificationListData notificationListData = NotificationListData.builder().notificationList(new ArrayList<>()).build();
 
         for (Notification n : notificationList) {
