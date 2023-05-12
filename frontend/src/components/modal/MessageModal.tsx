@@ -65,8 +65,10 @@ function MessageModal({...props}) {
     const data = await responseHeartApi(EmojiInfo)
     if (data.status === 'success') {
       setIsSelectedEmojiUrl(() => data.data.emojiUrl)
-      if (props.socket && props.socket.connected) {
-        props.socket.emit("send-message", data.data.senderId, data.data);
+      if (data.data.senderId) {
+        if (props.socket && props.socket.connected) {
+          props.socket.emit("send-message", data.data.senderId, data.data);
+        }
       }
     }
   }
