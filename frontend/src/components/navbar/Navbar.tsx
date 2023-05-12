@@ -47,6 +47,7 @@ function Navbar({socket}:{socket:Socket|null}) {
         if (data.data.notificationList[i].isChecked) {
           notiData.trueList[i] = data.data.notificationList[i];
         } else {
+          setIsNew(true)
           notiData.falseList[i] = data.data.notificationList[i];
         }
       }
@@ -78,7 +79,7 @@ function Navbar({socket}:{socket:Socket|null}) {
     if (isLogin) {
       getData();
     }
-  }, [isLogin]);
+  }, []);
 
   return (
     <div>
