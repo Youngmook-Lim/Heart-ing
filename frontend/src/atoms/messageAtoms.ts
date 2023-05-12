@@ -34,3 +34,8 @@ export const isSelectedEmojiUrlAtom = atom<string>({
   key: "isSelectedEmojiUrl",
   default: ""
 })
+
+export const isOpenReportingAtom = atom<boolean>({
+  key: 'isOpenReporting',
+  default: false,
+});

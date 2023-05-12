@@ -66,7 +66,7 @@ function HeartItem({ ...props }) {
         </div>
       )}
 
-      <div className="px-2 leading-5 tracking-tight whitespace-pre-line">
+      <div className="px-2 leading-5 tracking-tight whitespace-pre-line cursor-default">
         {" "}
         {props.context}{" "}
       </div>
