@@ -40,7 +40,15 @@ function NavbarNotificationItem({...props}) {
   return (
     <div className='text-sm ml-2 mb-1' onClick={props.onClickHandler}>
       <img src={props.messageInfo.heartUrl} alt='heart' className='w-4 h-4 mr-1 inline'/>
-      <span>{props.messageInfo.heartName} 하트를 받았습니다</span>
+      {(function() {
+        if (props.messageInfo.type === 'R') {
+          return (<span>{props.messageInfo.heartName} 하트를 받았어요!</span>)
+        } else if (props.messageInfo.type === 'E') {
+          return (<span>새로운 반응을 받았어요!</span>)
+        } else {
+          return (<span>새로운 하트를 획득하러 가요!</span>)
+        }
+      })()}
       <span className='text-hrtColorGray'> {timer()}</span>
     </div>
   )

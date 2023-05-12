@@ -54,13 +54,15 @@ function Heartwriting({socket}:{socket:Socket|null}) {
         title: title,
         content: content,
       };
+      console.log(messageInfo)
         
       const data = await sendMessageApi(messageInfo);
-      // console.log('왜 에러', data)
       if (data.status === "success") {
         if (socket && socket.connected) {
             socket.emit("send-message", userId, data.data);
-            // console.log("알람보내용");
+            if (data.data.isCheckSender) {
+              socket.emit("send-message", getUserInfo().userId, data.data);
+            }
           } else {
             const anonymousSocket = io("https://heart-ing.com", { path: "/ws" })
             anonymousSocket.on("connect", () => {

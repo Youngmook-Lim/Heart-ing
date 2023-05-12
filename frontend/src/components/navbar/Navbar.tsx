@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 import NavbarSide from "./NavbarSide";
 import NavbarSideContent from "./NavbarSideContent";
@@ -10,7 +10,7 @@ import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
-import { getReceived } from "../../features/api/messageApi";
+import { getNotificationApi, readNotificationApi } from "../../features/api/userApi";
 
 interface MyObject {
   [key: string]: any;
@@ -24,7 +24,6 @@ function Navbar({socket}:{socket:Socket|null}) {
   const [notiIsOpen, setNotiIsOpen] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const [receivedList, setReceivedList] = useState({});
-  const myId = getUserInfo().userId;
 
   const onNotiHandler = (e: MouseEvent) => {
     setNotiIsOpen(!notiIsOpen);
@@ -39,27 +38,26 @@ function Navbar({socket}:{socket:Socket|null}) {
     navigate("/");
   };
 
-  const getData = useCallback(async (userId: string | null) => {
-    if (!userId) return;
-    // console.log(userId);
-    const data = await getReceived(userId);
-    if (data.status === "success") {
+  const getData = async () => {
+    if (!isLogin) return;
+    const data = await getNotificationApi();
+    if (data.status === 'success') {
       const notiData: MyObject = { trueList: [], falseList: [] };
-      const listLength = Math.min(
-        20,
-        Object.keys(data.data.messageList).length
-      );
-      for (let i = 0; i < listLength; i++) {
-        if (data.data.messageList[i].isRead) {
-          notiData.trueList[i] = data.data.messageList[i];
+      for (let i = 0; i < Object.keys(data.data.notificationList).length; i++) {
+        if (data.data.notificationList[i].isChecked) {
+          notiData.trueList[i] = data.data.notificationList[i];
         } else {
-          setIsNew(true);
-          notiData.falseList[i] = data.data.messageList[i];
+          setIsNew(true)
+          notiData.falseList[i] = data.data.notificationList[i];
         }
       }
       setReceivedList(notiData);
     }
-  }, []);
+  };
+
+  const readNotification = async (notificationId: number) => {
+    const data = await readNotificationApi(notificationId);
+  }
 
   const onSocket = () => {
     if (socket) {
@@ -67,7 +65,7 @@ function Navbar({socket}:{socket:Socket|null}) {
         socket.emit("join-room", getUserInfo().userId);
         socket.on("receive-message", (data) => {
           // console.log("받은 메시지:", data);
-          getData(myId);
+          getData();
         });
       }
       socket.on("disconnect", () => {
@@ -79,9 +77,9 @@ function Navbar({socket}:{socket:Socket|null}) {
   useEffect(() => {
     onSocket();
     if (isLogin) {
-      getData(myId);
+      getData();
     }
-  }, [isLogin]);
+  }, []);
 
   return (
     <div>
@@ -116,6 +114,7 @@ function Navbar({socket}:{socket:Socket|null}) {
                 <NavbarNotification
                   onNotiHandler={onNotiHandler}
                   setNotiIsOpen={setNotiIsOpen}
+                  readNotification={readNotification}
                   notiData={receivedList}
                 />
               ) : null}
