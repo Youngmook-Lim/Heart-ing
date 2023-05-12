@@ -31,7 +31,11 @@ function Reporting({ onReportMessage }: propsType) {
 
     const onReportMessageHandler = async() => {
         if (content !== null) {
-            await onReportMessage(content)
+            if (window.confirm("정말 신고하시겠습니까?")) {
+                await onReportMessage(content)
+            } else {
+                onCloseReporting()
+            }
         } else {
             alert("신고사유를 입력해주세요.")
         }

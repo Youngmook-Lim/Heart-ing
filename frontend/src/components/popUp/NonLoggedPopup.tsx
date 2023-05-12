@@ -7,8 +7,8 @@ function NonLoggedPopup() {
     return (
         <>
             <div className="h-screen w-full fixed left-0 top-0 bg-black bg-opacity-30 text-center z-40">
-                <div className="flex flex-col justify-end h-full">
-                    <div className="container bg-white mx-auto maxFullHeight">
+                <div className="flex flex-col justify-end h-screen">
+                    <div className="container pb-10 bg-white mx-auto maxFullHeight">
                     <div className="h-12 bg-hrtColorNewPurple">
                         <div className="text-3xl">
                             <p className="text-hrtColorYellow pt-1">하팅! 시작하기</p>

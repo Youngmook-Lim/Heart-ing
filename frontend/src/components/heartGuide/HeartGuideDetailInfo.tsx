@@ -4,6 +4,7 @@ import { useSetRecoilState } from "recoil";
 import { openDetailInfoAtom } from "../../atoms/guideAtoms";
 import { IHeartDetailInfoTypes } from "../../types/guideType";
 import { acquireHeart } from "../../features/api/guideApi";
+import { ReactComponent as HeartLock } from "../../assets/images/pixel/heart/heart_lock_1.svg";
 import HeartGuideDetailInfoAcqCondition from "./HeartGuideDetailInfoAcqCondition";
 import HeartGuideDetailInfoStory from "./HeartGuideDetailInfoStory";
 import ButtonIcon from "../common/ButtonIcon";
@@ -48,11 +49,14 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
             {heartDetailInfo && (
               <>
                 {heartDetailInfo.isLocked ? (
-                  <img
-                    className="w-2/6 mx-auto my-auto opacity-30"
+                  (heartDetailInfo.heartId === 14 ?
+                    <div className="flex justify-center items-center py-2"><HeartLock /> </div>
+                    :
+                    <img
+                    className="w-2/6 mx-auto my-auto opacity-20"
                     src={heartDetailInfo.heartUrl}
                     alt="heartIcon"
-                  />
+                  />) 
                 ) : (
                   <img
                     className="w-2/6 mx-auto my-auto"
@@ -60,10 +64,16 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
                     alt="heartIcon"
                   />
                 )}
-                <div className="text-2xl cursor-default">{heartDetailInfo.name}하트</div>
+                <div className="text-2xl cursor-default">
+                  {heartDetailInfo.heartId === 14 && heartDetailInfo.isLocked ? "??"
+                    :
+                  heartDetailInfo.name}
+                  하트</div>
                 <div className="mt-4">
                   <HeartGuideDetailInfoStory
                     heartStory={heartDetailInfo.longDescription}
+                    heartId={heartDetailInfo.heartId}
+                    isLocked={heartDetailInfo.isLocked}
                   />
                   <HeartGuideDetailInfoAcqCondition
                     acqCondition={heartDetailInfo.acqCondition}

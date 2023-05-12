@@ -15,7 +15,7 @@ function Home() {
   }
 
   const checkUpdateRead = () => {
-    const readUpdate = localStorage.getItem("readUpdate")
+    const readUpdate = localStorage.getItem("readNewUpdate")
     
     if (readUpdate === "true") {
       setIsUpdateShow(false)
