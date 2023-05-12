@@ -415,9 +415,9 @@ public class HeartService {
                         isAcquirable = false;
                         log.info("누아르 하트를 획득 불가 - {}번 하트 조건 미충족", defaultHeartId);
                     }
-                    if (isSave) {
-                        saveHeartCondition(defaultHeartId, currentValue, HEART_NOIR_MAX_VALUE);
-                    }
+//                    if (isSave) {
+//                        saveHeartCondition(defaultHeartId, currentValue, HEART_NOIR_MAX_VALUE);
+//                    }
                 }
                 break;
         }
