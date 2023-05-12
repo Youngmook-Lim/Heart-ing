@@ -121,6 +121,8 @@ public class MessageService {
                 .user(receiver)
                 .content(NOTIFICATION_MESSAGE_SEND_MESSAGE)
                 .type("R")
+                .heart(heart)
+                .message(message)
                 .build();
 
         notificationRepository.save(notification);
@@ -251,6 +253,8 @@ public class MessageService {
                     .user(message.getSender())
                     .content(NOTIFICATION_MESSAGE_EMOJI)
                     .type("E")
+                    .heart(message.getHeart())
+                    .message(message)
                     .build();
 
             notificationRepository.save(notification);

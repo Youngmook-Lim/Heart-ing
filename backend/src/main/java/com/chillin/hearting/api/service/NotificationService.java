@@ -2,6 +2,8 @@ package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.NotificationData;
 import com.chillin.hearting.api.data.NotificationListData;
+import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.Message;
 import com.chillin.hearting.db.domain.Notification;
 import com.chillin.hearting.db.repository.NotificationRepository;
 import com.chillin.hearting.exception.NotificationNotFoundException;
@@ -27,7 +29,7 @@ public class NotificationService {
     @Transactional
     public NotificationListData getNotifications(String userId) {
         List<Notification> notificationList = notificationRepository.findByUserIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
-
+        System.out.println(notificationList.get(0));
         NotificationListData notificationListData = NotificationListData.builder().notificationList(new ArrayList<>()).build();
 
         for (Notification n : notificationList) {
@@ -42,17 +44,23 @@ public class NotificationService {
     public void processNotification(Notification n, NotificationListData notificationListData) {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime expiredDate = n.getExpiredDate();
+
+        Heart heart = n.getHeart();
+        Message message = n.getMessage();
+        String heartName = heart != null ? heart.getName() : null;
+        String heartUrl = heart != null ? heart.getImageUrl() : null;
+        Long messageId = message != null ? message.getId() : null;
+
         if (expiredDate.isAfter(now)) {
             // Not yet expired
             NotificationData notificationData = NotificationData.builder()
                     .notificationId(n.getId())
-                    .userId(n.getUser().getId())
-                    .content(n.getContent())
+                    .heartName(heartName)
+                    .heartUrl(heartUrl)
+                    .messageId(messageId)
                     .type(n.getType())
                     .createdDate(n.getCreatedDate())
-                    .expiredDate(n.getExpiredDate())
-                    .isChecked(n.isChecked())
-                    .isActive(n.isActive()).build();
+                    .isChecked(n.isChecked()).build();
             notificationListData.getNotificationList().add(notificationData);
         } else {
             // Expired, need to persist to DB
