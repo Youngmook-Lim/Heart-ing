@@ -44,7 +44,7 @@ function NavbarNotificationItem({...props}) {
         if (props.messageInfo.type === 'R') {
           return (<span>{props.messageInfo.heartName} 하트를 받았어요!</span>)
         } else if (props.messageInfo.type === 'E') {
-          return (<span>{props.messageInfo.heartName} 하트에 반응을 받았어요!</span>)
+          return (<span>새로운 반응을 받았어요!</span>)
         } else {
           return (<span>새로운 하트를 획득하러 가요!</span>)
         }

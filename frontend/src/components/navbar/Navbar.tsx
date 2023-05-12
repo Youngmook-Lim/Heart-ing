@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 import NavbarSide from "./NavbarSide";
 import NavbarSideContent from "./NavbarSideContent";
@@ -10,7 +10,6 @@ import { isLoginAtom } from "../../atoms/userAtoms";
 import { getUserInfo } from "../../features/userInfo";
 import NavbarNotification from "./NavbarNotification";
 import Logo from "../../assets/images/logo/logo_line.png";
-import { getReceived } from "../../features/api/messageApi";
 import { getNotificationApi, readNotificationApi } from "../../features/api/userApi";
 
 interface MyObject {
@@ -25,7 +24,6 @@ function Navbar({socket}:{socket:Socket|null}) {
   const [notiIsOpen, setNotiIsOpen] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const [receivedList, setReceivedList] = useState({});
-  const myId = getUserInfo().userId;
 
   const onNotiHandler = (e: MouseEvent) => {
     setNotiIsOpen(!notiIsOpen);
