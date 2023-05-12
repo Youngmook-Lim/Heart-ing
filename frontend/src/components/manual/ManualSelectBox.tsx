@@ -17,7 +17,7 @@ function ManualSelectBox() {
         imgId: 1,
         name: "건의사항",
         content:
-          "하팅!을 이용하시면서 건의하시고 싶은 것이나 불편한 사항이 있다면 아래의 링크나 하팅 공식 sns로 건의사항을 보내주세요. 하팅!의 개발진들은 여러분의 불편함을 개선하고자 항상 노력하겠습니다:)",
+          "하팅!을 이용하시면서 건의하시고 싶은 것이나 불편한 사항이 있다면 설문 조사나 하팅 공식 sns로 건의사항을 보내주세요. 하팅!의 개발진들은 여러분의 불편함을 개선하고자 항상 노력하겠습니다:)",
       },
     ],
     [
@@ -25,13 +25,13 @@ function ManualSelectBox() {
         imgId: 2,
         name: "하트전달",
         content:
-          "상대방에게 전달하고싶은 감정하트를 선택한 후, 전달하고 싶은 메세지가 있다면 함께 보내보세요. 전달한 하트는 24시간만 유지됩니다!",
+          "상대방을 향한 감정을 선택한 후, 전달하고 싶은 메세지가 있다면 함께 보내보세요. 전달한 하트는 24시간만 유지됩니다!",
       },
       {
         imgId: 3,
         name: "보낸하트",
         content:
-          "내가 전달한 하트들을 확인해보세요! 내가 전달한 하트에 대한 반응을 알 수 있습니다. 그러나 보낸 메시지들도 24시간 뒤에 사라진다는 것을 주의하세요!",
+          "내가 보낸 하트들을 확인해보세요! 상대가 내 하트에 이모지를 달았다면 보낸 하트에서 반응을 볼 수 있습니다. 그러나 보낸 메시지들도 24시간 뒤에 사라진다는 것을 주의하세요!",
       },
       {
         imgId: 4,
@@ -43,7 +43,7 @@ function ManualSelectBox() {
         imgId: 5,
         name: "저장소",
         content:
-          "받은 하트에서 24시간 뒤에도 사라지지 않았으면 하는 하트가 있다면 저장해보세요! 저장소의 하트는 영원히 간직 할 수 있습니다.",
+          "24시간 뒤에도 사라지지 않았으면 하는 하트가 있다면 저장을 눌러보세요! 저장소의 하트는 영원히 간직 할 수 있습니다.",
       },
     ],
     [
@@ -82,20 +82,22 @@ function ManualSelectBox() {
   return (
     <div className="flex flex-col items-center manualHeight">
       <div className="h-24 w-5/6 bg-hrtColorPink rounded-lg flex flex-col justify-center items-center">
-        <select
-          className="w-2/3 h-6 bg-white text-center mt-1 mb-2"
-          value={selectedOption}
-          onChange={handleChangeOptioin}
-        >
-          <option value={0}>하팅!?</option>
-          <option value={1}>메시지</option>
-          <option value={2}>공유하기</option>
-          <option value={3}>도감</option>
-        </select>
-        <div className="">
+        <div className="w-5/6 flex justify-center">
+          <select
+            className="w-2/3 bg-white text-center items-center mt-1 mb-2"
+            value={selectedOption}
+            onChange={handleChangeOptioin}
+          >
+            <option value={0}>하팅!?</option>
+            <option value={1}>메시지</option>
+            <option value={2}>공유하기</option>
+            <option value={3}>도감</option>
+          </select>
+        </div>
+        <div className="textShadow">
           {tabArr[selectedOption].map((el, index) => (
             <span
-              className="text-white text-base mx-2"
+              className={`text-base mx-2 cursor-pointer text-white ${selectedTabIndex === index ? 'purple' : ''}`}
               key={index}
               onClick={() => handleTabClick(index)}
             >

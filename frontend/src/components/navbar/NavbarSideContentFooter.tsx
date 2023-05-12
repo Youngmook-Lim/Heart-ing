@@ -29,7 +29,7 @@ function NavbarSideContentFooter() {
           <img src={Insta} className="w-6 h-6 mx-2" alt="" />
         </a>
       </div>
-      <p className="text-gray-400">SSAFY 8기 B307</p>
+      <p className="text-gray-400 cursor-default">SSAFY 8기 B307</p>
     </div>
   );
 }

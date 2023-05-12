@@ -28,7 +28,7 @@ function HeartResponseEmojiListItem({ id, onEmojiHandler, messageEmojiId, onClos
 
   return (
     <>
-      <div className="relative flex justify-center" onClick={getEmojiId}>
+      <div className="relative flex justify-center cursor-pointer" onClick={getEmojiId}>
         <div className="absolute z-50">
           <ResponseEmojiIcon id={id} />
         </div>

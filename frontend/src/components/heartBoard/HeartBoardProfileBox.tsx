@@ -15,7 +15,7 @@ function HeartBoardProfileBox({ ...props }) {
   return (
     <div className="pt-3">
       <div className="flex flex-col items-center relative">
-        <div className="text-l bg-hrtColorYellow mt-4 px-4 leading-9 rounded">
+        <div className="text-l bg-hrtColorYellow mt-4 px-4 leading-9 rounded cursor-default">
           {statusMessage}
         </div>
         {statusMessage && statusMessage.trim() !== "" ? (
@@ -26,7 +26,7 @@ function HeartBoardProfileBox({ ...props }) {
           />
         ) : null}
         <div className="flex align-middle pt-2">
-          <span className="text-4xl">{nickname}</span>
+          <span className="text-4xl cursor-default">{nickname}</span>
         </div>
       </div>
     </div>
