@@ -16,13 +16,13 @@ function UpdatePopup() {
                         <div className="flex">
                             <div className="text-left py-2 leading-8">
                                 <p className="text-xl pb-2">v3.0 업데이트 사항</p>
+                                <p>• 스페셜하트 업데이트</p>
                                 <p>• 실시간 알람</p>
-                                <p className="text-sm">(메세지 수신, 반응하기, 스페셜하트 획득)</p>
-                                <p>• 메세지 보내기 버그 해결</p>
+                                <p className="text-sm ml-2">(메세지 수신, 반응하기, 스페셜하트 획득)</p>
                                 <p>• 악성 메세지 신고하기</p>
-                                <p>• 행성하트 지급 완료</p>
-                                <p>• 프로필 수정 페이지 추가</p>
                                 <p>• 기본 감정 하트별 컬러템플릿 적용</p>
+                                <p>• 프로필 수정 페이지 추가</p>
+                                <p>• 행성하트 지급 완료</p>
                             </div>
                         </div>
                     </div>
