@@ -378,6 +378,7 @@ public class OAuthService {
 
                 // 레디스에 유저 보낸 하트 정보 등록
                 migrationService.migrateUserSentHeart(socialUser.getId());
+                migrationService.migrateUserReceivedHeart(socialUser.getId());
 
                 messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
                         "하팅 개발진의 감사한 마음을 \n" +
