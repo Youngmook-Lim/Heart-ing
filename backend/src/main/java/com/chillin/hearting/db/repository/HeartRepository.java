@@ -24,6 +24,6 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
 
     @Query(value = "select id as heartId, name, image_url as heartUrl, ifnull((select count(*) from message where receiver_id=:userId and heart_id=h.id group by heart_id),0) as currentValue " +
             "from heart as h ", nativeQuery = true)
-    List<HeartCountDTO> findAllHeartReceivedCount(String userId);
+    List<HeartCountDTO> findAllHeartReceivedCount(@Param(value = "userId") String userId);
 }
 
