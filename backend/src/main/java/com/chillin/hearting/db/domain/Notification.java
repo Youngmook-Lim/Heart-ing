@@ -27,6 +27,16 @@ public class Notification implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_id", nullable = false)
+    private Message message;
+
+    // FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "heart_id", nullable = false)
+    private Heart heart;
+
     @Column(length = 500, name = "content")
     private String content;
 
