@@ -21,12 +21,13 @@ function ManualHomeIntro() {
   }, []);
 
   return (
-    <div className="flex flex-col my-6 w-full">
+    <div className="flex flex-col mb-6 w-full">
       <div
         className={`flex justify-center items-center pt-2 ${
           scrollPosition < 90 ? "shake-vertical" : "scale-out-center hidden"
         }`}
         onClick={onMoreClick}
+        ref={introRef}
       >
         <img
           src={manual_home_scroll}
@@ -76,7 +77,6 @@ function ManualHomeIntro() {
         className={`mt-2 mb-4 ${
           scrollPosition > 330 ? "slide-in-bottom" : "collapse"
         }`}
-        ref={introRef}
       >
         <div className="flex flex-col items-center mx-8">
           <span className="text-lg flex justify-center text-white items-center textShadow my-2 ">
@@ -95,7 +95,9 @@ function ManualHomeIntro() {
         </div>
       </div>
       <a
-        className={`mx-8 mb-24 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink heartbeat`}
+        className={`mx-8 mb-24 bg-hrtColorYellow rounded-xl border-2 border-hrtColorPink ${
+          scrollPosition > 330 ? "heartbeat" : "collapse"
+        } `}
         href="https://heart-ing.com/heartboard/user?id=3yqolax1ee"
       >
         <p className="py-2 text-hrtColorPink">개발팀의 하트 수신함 보러가기</p>

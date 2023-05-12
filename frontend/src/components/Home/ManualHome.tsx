@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import google_login_button from "../../assets/images/social/google.png";
-import kakao_login_button from "../../assets/images/social/kakao.png";
+import kakao_login_button from "../../assets/images/social/kakao_login.png";
+import twitter_login_button from "../../assets/images/social/twitter_login.png";
+import google_login_button from "../../assets/images/social/google_login.png";
 import main_home_logo from "../../assets/images/logo/main_home_logo.png";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../../atoms/userAtoms";
@@ -43,7 +44,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
       <div className="h-1/3 flex justify-center items-center">
         <img src={main_home_logo} alt="hearting_logo" className="max-h-40" />
       </div>
-      <div className="flex flex-col h-1/3 pt-4 ">
+      <div className="flex flex-col h-1/3 pt-4 w-full">
         {isLogin ? (
           <div className="h-1/2 my-auto">
             <button
@@ -54,42 +55,55 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
             </button>
           </div>
         ) : (
-          <div className="h-1/2">
+          <div className="flex flex-col my-6">
             <div className="pt-2">
               <span className="flex justify-center items-center my-2">
                 <p className="border-b border-hrtColorPink w-1/4 my-4"></p>
                 <p className="mx-4 text-sm text-hrtColorPink">
                   {" "}
-                  하팅! 시작하기{" "}
+                  로그인/회원가입{" "}
                 </p>
                 <p className="border-b border-hrtColorPink w-1/4 my-4"></p>
               </span>
             </div>
-            <div className="flex flex-col items-center mx-8">
-              <a href={KAKAO_REQUEST}>
-                <img
-                  src={kakao_login_button}
-                  alt="kakao_login_button"
-                  className="p-2"
-                />
-              </a>
-              {navigator.userAgent.includes("KAKAOTALK") ? (
-                <div onClick={(e) => onGoogleLoginHandler(e)}>
-                  <img
-                    src={google_login_button}
-                    alt="google_login_button"
-                    className="p-2"
-                  />
+            <div className="h-1/2">
+              <div className="flex flex-col items-center mx-12">
+                <div className="flex">
+                  <a href={KAKAO_REQUEST}>
+                    <img
+                      src={kakao_login_button}
+                      alt="kakao_login_button"
+                      className="p-2 px-8"
+                    />
+                  </a>
+                  {/* 트위터 로그인 링크가 들어갑니다 */}
+                  {/* <a href={KAKAO_REQUEST}>
+                    <img
+                      src={twitter_login_button}
+                      alt="twitter_login_button"
+                      className="p-2 px-4"
+                    />
+                  </a> */}
+                  {/* 페이스북 로그인이 생긴다면 a>img의 클래스 태그 중 px-4를 없애고 mx-12 => mx-8로 수정합니다 */}
+                  {navigator.userAgent.includes("KAKAOTALK") ? (
+                    <div onClick={(e) => onGoogleLoginHandler(e)}>
+                      <img
+                        src={google_login_button}
+                        alt="google_login_button"
+                        className="p-2 px-8"
+                      />
+                    </div>
+                  ) : (
+                    <a href={GOOGLE_REQUEST}>
+                      <img
+                        src={google_login_button}
+                        alt="google_login_button"
+                        className="p-2 px-8"
+                      />
+                    </a>
+                  )}
                 </div>
-              ) : (
-                <a href={GOOGLE_REQUEST}>
-                  <img
-                    src={google_login_button}
-                    alt="google_login_button"
-                    className="p-2"
-                  />
-                </a>
-              )}
+              </div>
             </div>
           </div>
         )}
