@@ -18,6 +18,8 @@ import Google from "./pages/Google";
 import { Socket, io } from "socket.io-client";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "./atoms/userAtoms";
+import HeartTest from "./pages/HeartTest";
+import HeartTestResult from "./pages/HeartTestResult";
 
 declare global {
   interface Window {
@@ -75,6 +77,8 @@ function App() {
           <Route path="/receivedheart" element={<ReceivedHeart socket={socket}/>} />
           <Route path="/sentheart" element={<SentHeart socket={socket}/>} />
           <Route path="/profilesettings" element={<Settings />} />
+          <Route path="/hearttest" element={<HeartTest />} />
+          <Route path="/heartresult" element={<HeartTestResult />} />
         </Routes>
       </BrowserRouter>
     </div>
