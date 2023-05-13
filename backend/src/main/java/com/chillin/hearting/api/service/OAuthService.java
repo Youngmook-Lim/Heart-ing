@@ -154,6 +154,7 @@ public class OAuthService {
             bw.close();
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new UnAuthorizedException(provider + "에서 access token을 받아올 때 문제가 있었습니다.");
         }
 
         return socialAccessToken;
