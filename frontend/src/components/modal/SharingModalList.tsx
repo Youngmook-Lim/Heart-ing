@@ -14,9 +14,15 @@ function SharingModalList({...props}) {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          alert(
-            `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
-          );
+          if (props.shareMode === 'board') {
+            alert(
+              `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
+            );
+          } else {
+            alert(
+              `하트테스트 결과가 복사되었습니다.\n친구들에게 공유해보세요!`
+            );
+          }
         })
         .catch(() => {
           alert(`지원하지 않는 브라우저입니다.\n다른 브라우저로 접속해주세요.`);
@@ -34,11 +40,19 @@ function SharingModalList({...props}) {
       textarea.select();
       document.execCommand("copy");
       document.body.removeChild(textarea);
-      alert(
-        `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
-      );
+      if (props.shareMode === 'board') {
+        alert(
+          `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
+        );
+      } else {
+        alert(
+          `하트테스트 결과가 복사되었습니다.\n친구들에게 공유해보세요!`
+        );
+      }
     }
-    props.setSharingAtom(false)
+    if (props.shareMode === 'board') {
+      props.setSharingAtom(false)
+    }
   };
 
   const shareFacebook = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -47,46 +61,73 @@ function SharingModalList({...props}) {
   }
 
   const shareTwitter = (e: React.MouseEvent<HTMLDivElement>) => {
-    const text = '하트를 보내주세요♡'
-    window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
-    props.setSharingAtom(false)
+    if (props.shareMode === 'board') {
+      const text = '하트를 보내주세요♡'
+      window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
+      props.setSharingAtom(false)
+    } else {
+      const text = '나의 심볼♡하트 테스트 결과는?'
+      window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
+    }
   }
 
   const shareKakao = (e: React.MouseEvent<HTMLDivElement>) => {
-    // window.Kakao.Share.sendCustom({
-    //   templateId: 93587,
-    //   templateArgs: {
-    //     title: '본격 두근두근 마음 전달 서비스 Hearting!',
-    //     description: '하트를 보내주세요♡',
-    //   },
-    // });
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '본격 두근두근 마음 전달 서비스, 하팅!',
-        description: '소중한 사람에게 마음을 전해주세요❤',
-        imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
-        link: {
-          mobileWebUrl: url,
-          webUrl: url,
-        },
-      },
-      itemContent: {
-        profileText: 'Hearting!♡',
-        profileImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
-        titleImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
-      },
-      buttons: [
-        {
-          title: '하트 보내러가기',
+    if (props.shareMode === 'board') {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '본격 두근두근 마음 전달 서비스, 하팅!',
+          description: '소중한 사람에게 마음을 전해주세요❤',
+          imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
           link: {
             mobileWebUrl: url,
             webUrl: url,
           },
         },
-      ],
-    });
-    props.setSharingAtom(false)
+        itemContent: {
+          profileText: 'Hearting!♡',
+          profileImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+          titleImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+        },
+        buttons: [
+          {
+            title: '하트 보내러가기',
+            link: {
+              mobileWebUrl: url,
+              webUrl: url,
+            },
+          },
+        ],
+      });
+      props.setSharingAtom(false)
+    } else {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '심볼♥하트 테스트',
+          description: '나의 깊은 마음 속에 있는 하트는?',
+          imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
+          link: {
+            mobileWebUrl: url,
+            webUrl: url,
+          },
+        },
+        itemContent: {
+          profileText: 'Hearting!♡',
+          profileImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+          titleImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+        },
+        buttons: [
+          {
+            title: '확인하기',
+            link: {
+              mobileWebUrl: url,
+              webUrl: url,
+            },
+          },
+        ],
+      });
+    }
   }
 
   const sharetype = [

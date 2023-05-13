@@ -59,6 +59,13 @@ function NavbarSideContentBody({ ...props }) {
           >
             사용설명서
           </NavLink>
+          <NavLink
+            to="/hearttest"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
+            하트테스트
+          </NavLink>
           <hr />
           <NavLink
             to="/profilesettings"
@@ -96,6 +103,13 @@ function NavbarSideContentBody({ ...props }) {
             onClick={props.onOpenHandler}
           >
             사용설명서
+          </NavLink>
+          <NavLink
+            to="/hearttest"
+            className="block text-left text-xl my-4"
+            onClick={props.onOpenHandler}
+          >
+            하트테스트
           </NavLink>
         </div>
       )}
