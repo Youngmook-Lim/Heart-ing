@@ -43,8 +43,8 @@ public class AuthToken {
                 .setHeaderParam("type", "JWT")
                 .setHeaderParam("createdDate", System.currentTimeMillis())
                 .setSubject("refreshToken")
-                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -54,8 +54,8 @@ public class AuthToken {
                 .setSubject("accessToken")
                 .claim(AUTHORITIES_KEY, role)
                 .claim("id", id)
-                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
