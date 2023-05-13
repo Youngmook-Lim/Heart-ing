@@ -202,6 +202,7 @@ public class OAuthService {
             throw new UnAuthorizedException(e.getMessage());
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());
+            throw new UserNotFoundException(provider + "에서 사용자 정보를 받아오지 못했습니다.");
         }
         return socialLoginResultData;
     }
