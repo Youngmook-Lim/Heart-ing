@@ -5,7 +5,6 @@ function HeartTestLoading({...props}) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log(props.result)
     if (props.result === ('ISTP' || 'INFJ')) {
       navigate('/heartresult?result=0')
     } else if (props.result === 'ENFP' || props.result === 'ESFP') {

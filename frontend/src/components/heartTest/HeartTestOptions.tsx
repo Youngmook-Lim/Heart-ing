@@ -8,7 +8,6 @@ function HeartTestOptions({...props}) {
 
   const onNextHandler = (e:React.MouseEvent<HTMLDivElement>) => {
     const optionType = e.currentTarget.id
-    console.log(MBTI)
     const newMBTI = [...MBTI]
     newMBTI.push(optionType)
     setMBTI(newMBTI)
@@ -34,7 +33,6 @@ function HeartTestOptions({...props}) {
       let resultStr = result.join('')
       props.setResult(resultStr)
       props.setTestMode('result')
-      console.log(result)
     }
     setOpsNum(opsNum+1)
   }
