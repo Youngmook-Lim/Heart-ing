@@ -20,6 +20,7 @@ import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "./atoms/userAtoms";
 import HeartTest from "./pages/HeartTest";
 import HeartTestResult from "./pages/HeartTestResult";
+import Twitter from "./pages/Twitter";
 
 declare global {
   interface Window {
@@ -73,6 +74,7 @@ function App() {
           <Route path="/heartwriting" element={<Heartwriting socket={socket}/>} />
           <Route path="/oauth2/code/kakao" element={<Kakao />} />
           <Route path="/oauth2/code/google" element={<Google />} />
+          <Route path="/oauth2/code/twitter" element={<Twitter />} />
           <Route path="/manual" element={<Manual />} />
           <Route path="/receivedheart" element={<ReceivedHeart socket={socket}/>} />
           <Route path="/sentheart" element={<SentHeart socket={socket}/>} />

@@ -1,3 +1,4 @@
+import { ITwitterUserTokenTypes } from '../../types/userType';
 import { axios, nonAuthAxios } from './https'
 
 export async function login(provider: string, code: string) {
@@ -9,6 +10,32 @@ export async function login(provider: string, code: string) {
     return err
   }
 }
+
+export async function twitterRedirectApi() {
+  try{
+    const res = await nonAuthAxios.get('/api/v1/auth/guests/twitter/redirect-url');
+    const data = res.data
+    return data
+  } catch(err) {
+    console.log(err)
+    return err
+  }
+}
+
+export async function twitterLoginApi(body: ITwitterUserTokenTypes) {
+  try{
+    const res = await nonAuthAxios.post(`api/v1/auth/guests/twitter/user-info`, body);
+    const data = res.data
+    return data
+  } catch(err) {
+    console.log('트위터 로그인 안됐단다')
+    // console.log(err)
+    return err
+  }
+}
+
+
+
 
 export async function modifyNickname(nickname: object) {
   try{
