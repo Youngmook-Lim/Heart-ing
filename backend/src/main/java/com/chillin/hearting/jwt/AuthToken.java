@@ -89,6 +89,7 @@ public class AuthToken {
     }
 
     public Claims getExpiredTokenClaims() {
+        log.info("getExpiredTokenClaims 메서드로 들어옴.");
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -98,8 +99,18 @@ public class AuthToken {
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token");
             return e.getClaims();
+        } catch (MalformedJwtException e) {
+            log.info("손상된 토큰입니다.");
+        } catch (SecurityException e) {
+            log.info("Invalid JWT signature - 시그니처 검증에 실패한 토큰입니다. jwt secret 키가 정상이 아닐 가능성이 높습니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT token compact of handler are invalid.");
+            log.debug(e.getMessage());
+            log.debug("아마도 JWT가 헤더에 안 담겼을지도?");
+        } catch (UnsupportedJwtException e) {
+            log.info("Unsupported JWT token - 지원하지 않는 토큰입니다.");
         }
-//        return null;
+        return null;
 
     }
 }
