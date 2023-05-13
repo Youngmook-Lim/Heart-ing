@@ -367,7 +367,6 @@ public class OAuthService {
         SocialLoginData socialLoginData = null;
 
         try {
-            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
 
             User socialUser = socialLoginResultData.getUser();
 
