@@ -26,3 +26,8 @@ export const sharingAtom = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const sharingModeAtom = atom<string>({
+  key: 'sharingMode',
+  default: 'board',
+});

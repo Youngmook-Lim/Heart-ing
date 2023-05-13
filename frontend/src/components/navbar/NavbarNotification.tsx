@@ -69,17 +69,23 @@ function NavbarNotification({ ...props }) {
                 )}
               </div>
             ) : (
-              <p className="text-sm ml-2 mb-1">읽지 않은 메세지가 없습니다</p>
+              <p className="text-sm ml-2 mb-1">읽지 않은 알림이 없습니다</p>
             )}
           </div>
           <div className="flex flex-col items-start">
             <p className="text-xs">• 지난 알림</p>
-            {props.notiData.trueList.map((message: IGetNotificationListTypes) => (
-              <div onClick={() =>{onClickHandler(message)}}>
-                <NavbarNotificationItem
-                  messageInfo={message} />
+            {Object.keys(props.notiData.trueList).length ? (
+              <div>
+                {props.notiData.trueList.map((message: IGetNotificationListTypes) => (
+                  <div onClick={() =>{onClickHandler(message)}}>
+                    <NavbarNotificationItem
+                      messageInfo={message} />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <p className="text-sm ml-2 mb-1">24시간 내의 알림이 없습니다</p>
+            )} 
           </div>
         </div>
       </div>

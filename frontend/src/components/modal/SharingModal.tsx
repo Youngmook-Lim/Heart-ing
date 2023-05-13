@@ -20,7 +20,7 @@ function SharingModal() {
           </button>
         </div>
         <div className="relative mx-6 flex flex-col items-center">
-          <SharingModalList setSharingAtom={setSharingAtom}/>
+          <SharingModalList setSharingAtom={setSharingAtom} shareMode={'board'}/>
         </div>
       </div>
     </div>
