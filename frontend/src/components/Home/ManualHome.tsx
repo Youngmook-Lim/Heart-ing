@@ -11,6 +11,7 @@ import { ITotalHeartPropsTypes } from "../../types/messageType";
 
 import ManualHomeCount from "./ManualHomeCount";
 import ManualHomeIntro from "./ManualHomeIntro";
+import { twitterRedirectApi } from "../../features/api/userApi";
 
 function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   const navigate = useNavigate();
@@ -33,8 +34,18 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
   };
 
   const onGoogleLoginHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-    alert("다른 브라우저에서 이용 가능합니다.");
+    alert(`지원하지 않는 브라우저입니다.\n다른 브라우저로 접속해주세요.`);
   };
+
+  const onTwitterLoginHandler = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const data= await twitterRedirectApi()
+    if (data.data.redirectUrl) {
+      window.location.href = data.data.redirectUrl
+    }
+    else{
+      alert(`로그인을 실패했습니다.\n잠시 후 다시 시도해주세요.`)
+    }
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -73,24 +84,24 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                     <img
                       src={kakao_login_button}
                       alt="kakao_login_button"
-                      className="p-2 px-8"
+                      className="p-2 px-4"
                     />
                   </a>
                   {/* 트위터 로그인 링크가 들어갑니다 */}
-                  {/* <a href={KAKAO_REQUEST}>
+                  <div onClick={onTwitterLoginHandler}>
                     <img
                       src={twitter_login_button}
                       alt="twitter_login_button"
                       className="p-2 px-4"
                     />
-                  </a> */}
+                  </div>
                   {/* 페이스북 로그인이 생긴다면 a>img의 클래스 태그 중 px-4를 없애고 mx-12 => mx-8로 수정합니다 */}
                   {navigator.userAgent.includes("KAKAOTALK") ? (
                     <div onClick={(e) => onGoogleLoginHandler(e)}>
                       <img
                         src={google_login_button}
                         alt="google_login_button"
-                        className="p-2 px-8"
+                        className="p-2 px-4"
                       />
                     </div>
                   ) : (
@@ -98,7 +109,7 @@ function ManualHome({ onGetTotalHeart }: ITotalHeartPropsTypes) {
                       <img
                         src={google_login_button}
                         alt="google_login_button"
-                        className="p-2 px-8"
+                        className="p-2 px-4"
                       />
                     </a>
                   )}

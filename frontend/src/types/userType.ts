@@ -13,3 +13,8 @@ export interface IUpdateProfileTypes {
   nickname : string,
   statusMessage : string,
 }
+
+export interface ITwitterUserTokenTypes {
+  oauthToken : string,
+  oauthVerifier : string,
+}

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { login } from "../features/api/userApi";
+import { twitterLoginApi } from "../features/api/userApi";
 import {
   isLoginAtom,
   userNicknameAtom,
@@ -9,7 +9,7 @@ import {
 } from "../atoms/userAtoms";
 import { savingUserInfo } from "../features/userInfo";
 
-function Google() {
+function Twitter() {
   const navigate = useNavigate();
 
   const setIsLogin = useSetRecoilState(isLoginAtom);
@@ -17,15 +17,14 @@ function Google() {
   const setUserStatusMessage = useSetRecoilState(userStautsMessageAtom);
 
   let params = new URL(document.URL).searchParams;
-  let code = params.get("code");
+  let token = params.get("oauth_token");
+  let verifier = params.get("oauth_verifier");
 
   useEffect(() => {
-    async function googleLogin() {
-      if (!code) return;
-      const data = await login("google", code);
-      if (data !== null) {
-        // console.log("구글 됏당");
-        // console.log("닉네임 머임?", data.data);
+    async function twitterLogin() {
+      if (!token || !verifier) return;
+      const data = await twitterLoginApi({oauthToken: token, oauthVerifier: verifier});
+      if (data.data) {
         const userInfo = {
           userId: data.data.userId,
           accessToken: data.data.accessToken,
@@ -40,13 +39,15 @@ function Google() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        // console.log("ㄱ글로그인 실패ㅜ;");
+        // console.log("카카오로그인 실패ㅜ;");
       }
     }
-    googleLogin();
-  }, [code, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
+    twitterLogin();
+  }, [token, verifier, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
 
-  return <div></div>;
+  return (
+    <div></div>
+  )
 }
 
-export default Google;
+export default Twitter
