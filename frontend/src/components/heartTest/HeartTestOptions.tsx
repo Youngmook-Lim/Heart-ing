@@ -48,7 +48,7 @@ function HeartTestOptions({...props}) {
               </div>
               <div>
                 {Questions[opsNum].answers.map((answer) => {
-                  return <div id={answer.type} className={`mx-auto h-auto w-64 my-4 py-2 flex justify-center items-center border-2 ${answer.id === 1 ? 'bg-hrtColorYellow border-hrtColorPurple' : 'bg-hrtColorOutline900 border-hrtColorYellow'}`} onClick={onNextHandler}><p className='whitespace-pre-wrap'>{answer.content}</p></div>;
+                  return <div id={answer.type} className={`mx-auto h-auto w-64 my-4 py-2 flex justify-center items-center border-2 cursor-pointer ${answer.id === 1 ? 'bg-hrtColorYellow border-hrtColorPurple' : 'bg-hrtColorPurple border-hrtColorYellow'}`} onClick={onNextHandler}><p className='whitespace-pre-wrap'>{answer.content}</p></div>;
                 })}
               </div>
               </div>

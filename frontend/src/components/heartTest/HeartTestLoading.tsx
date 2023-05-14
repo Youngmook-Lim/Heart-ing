@@ -5,7 +5,7 @@ function HeartTestLoading({...props}) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (props.result === ('ISTP' || 'INFJ')) {
+    if (props.result === 'ISTP' || props.result === 'INFJ') {
       navigate('/heartresult?result=0')
     } else if (props.result === 'ENFP' || props.result === 'ESFP') {
       navigate('/heartresult?result=1')
@@ -21,6 +21,8 @@ function HeartTestLoading({...props}) {
       navigate('/heartresult?result=6')
     } else if (props.result === 'ESFJ' || props.result === 'ESTJ') {
       navigate('/heartresult?result=7')
+    } else {
+      navigate('/heartresult?result=0')
     }
   }) 
   return (
