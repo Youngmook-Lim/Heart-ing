@@ -18,6 +18,10 @@ function SharingModalList({...props}) {
             alert(
               `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
             );
+          } else if (props.shareMode === 'start') {
+            alert(
+              `하트테스트 주소가 복사되었습니다.\n친구들에게 공유해보세요!`
+            );
           } else {
             alert(
               `하트테스트 결과가 복사되었습니다.\n친구들에게 공유해보세요!`
@@ -44,6 +48,10 @@ function SharingModalList({...props}) {
         alert(
           `${userNickname}님의 하트 수신함이 복사되었습니다.\n친구들에게 공유해보세요!`
         );
+      } else if (props.shareMode === 'start') {
+        alert(
+          `하트테스트 주소가 복사되었습니다.\n친구들에게 공유해보세요!`
+        );
       } else {
         alert(
           `하트테스트 결과가 복사되었습니다.\n친구들에게 공유해보세요!`
@@ -65,6 +73,9 @@ function SharingModalList({...props}) {
       const text = '하트를 보내주세요♡'
       window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
       props.setSharingAtom(false)
+    } else if (props.shareMode === 'start') {
+      const text = '심볼♡하트 테스트'
+      window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
     } else {
       const text = '나의 심볼♡하트 테스트 결과는?'
       window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" +  url)
@@ -100,12 +111,39 @@ function SharingModalList({...props}) {
         ],
       });
       props.setSharingAtom(false)
-    } else {
+    } else if (props.shareMode === 'start') { 
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: '심볼♥하트 테스트',
-          description: '나의 깊은 마음 속에 있는 하트는?',
+          description: '당신의 깊은 마음 속에 있는 심볼 하트는?',
+          imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
+          link: {
+            mobileWebUrl: url,
+            webUrl: url,
+          },
+        },
+        itemContent: {
+          profileText: 'Hearting!♡',
+          profileImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+          titleImageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo.png',
+        },
+        buttons: [
+          {
+            title: '확인하기',
+            link: {
+              mobileWebUrl: url,
+              webUrl: url,
+            },
+          },
+        ],
+      });
+    } else {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '심볼♥하트 테스트 결과',
+          description: '내 깊은 마음 속에 있는 하트를 보여줄게',
           imageUrl: 'https://heart-ing.s3.ap-northeast-2.amazonaws.com/profile/messageLogo_final.png',
           link: {
             mobileWebUrl: url,
@@ -140,7 +178,7 @@ function SharingModalList({...props}) {
   return (
     <div className='flex'>
       {sharetype.map((share: {icon: any, name: string, click: (e: React.MouseEvent<HTMLDivElement>) =>void}) => (
-        <SharingModalListItem icon={share.icon} name={share.name} click={share.click}/>
+        <SharingModalListItem key={share.name} icon={share.icon} name={share.name} click={share.click}/>
       ))}
     </div>
   )
