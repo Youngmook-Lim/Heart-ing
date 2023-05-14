@@ -43,8 +43,11 @@ function HeartTestOptions({...props}) {
       <div className=" mx-auto">
         <div className="bg-hrtColorWhiteTrans border-2 border-hrtColorPink rounded-lg relative ">
           <div className="overflow-auto guideHeight scrollbar-hide">
-              <div>
-                <p className='whitespace-pre-wrap text-xl my-12 mx-4'>{Questions[opsNum].question}</p>
+            <div >
+            </div>
+              <div className='mb-12 mt-8 mx-4'>
+              <p className='text-right mr-8 mb-4 text-hrtColorOutline700'>{opsNum+1}/12</p>
+                <p className='whitespace-pre-wrap text-xl'>{Questions[opsNum].question}</p>
               </div>
               <div>
                 {Questions[opsNum].answers.map((answer) => {
