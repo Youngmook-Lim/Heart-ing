@@ -33,7 +33,7 @@ function HeartTestResult() {
       <img src={LogoEffect} alt="test" className="w-full px-14 py-8" />
       <div className="mx-auto">
         <div className="bg-hrtColorWhiteTrans border-2 border-hrtColorPink rounded-lg relative">
-          <div className="overflow-auto guideHeight scrollbar-hide">
+          <div className="overflow-auto scrollbar-hide">
             <div className='my-4 mt-8'>
               <p className='text-xl'>당신의</p>
               <p className='text-xl'>심볼♥하트는...</p>
@@ -62,6 +62,7 @@ function HeartTestResult() {
           <div className="w-2 h-2 rounded-xl border-2 border-hrtColorPink absolute right-1 bottom-1"></div>
         </div>
       </div>
+      <div className="h-24"></div>
     </div>
   )
 }
