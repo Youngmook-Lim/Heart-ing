@@ -430,6 +430,11 @@ public class HeartService {
 //                    }
                 }
                 break;
+            case 15:
+                // 카네이션 하트 - 5/15 만 획득 가능
+                isAcquirable = true;
+                log.info("카네이션 하트를 획득할 수 있습니다!");
+                break;
         }
         return isAcquirable;
     }
