@@ -154,6 +154,7 @@ public class OAuthService {
             bw.close();
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new UnAuthorizedException(provider + "에서 access token을 받아올 때 문제가 있었습니다.");
         }
 
         return socialAccessToken;
@@ -202,6 +203,7 @@ public class OAuthService {
             throw new UnAuthorizedException(e.getMessage());
         } catch (IOException | ParseException e) {
             log.error(e.getMessage());
+            throw new UserNotFoundException(provider + "에서 사용자 정보를 받아오지 못했습니다.");
         }
         return socialLoginResultData;
     }
@@ -249,35 +251,41 @@ public class OAuthService {
     @Transactional
     public SocialLoginData getTwitterUserInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String oauthToken, String oauthVerifier, String provider) {
 
-        // spring에서 twitter api를 사용하기 위해 oauth1 타입의 트위터 연결 생성
-        OAuth1Operations oauthOperations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
+        SocialLoginData socialLoginData = null;
 
-        // access token 받아올 때에도 request token이 필요하기 때문에 OAuthToken 객체 생성
-        OAuthToken requestToken = new OAuthToken(oauthToken, null);
+        try {
+            // spring에서 twitter api를 사용하기 위해 oauth1 타입의 트위터 연결 생성
+            OAuth1Operations oauthOperations = new TwitterConnectionFactory(CONSUMER_KEY, CONSUMER_SECRET).getOAuthOperations();
 
-        // access token 받아옴
-        OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
+            // access token 받아올 때에도 request token이 필요하기 때문에 OAuthToken 객체 생성
+            OAuthToken requestToken = new OAuthToken(oauthToken, null);
 
-        // 이제 트위터에서 제공하는 api에 접근할 때 마다 항상 같이 가져가야 하는 친구들을 모두 담아서 TwitterTemplate 객체 생성
-        Twitter twitter = new TwitterTemplate(CONSUMER_KEY, CONSUMER_SECRET, accessToken.getValue(), accessToken.getSecret());
+            // access token 받아옴
+            OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
 
-        // 현재 인증된 사용자의 트위터 프로필 가져옴. -> 여기엔 이메일 없음.
-        TwitterProfile twitterProfile = twitter.userOperations().getUserProfile();
+            // 이제 트위터에서 제공하는 api에 접근할 때 마다 항상 같이 가져가야 하는 친구들을 모두 담아서 TwitterTemplate 객체 생성
+            Twitter twitter = new TwitterTemplate(CONSUMER_KEY, CONSUMER_SECRET, accessToken.getValue(), accessToken.getSecret());
 
-        log.info("트위터 로그인 한 유저 정보 : {}", twitterProfile.getId());
+            // 현재 인증된 사용자의 트위터 프로필 가져옴. -> 여기엔 이메일 없음.
+            TwitterProfile twitterProfile = twitter.userOperations().getUserProfile();
 
-        // Get email address
-        RestTemplate restTemplate = ((TwitterTemplate) twitter).getRestTemplate();
-        ResponseEntity<JsonNode> response = restTemplate.getForEntity("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true", JsonNode.class);
-        JsonNode jsonResponse = response.getBody();
-        String email = jsonResponse.get("email").asText();
+            log.info("트위터 로그인 한 유저 정보 : {}", twitterProfile.getId());
 
-        log.info("트위터 로그인 한 유저의 이메일 정보 : {}", email);
+            // Get email address
+            RestTemplate restTemplate = ((TwitterTemplate) twitter).getRestTemplate();
+            ResponseEntity<JsonNode> response = restTemplate.getForEntity("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true", JsonNode.class);
+            JsonNode jsonResponse = response.getBody();
+            String email = jsonResponse.get("email").asText();
 
-        SocialLoginResultData socialLoginResultData = checkSocialUserInfoFromDB(email, provider);
+            log.info("트위터 로그인 한 유저의 이메일 정보 : {}", email);
 
-        SocialLoginData socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
+            SocialLoginResultData socialLoginResultData = checkSocialUserInfoFromDB(email, provider);
 
+            socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
 
         return socialLoginData;
 
@@ -366,7 +374,6 @@ public class OAuthService {
         SocialLoginData socialLoginData = null;
 
         try {
-            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
 
             User socialUser = socialLoginResultData.getUser();
 
