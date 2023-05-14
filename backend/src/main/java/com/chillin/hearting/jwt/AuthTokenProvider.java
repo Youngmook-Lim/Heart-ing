@@ -2,6 +2,7 @@ package com.chillin.hearting.jwt;
 
 import com.chillin.hearting.db.repository.UserRepository;
 import com.chillin.hearting.exception.TokenValidFailedException;
+import com.chillin.hearting.exception.UnAuthorizedException;
 import com.chillin.hearting.oauth.domain.PrincipalDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
@@ -62,6 +63,10 @@ public class AuthTokenProvider {
     public Authentication getExpiredUser(AuthToken authToken) {
 
         Claims claims = authToken.getExpiredTokenClaims();
+
+        if (claims == null) {
+            throw new UnAuthorizedException("다시 로그인 해주세요.");
+        }
         return getRealAuthentication(claims, authToken);
     }
 
