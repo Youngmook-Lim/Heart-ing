@@ -130,7 +130,7 @@ function SharingModalList({...props}) {
         },
         buttons: [
           {
-            title: '확인하기',
+            title: '테스트하기',
             link: {
               mobileWebUrl: url,
               webUrl: url,
@@ -157,7 +157,7 @@ function SharingModalList({...props}) {
         },
         buttons: [
           {
-            title: '확인하기',
+            title: '결과확인하기',
             link: {
               mobileWebUrl: url,
               webUrl: url,
