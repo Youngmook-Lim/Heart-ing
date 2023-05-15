@@ -387,13 +387,15 @@ public class OAuthService {
                 migrationService.migrateUserSentHeart(socialUser.getId());
                 migrationService.migrateUserReceivedHeart(socialUser.getId());
 
-                messageService.sendMessage(7L, "SUPER_USER", socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
+                messageService.sendMessage(7L, null, socialUser.getId(), "환영합니다!\uD83D\uDC95", "안녕하세요!( >ᴗ< )\n" +
                         "하팅 개발진의 감사한 마음을 \n" +
                         "모두 모아 첫 번째 하트를 \n" +
                         "보냅니다.❤\uFE0F\uD83D\uDC9B\uD83D\uDC9A\uD83D\uDC99\uD83D\uDC9C\n" +
                         "하트에 전달하고 싶은 마음, \n" +
                         "감정을 담아 주고받아 보세요.\n" +
-                        "하팅!", "");
+                        "하팅!", "ADMIN");
+
+                messageService.sendScheduledMessages(socialUser);
             }
 
             AuthToken accessToken = userService.makeAccessToken(socialUser.getId());
