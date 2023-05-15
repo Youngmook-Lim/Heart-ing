@@ -55,14 +55,9 @@ public class MessageController {
         } else {
             clientIp = clientIp.split(",")[0];
         }
-        log.debug("Client request from : " + clientIp);
 
         SendMessageData data = messageService.sendMessage(sendMessageReq.getHeartId(), sendMessageReq.getSenderId(), sendMessageReq.getReceiverId(), sendMessageReq.getTitle(), sendMessageReq.getContent(), clientIp);
 
-        //////////////////
-        // 밑에서 보낸 유저가 알림을 갱신해야하는지 판별하고 data.isCheckSender를 true로 바꿔줘야 함
-        //////////////////
-        
         // receiver 하트 획득 조건 체크
         log.info("receiver 하트 획득 조건 체크");
         heartService.updateReceivedHeartCount(sendMessageReq.getReceiverId(), sendMessageReq.getHeartId());

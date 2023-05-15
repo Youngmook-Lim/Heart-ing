@@ -27,17 +27,13 @@ public class MessageReceivedController {
     private static final String SUCCESS = "success";
     private final MessageReceivedService messageReceivedService;
 
-
     @GetMapping("/{userId}")
     public ResponseEntity<ResponseDTO> getReceivedMessages(@PathVariable("userId") String userId, HttpServletRequest httpServletRequest) {
 
         User user = (User) httpServletRequest.getAttribute("user");
 
         // Check if the user is requesting his own page
-        boolean isSelf = false;
-        if (user != null && userId.equals(user.getId())) {
-            isSelf = true;
-        }
+        boolean isSelf = user != null && userId.equals(user.getId());
 
         Data data = messageReceivedService.getReceivedMessages(userId, isSelf);
 
