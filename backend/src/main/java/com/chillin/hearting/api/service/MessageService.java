@@ -67,6 +67,12 @@ public class MessageService {
             messageRepository.save(m);
         }
 
+        sendScheduledMessage(receiver);
+
+        log.info("스케줄러가 " + SEND_TO_ADMIN_INTERVAL_HOURS + "시간 주기로 ADMIN 계정에 샘플 메시지 " + SEND_TO_ADMIN_MESSAGE_CNT + "개를 발송했습니다.");
+    }
+
+    public void sendScheduledMessage(User user) {
         List<Integer> heartList = new ArrayList<>();
         List<Integer> sampleList = new ArrayList<>();
         for (int i = 0; i < SEND_TO_ADMIN_HEART_ID_LIST.length; i++) {
@@ -85,14 +91,12 @@ public class MessageService {
 
             Heart heart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
 
-            Message message = Message.builder().heart(heart).receiver(receiver).sender(null).title(sample.title).content(sample.content).senderIp("ADMIN").build();
+            Message message = Message.builder().heart(heart).receiver(user).sender(null).title(sample.title).content(sample.content).senderIp("ADMIN").build();
             messageRepository.save(message);
 
-            receiver.updateMessageTotal();
+            user.updateMessageTotal();
         }
-        userRepository.save(receiver);
-
-        log.info("스케줄러가 " + SEND_TO_ADMIN_INTERVAL_HOURS + "시간 주기로 ADMIN 계정에 샘플 메시지 " + SEND_TO_ADMIN_MESSAGE_CNT + "개를 발송했습니다.");
+        userRepository.save(user);
     }
 
     @Transactional
