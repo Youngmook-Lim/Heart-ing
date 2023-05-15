@@ -85,7 +85,7 @@ function HeartGuideDetailInfo({ heartDetailInfo }: HeartGuideDetailInfoProps) {
             )}
             {heartDetailInfo && heartDetailInfo.isAcq === true ? (
               <div
-                className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline cursor-pointer"
+                className="mx-auto my-auto mt-5 mb-4 modal-button text-hrtColorOutline bg-hrtColorYellow cursor-pointer"
                 onClick={(e) => onAcquireHandler(e)}
               >
                 획득
