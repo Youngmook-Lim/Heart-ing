@@ -61,7 +61,7 @@ public class MessageService {
     public void sendScheduledMessageToAdmin() {
         User receiver = userRepository.findById(ADMIN_ID).orElseThrow(UserNotFoundException::new);
 
-        List<Message> messageList = messageRepository.findBySenderIp("ADMIN");
+        List<Message> messageList = messageRepository.findByReceiverIdAndSenderIp(ADMIN_ID, "ADMIN");
         for (Message m : messageList) {
             m.deleteMessage();
             messageRepository.save(m);
