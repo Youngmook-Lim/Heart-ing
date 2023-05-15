@@ -18,9 +18,9 @@ public class HomeService {
     // 홈 화면 - 서비스 전체 누적 메시지 수
     public TotalMessageCountData totalMessageCount() {
 
-        Long count = messageRepository.count();
+        Long count = messageRepository.countBySenderIpNotOrIsNull("ADMIN");
 
-        log.debug("서비스 누적 메시지 수 {}", count);
+        log.info("서비스 누적 메시지 수(관리자가 전송한 메시지 제외) : {}", count);
 
         return TotalMessageCountData.builder().totalHeartCount(count).build();
     }
