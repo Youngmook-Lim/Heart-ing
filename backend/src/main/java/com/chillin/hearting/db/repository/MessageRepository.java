@@ -11,7 +11,7 @@ import java.util.List;
 public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByReceiverIdAndIsActiveTrue(String userId, Sort sort);
 
-    List<Message> findBySenderIp(String senderIp);
+    List<Message> findByReceiverIdAndSenderIp(String receiverId, String senderIp);
 
     @Query(value = "SELECT COUNT(*) FROM message WHERE sender_ip IS NULL OR sender_ip != :senderIp", nativeQuery = true)
     Long countBySenderIpNotOrIsNull(@Param(value = "senderIp") String senderIp);
