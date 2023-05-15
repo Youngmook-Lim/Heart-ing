@@ -30,7 +30,6 @@ public class MessageService {
     private final EmojiRepository emojiRepository;
     private final NotificationRepository notificationRepository;
 
-
     private static class Sample {
         String title, content;
 
@@ -42,7 +41,7 @@ public class MessageService {
 
     private static final int SEND_TO_ADMIN_INTERVAL_HOURS = 24;
     private static final int SEND_TO_ADMIN_MESSAGE_CNT = 5;
-    private static final Long[] SEND_TO_ADMIN_HEART_ID_LIST = {1L, 2L, 3L, 4L, 5L, 6L, 7L};
+    private static final Long[] SEND_TO_ADMIN_HEART_ID_LIST = {1L, 2L, 3L, 4L, 5L};
     private static final Sample[] SEND_TO_ADMIN_MESSAGE_LIST = {
             new Sample("하팅!은요~", "익명의 메세지 전달 서비스입니다. 하트에 전달고싶은 감정, 마음을 담아 상대방에게 전달해보세요!"),
             new Sample("건의사항", "하팅!을 이용하시면서 건의하시고 싶은 것이나 불편한 사항이 있다면 아래의 링크나 하팅 공식 sns로 건의사항을 보내주세요. 하팅!의 개발진들은 여러분의 불편함을 개선하고자 항상 노력하겠습니다:)"),
@@ -68,6 +67,12 @@ public class MessageService {
             messageRepository.save(m);
         }
 
+        sendScheduledMessages(receiver);
+
+        log.info("스케줄러가 " + SEND_TO_ADMIN_INTERVAL_HOURS + "시간 주기로 ADMIN 계정에 샘플 메시지 " + SEND_TO_ADMIN_MESSAGE_CNT + "개를 발송했습니다.");
+    }
+
+    public void sendScheduledMessages(User user) {
         List<Integer> heartList = new ArrayList<>();
         List<Integer> sampleList = new ArrayList<>();
         for (int i = 0; i < SEND_TO_ADMIN_HEART_ID_LIST.length; i++) {
@@ -86,14 +91,12 @@ public class MessageService {
 
             Heart heart = heartRepository.findById(heartId).orElseThrow(HeartNotFoundException::new);
 
-            Message message = Message.builder().heart(heart).receiver(receiver).sender(null).title(sample.title).content(sample.content).senderIp("ADMIN").build();
+            Message message = Message.builder().heart(heart).receiver(user).sender(null).title(sample.title).content(sample.content).senderIp("ADMIN").build();
             messageRepository.save(message);
 
-            receiver.updateMessageTotal();
+            user.updateMessageTotal();
         }
-        userRepository.save(receiver);
-
-        log.info("스케줄러가 " + SEND_TO_ADMIN_INTERVAL_HOURS + "시간 주기로 ADMIN 계정에 샘플 메시지 " + SEND_TO_ADMIN_MESSAGE_CNT + "개를 발송했습니다.");
+        userRepository.save(user);
     }
 
     @Transactional
@@ -189,7 +192,6 @@ public class MessageService {
 
         // Update message
         message.reportMessage();
-
 
         // If reportedUser is not a logged in user
         if (reportedUser == null) {
