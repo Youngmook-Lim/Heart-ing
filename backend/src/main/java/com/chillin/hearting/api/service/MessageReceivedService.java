@@ -32,7 +32,6 @@ public class MessageReceivedService {
 
         // Get list of all received messages
         List<Message> initialList = messageRepository.findByReceiverIdAndIsActiveTrue(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
-        log.debug(initialList.toString());
 
         // Update expired messages
         ReceivedMessageData receivedMessageData = ReceivedMessageData.builder()
@@ -42,7 +41,6 @@ public class MessageReceivedService {
             processMessage(m, receivedMessageData, isSelf);
         }
 
-        log.debug(receivedMessageData.toString());
         log.info(userId + " 유저가 메시지 리스트를 조회했습니다. 총 " + receivedMessageData.getMessageList().size() + "개의 메시지가 조회되었습니다.");
 
         return receivedMessageData;
