@@ -8,8 +8,12 @@ type propType = { id: number };
 function ButtonIcon(id: propType) {
   const index = id.id;
   const IconList = [
-    <ClosePurple className="w-8 h-8" />,
-    <CloseYellow className="w-8 h-8" />,
+    <>
+      <ClosePurple className="w-8 h-8" />
+    </>,
+    <>
+      <CloseYellow className="w-8 h-8" />
+    </>,
   ];
   return IconList[index];
 }
