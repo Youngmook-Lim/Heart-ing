@@ -165,8 +165,7 @@ public class OAuthService {
     // 카카오에서 회원정보 받아오기
     @Transactional
     public SocialLoginResultData getSocialUserInfo(String kakaoAccessToken, String provider) {
-
-        User user = null;
+        
         SocialLoginResultData socialLoginResultData = null;
 
         try {
