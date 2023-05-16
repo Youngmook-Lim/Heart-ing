@@ -166,7 +166,7 @@ public class UserService {
         return tokenProvider.createAuthToken(
                 userId,
                 ROLE,
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+                new Date(now.getTime() + refreshTokenExpiry)
         );
     }
 
@@ -187,10 +187,8 @@ public class UserService {
         AuthToken accessToken = authTokenProvider.createAuthToken(
                 loginReq.getId(),
                 "ROLE_ADMIN",
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+                new Date(now.getTime() + refreshTokenExpiry)
         );
-
-        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
 
         AuthToken refreshToken = authTokenProvider.createAuthToken(
