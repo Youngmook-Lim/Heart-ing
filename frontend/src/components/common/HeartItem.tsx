@@ -23,7 +23,6 @@ function HeartItem({ ...props }) {
   };
 
   const bounceAnimation = () => {
-    // console.log("됴됴잉");
     setIsAnimation(true);
     setTimeout(function () {
       setIsAnimation(false);
