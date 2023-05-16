@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -48,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/guests/twitter/redirect-url")
-    public ResponseEntity<ResponseDTO> twitterLogin(HttpServletResponse httpServletResponse) throws IOException {
+    public ResponseEntity<ResponseDTO> twitterLogin() {
         Data authenticationUrl = oAuthService.getTwitterRequestToken();
 
         ResponseDTO responseDTO = ResponseDTO.builder()
