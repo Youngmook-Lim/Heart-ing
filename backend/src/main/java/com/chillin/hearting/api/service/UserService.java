@@ -29,6 +29,11 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * {@code UserService}는 로그인을 제외한 모든 유저 관련 로직을 처리하는 서비스입니다.
+ *
+ * @author wjdwn03
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,7 +56,13 @@ public class UserService {
     @Value("${app.auth.refresh-token-expiry}")
     private long refreshTokenExpiry;
 
-
+    /**
+     * 닉네임 수정을 요청한 정보를 DB에 저장합니다.
+     *
+     * @param userId   수정 요청한 유저 id
+     * @param nickname 수정할 닉네임
+     * @return 성공 시 사용자가 수정한 닉네임 정보를 담은 UpdateNicknameData 타입의 객체를 반환합니다.
+     */
     @Transactional
     public UpdateNicknameData updateNickname(String userId, String nickname) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -66,6 +77,13 @@ public class UserService {
 
     }
 
+    /**
+     * 상태메시지 수정을 요청한 정보를 DB에 저장합니다.
+     *
+     * @param userId        수정 요청한 유저 id
+     * @param statusMessage 수정할 상태메시지
+     * @return 성공 시 사용자가 수정한 닉네임 정보를 담은 UpdateStatusMessageData 타입의 객체를 반환합니다.
+     */
     @Transactional
     public UpdateStatusMessageData updateStatusMessage(String userId, String statusMessage) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -80,6 +98,13 @@ public class UserService {
 
     }
 
+    /**
+     * 로그아웃 시 호출되는 메서드로 DB에 저장된 refresh token을 삭제합니다.
+     *
+     * @param userId              refresh token을 삭제할 user id
+     * @param httpServletRequest
+     * @param httpServletResponse
+     */
     @Transactional
     public void deleteRefreshToken(String userId, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
@@ -93,7 +118,12 @@ public class UserService {
 
     }
 
-    // 하트판 주인 정보 조회
+    /**
+     * 하트판 주인의 정보를 조회합니다.
+     *
+     * @param userId 조회할 user id
+     * @return 성공 시 하트판 주인의 닉네임, 상태메시지, 누적 수신 메시지 수를 담은 HeartBoardOwnerData 타입의 객체를 반환합니다.
+     */
     public HeartBoardOwnerData getBoardOwnerInformation(String userId) {
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
@@ -105,7 +135,13 @@ public class UserService {
                 .build();
     }
 
-    // access token 재발급
+    /**
+     * access token을 재발급합니다.
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @return 성공 시 재발급한 access token을 담은 ReissuedAccessTokenData 타입의 객체를 반환합니다.
+     */
     @Transactional
     public ReissuedAccessTokenData reissueAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
@@ -159,6 +195,12 @@ public class UserService {
         return ReissuedAccessTokenData.builder().accessToken(accessToken.getToken()).build();
     }
 
+    /**
+     * access token을 생성합니다.
+     *
+     * @param userId access token을 생성할 user id
+     * @return 성공 시 발급된 access token을 AuthToken 타입의 객체로 반환합니다.
+     */
     public AuthToken makeAccessToken(String userId) {
 
         Date now = new Date();
@@ -170,6 +212,11 @@ public class UserService {
         );
     }
 
+    /**
+     * refresh token을 생성합니다.
+     *
+     * @return 성공 시 생성한 refresh token을 AuthToken 타입의 객체로 반환합니다.
+     */
     public AuthToken makeRefreshToken() {
 
         Date now = new Date();
@@ -177,6 +224,14 @@ public class UserService {
         return tokenProvider.createAuthToken(new Date(now.getTime() + refreshTokenExpiry));
     }
 
+    /**
+     * 관리자 계정 로그인을 처리합니다.
+     *
+     * @param loginReq            관리자 계정 로그인을 요청한 user id가 담긴 객체
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @return 성공 시 닉네임, access token, isFirst를 담은 SocialLoginData 타입의 객체를 반환합니다.
+     */
     @Transactional
     public SocialLoginData adminLogin(LoginTestReq loginReq, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         User loginuser = userRepository.findById(loginReq.getId()).orElseThrow(UserNotFoundException::new);
@@ -214,10 +269,21 @@ public class UserService {
 
     }
 
+    /**
+     * redis에 저장된 user의 refresh token을 제거합니다.
+     *
+     * @param userId refresh token을 제거할 user id
+     */
     public void deleteUserToken(String userId) {
         redisTemplate.opsForValue().getOperations().delete(USER_TOKEN + userId);
     }
 
+    /**
+     * 쿠키에 담긴 refresh token을 삭제합니다.
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     */
     public void deleteCookieRefreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
     }
