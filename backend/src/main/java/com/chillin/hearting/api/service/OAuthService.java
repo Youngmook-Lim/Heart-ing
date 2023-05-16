@@ -242,10 +242,7 @@ public class OAuthService {
         // request token을 담아서 사용자 인증 url 생성(트위터 로그인 화면창)
         String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
-
-        TwitterRedirectData twitterRedirectData = TwitterRedirectData.builder().redirectUrl(authenticationUrl).build();
-
-        return twitterRedirectData;
+        return TwitterRedirectData.builder().redirectUrl(authenticationUrl).build();
     }
 
     @Transactional
