@@ -39,7 +39,7 @@ function MessageModal({ ...props }) {
   const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
   const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
 
-  const [isOpenReporting, setIsOpenReporting] = useRecoilState(isOpenReportingAtom)
+  const setIsOpenReporting = useSetRecoilState(isOpenReportingAtom)
   
   const [messageData, setMessageData] = useState<IMessageDetailTypes>();
 
