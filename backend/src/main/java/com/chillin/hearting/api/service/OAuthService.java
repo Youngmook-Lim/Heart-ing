@@ -61,6 +61,8 @@ public class OAuthService {
     private static final String CLIENT_PROVIDER = "spring.security.oauth2.client.provider.";
     private static final String CLIENT_REGISTRATION = "spring.security.oauth2.client.registration.";
 
+    private static final String EMPTY_USER_INFO = "로부터 user 정보를 가져오지 못했습니다.";
+
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
     private final Environment environment;
@@ -283,6 +285,9 @@ public class OAuthService {
 
             socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
 
+        } catch (NullPointerException e) {
+            log.info(e.getMessage());
+            throw new UnAuthorizedException("트위터에서 유저 정보를 받아오지 못했습니다.");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
