@@ -102,7 +102,7 @@ public class OAuthService {
 
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+            throw new IllegalArgumentException(provider + EMPTY_USER_INFO);
         } catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
         }
@@ -287,7 +287,7 @@ public class OAuthService {
 
         } catch (NullPointerException e) {
             log.info(e.getMessage());
-            throw new UnAuthorizedException("트위터에서 유저 정보를 받아오지 못했습니다.");
+            throw new UnAuthorizedException(provider + EMPTY_USER_INFO);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -383,7 +383,7 @@ public class OAuthService {
             User socialUser = socialLoginResultData.getUser();
 
             if (socialUser == null) {
-                throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+                throw new NotFoundException(provider + EMPTY_USER_INFO);
             }
 
             if (socialLoginResultData.isFirst()) {
@@ -431,7 +431,7 @@ public class OAuthService {
             CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+            throw new IllegalArgumentException(provider + EMPTY_USER_INFO);
         } catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
         }
