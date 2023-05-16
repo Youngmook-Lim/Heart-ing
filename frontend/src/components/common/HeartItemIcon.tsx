@@ -12,14 +12,30 @@ type propType = { id: number };
 function HeartItemIcon(id: propType) {
   const index = id.id;
   const heartList = [
-    <HeartLock />,
-    <HeartYellow />,
-    <HeartBlue />,
-    <HeartGreen />,
-    <HeartPink />,
-    <HeartRed />,
-    <HeartPlanet />,
-    <HeartRainbow />,
+    <>
+      <HeartLock />
+    </>,
+    <>
+      <HeartYellow />
+    </>,
+    <>
+      <HeartBlue />
+    </>,
+    <>
+      <HeartGreen />
+    </>,
+    <>
+      <HeartPink />
+    </>,
+    <>
+      <HeartRed />
+    </>,
+    <>
+      <HeartPlanet />
+    </>,
+    <>
+      <HeartRainbow />
+    </>,
   ];
   return heartList[index];
 }
