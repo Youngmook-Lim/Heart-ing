@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.HeartData;
+import com.chillin.hearting.api.data.HeartListData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
@@ -70,10 +71,10 @@ class HeartServiceTest {
         when(heartRepository.findAll()).thenReturn(findHearts);
 
         // when
-        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
+        HeartListData allHearts = (HeartListData) heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartData heartData : allHearts) {
+        for (HeartData heartData : allHearts.getHeartList()) {
             if (heartData.getType().equals(DEFAULT_TYPE)) {
                 assertThat(heartData.getIsLocked()).isEqualTo(false);
             } else if (heartData.getType().equals(SPECIAL_TYPE)) {
