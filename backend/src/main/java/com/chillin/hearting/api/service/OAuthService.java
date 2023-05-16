@@ -47,7 +47,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -165,7 +164,7 @@ public class OAuthService {
     // 카카오에서 회원정보 받아오기
     @Transactional
     public SocialLoginResultData getSocialUserInfo(String kakaoAccessToken, String provider) {
-        
+
         SocialLoginResultData socialLoginResultData = null;
 
         try {
@@ -192,7 +191,7 @@ public class OAuthService {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
-            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, (Map<String, Object>) jsonObject);
+            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, jsonObject);
 
             log.info("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
             log.info(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
