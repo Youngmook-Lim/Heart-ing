@@ -38,6 +38,8 @@ public class UserService {
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String ROLE = "ROLE_USER";
 
+    private static final String USER_TOKEN = "userToken:";
+
     private final UserRepository userRepository;
     private final AuthTokenProvider tokenProvider;
     private final AppProperties appProperties;
@@ -121,7 +123,7 @@ public class UserService {
 
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
 
-        String key = "userToken:" + user.getId();
+        String key = USER_TOKEN + user.getId();
         String redisRefreshToken = "";
 
         try {
@@ -196,7 +198,7 @@ public class UserService {
         );
 
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        String key = "userToken:" + loginuser.getId();
+        String key = USER_TOKEN + loginuser.getId();
         valueOperations.set(key, refreshToken.getToken(), 14L, TimeUnit.DAYS);
         log.info("refresh token redis에 저장했다?");
 
@@ -215,7 +217,7 @@ public class UserService {
     }
 
     public void deleteUserToken(String userId) {
-        redisTemplate.opsForValue().getOperations().delete("userToken:" + userId);
+        redisTemplate.opsForValue().getOperations().delete(USER_TOKEN + userId);
     }
 
     public void deleteCookieRefreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
