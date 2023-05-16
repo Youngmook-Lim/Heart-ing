@@ -196,7 +196,7 @@ public class UserService {
     }
 
     /**
-     * access token을 생성합니다.
+     * access token을 발급합니다.
      *
      * @param userId access token을 생성할 user id
      * @return 성공 시 발급된 access token을 AuthToken 타입의 객체로 반환합니다.
@@ -213,7 +213,7 @@ public class UserService {
     }
 
     /**
-     * refresh token을 생성합니다.
+     * refresh token을 발급합니다.
      *
      * @return 성공 시 생성한 refresh token을 AuthToken 타입의 객체로 반환합니다.
      */
