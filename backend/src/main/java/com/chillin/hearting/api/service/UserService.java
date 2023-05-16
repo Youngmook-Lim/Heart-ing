@@ -204,9 +204,9 @@ public class UserService {
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
-        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, "refreshToken");
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
 
-        CookieUtil.addCookie(httpServletResponse, "refreshToken", refreshToken.getToken(), cookieMaxAge);
+        CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         log.info("관리자용 로그인 성공! {}", socialLoginData);
 
@@ -219,7 +219,7 @@ public class UserService {
     }
 
     public void deleteCookieRefreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, "refreshToken");
+        CookieUtil.deleteCookie(httpServletRequest, httpServletResponse, REFRESH_TOKEN);
     }
 
 
