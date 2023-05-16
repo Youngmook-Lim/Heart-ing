@@ -1,7 +1,7 @@
 package com.chillin.hearting.api.service;
 
+import com.chillin.hearting.api.data.SocialLoginBeforeTokenIssueData;
 import com.chillin.hearting.api.data.SocialLoginData;
-import com.chillin.hearting.api.data.SocialLoginResultData;
 import com.chillin.hearting.api.data.TwitterRedirectData;
 import com.chillin.hearting.db.domain.BlockedUser;
 import com.chillin.hearting.db.domain.User;
@@ -47,10 +47,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * {@code OAuthService}는 소셜 로그인 관련 로직을 처리하는 서비스입니다.
+ *
+ * @author wjdwn03
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -60,6 +64,8 @@ public class OAuthService {
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String CLIENT_PROVIDER = "spring.security.oauth2.client.provider.";
     private static final String CLIENT_REGISTRATION = "spring.security.oauth2.client.registration.";
+
+    private static final String EMPTY_USER_INFO = "로부터 user 정보를 가져오지 못했습니다.";
 
     private final UserRepository userRepository;
     private final BlockedUserRepository blockedUserRepository;
@@ -84,6 +90,16 @@ public class OAuthService {
     private long refreshTokenExpiry;
 
 
+    /**
+     * 트위터를 제외한 소셜 로그인을 처리합니다.
+     *
+     * @param code                provider에서 제공한 인가 코드
+     * @param provider            소셜 회사명
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @return 성공 시 user id, 닉네임, 상태메시지, access token, isFirst(회원가입인지 아닌지)를 담은 SocialLoginData 타입의 객체를 반환합니다.
+     * @throws NotFoundException 소셜에서 회원 정보를 받아오지 못한 경우
+     */
     @Transactional
     public SocialLoginData socialLogin(String code, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws NotFoundException {
 
@@ -92,15 +108,15 @@ public class OAuthService {
         SocialLoginData socialLoginData = null;
 
         try {
-            SocialLoginResultData socialLoginResultData = getSocialUserInfo(socialAccessToken, provider);
-            log.info("getSocialUserInfo 리턴값 : {}", socialLoginResultData);
+            SocialLoginBeforeTokenIssueData socialLoginBeforeTokenIssueData = getSocialUserInfo(socialAccessToken, provider);
+            log.info("getSocialUserInfo 리턴값 : {}", socialLoginBeforeTokenIssueData);
 
-            socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
+            socialLoginData = issueTokenCookie(socialLoginBeforeTokenIssueData, provider, httpServletRequest, httpServletResponse);
 
 
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+            throw new IllegalArgumentException(provider + EMPTY_USER_INFO);
         } catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
         }
@@ -108,7 +124,13 @@ public class OAuthService {
 
     }
 
-    // 카카오에서 access token 받아오기
+    /**
+     * (트위터 제외) 카카오, 구글에서 제공한 인가코드로 access token을 받아옵니다.
+     *
+     * @param code     카카오, 구글에서 제공한 인가코드
+     * @param provider 소셜 회사명
+     * @return 성공 시 소셜에서 받아온 access token을 String 타입으로 반환합니다.
+     */
     public String getSocialAccessToken(String code, String provider) {
 
         String socialAccessToken = "";
@@ -160,19 +182,24 @@ public class OAuthService {
         return socialAccessToken;
     }
 
-    // 카카오에서 회원정보 받아오기
+    /**
+     * (트위터 제외) 소셜에서 받아온 access token으로 사용자 정보를 요청합니다.
+     *
+     * @param socialAccessToken 소셜에서 넘겨준 access toekn
+     * @param provider          소셜 회사명
+     * @return 성공 시 소셜 로그인 처리된 user 객체와 회원가입인지 아닌지 여부를 보여주는 isFirst를 담은 SocialLoginBeforeTokenIssueData 타입의 객체를 반환한다.
+     */
     @Transactional
-    public SocialLoginResultData getSocialUserInfo(String kakaoAccessToken, String provider) {
+    public SocialLoginBeforeTokenIssueData getSocialUserInfo(String socialAccessToken, String provider) {
 
-        User user = null;
-        SocialLoginResultData socialLoginResultData = null;
+        SocialLoginBeforeTokenIssueData socialLoginBeforeTokenIssueData = null;
 
         try {
             String userInfoUri = environment.getProperty(CLIENT_PROVIDER + provider + ".user-info-uri");
             URL url = new URL(userInfoUri);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
+            conn.setRequestProperty("Authorization", "Bearer " + socialAccessToken);
             int responseCode = conn.getResponseCode();
             log.info(provider + "에서 사용자 정보 받아온 responseCode : {} ", responseCode);
 
@@ -191,13 +218,13 @@ public class OAuthService {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(socialResponse.toString());
 
-            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, (Map<String, Object>) jsonObject);
+            OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(provider, jsonObject);
 
             log.info("oauth2attribute test : {}", oAuth2Attribute.getAttributes());
             log.info(provider + "에 등록된 이메일 : {}", oAuth2Attribute.getEmail());
 
 
-            socialLoginResultData = checkSocialUserInfoFromDB(oAuth2Attribute.getEmail(), provider);
+            socialLoginBeforeTokenIssueData = checkSocialUserInfoFromDB(oAuth2Attribute.getEmail(), provider);
         } catch (UnAuthorizedException e) {
             log.error("로그인 한 회원 status : {}", e.getMessage());
             throw new UnAuthorizedException(e.getMessage());
@@ -205,9 +232,15 @@ public class OAuthService {
             log.error(e.getMessage());
             throw new UserNotFoundException(provider + "에서 사용자 정보를 받아오지 못했습니다.");
         }
-        return socialLoginResultData;
+        return socialLoginBeforeTokenIssueData;
     }
 
+    /**
+     * 최초 회원가입 시 생성한 uuid를 10자로 줄여준다.
+     *
+     * @param uuid 10자로 줄여줄 uuid
+     * @return 길이를 10자로 줄인 String 타입의 id를 반환한다.
+     */
     public static String parseToShortUUID(String uuid) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -225,6 +258,11 @@ public class OAuthService {
         }
     }
 
+    /**
+     * 유저가 트위터 로그인할 링크를 생성할 때 필요한 정보를 트위터에 요청한다.
+     *
+     * @return 클라이언트에서 redirect 할 url을 담은 TwitterRedirectData 타입의 객체를 반환한다.
+     */
     public TwitterRedirectData getTwitterRequestToken() {
 
         log.info("트위터 request token 얻으러 들어옴.");
@@ -242,12 +280,19 @@ public class OAuthService {
         // request token을 담아서 사용자 인증 url 생성(트위터 로그인 화면창)
         String authenticationUrl = oAuth1Operations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
-
-        TwitterRedirectData twitterRedirectData = TwitterRedirectData.builder().redirectUrl(authenticationUrl).build();
-
-        return twitterRedirectData;
+        return TwitterRedirectData.builder().redirectUrl(authenticationUrl).build();
     }
 
+    /**
+     * 트위터에서 넘겨준 코드로 유저 정보를 요청하여 로그인 처리를 해준다.
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param oauthToken          트위터에게 access token을 요청할 때 필요한 request 토큰
+     * @param oauthVerifier       트위터에게 access token을 요청할 때 필요한 oauthVerifier
+     * @param provider            트위터
+     * @return 성공 시 user id, 닉네임, 상태메시지, access token, isFirst(회원가입인지 아닌지)를 담은 SocialLoginData 타입의 객체를 반환합니다.
+     */
     @Transactional
     public SocialLoginData getTwitterUserInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String oauthToken, String oauthVerifier, String provider) {
 
@@ -279,10 +324,13 @@ public class OAuthService {
 
             log.info("트위터 로그인 한 유저의 이메일 정보 : {}", email);
 
-            SocialLoginResultData socialLoginResultData = checkSocialUserInfoFromDB(email, provider);
+            SocialLoginBeforeTokenIssueData socialLoginBeforeTokenIssueData = checkSocialUserInfoFromDB(email, provider);
 
-            socialLoginData = issueTokenCookie(socialLoginResultData, provider, httpServletRequest, httpServletResponse);
+            socialLoginData = issueTokenCookie(socialLoginBeforeTokenIssueData, provider, httpServletRequest, httpServletResponse);
 
+        } catch (NullPointerException e) {
+            log.info(e.getMessage());
+            throw new UnAuthorizedException(provider + EMPTY_USER_INFO);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -291,12 +339,19 @@ public class OAuthService {
 
     }
 
+    /**
+     * 소셜 측에서 받아온 email로 DB에 insert된 유저인지 확인하고 DB insert하거나 status를 처리합니다.
+     *
+     * @param email    소셜에서 받아온 유저의 이메일
+     * @param provider 소셜 회사명
+     * @return DB에 저장된 User와 isFirst(회원가입인지 아닌지)를 담은 SocialLoginBeforeTokenIssueData 타입의 객체를 반환합니다.
+     */
     @Transactional
-    public SocialLoginResultData checkSocialUserInfoFromDB(String email, String provider) {
+    public SocialLoginBeforeTokenIssueData checkSocialUserInfoFromDB(String email, String provider) {
 
         User user = userRepository.findByEmailAndType(email, provider.toUpperCase()).orElse(null);
 
-        SocialLoginResultData socialLoginResultData = null;
+        SocialLoginBeforeTokenIssueData socialLoginBeforeTokenIssueData = null;
 
         try {
 
@@ -316,12 +371,12 @@ public class OAuthService {
                         user.updateUserStatusToActive(nowLocalTime);
                         log.info("계정 일시 정지 풀고 난 후 user status : {}", user.getStatus());
 
-                        socialLoginResultData = SocialLoginResultData.builder()
+                        socialLoginBeforeTokenIssueData = SocialLoginBeforeTokenIssueData.builder()
                                 .user(userRepository.saveAndFlush(user))
                                 .isFirst(false)
                                 .build();
 
-                        return socialLoginResultData;
+                        return socialLoginBeforeTokenIssueData;
                     }
 
                     throw new UnAuthorizedException("pause");
@@ -332,7 +387,7 @@ public class OAuthService {
                 }
                 // 로그인 한 적 있는 정상 계정인 경우
                 else {
-                    socialLoginResultData = SocialLoginResultData.builder()
+                    socialLoginBeforeTokenIssueData = SocialLoginBeforeTokenIssueData.builder()
                             .user(user)
                             .isFirst(false)
                             .build();
@@ -354,34 +409,43 @@ public class OAuthService {
 
                 user = User.builder().id(shortUuid).type(provider.toUpperCase()).email(email).nickname(nickname).build();
 
-                socialLoginResultData = SocialLoginResultData.builder()
+                socialLoginBeforeTokenIssueData = SocialLoginBeforeTokenIssueData.builder()
                         .user(userRepository.saveAndFlush(user))
                         .isFirst(true)
                         .build();
 
-                return socialLoginResultData;
+                return socialLoginBeforeTokenIssueData;
             }
         } catch (UnAuthorizedException e) {
             log.error("로그인 한 회원 status : {}", e.getMessage());
             throw new UnAuthorizedException(e.getMessage());
         }
-        return socialLoginResultData;
+        return socialLoginBeforeTokenIssueData;
     }
 
+    /**
+     * JWT 발급, refresh token을 쿠키에 담아줍니다.
+     *
+     * @param socialLoginBeforeTokenIssueData 토큰을 발급할 유저 정보가 담긴 객체
+     * @param provider                        소셜 회사명
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @return 성공 시 user id, 닉네임, 상태메시지, access token, isFirst(회원가입인지 아닌지)를 담은 SocialLoginData 타입의 객체를 반환합니다.
+     */
     @Transactional
-    public SocialLoginData issueTokenCookie(SocialLoginResultData socialLoginResultData, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    public SocialLoginData issueTokenCookie(SocialLoginBeforeTokenIssueData socialLoginBeforeTokenIssueData, String provider, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
         SocialLoginData socialLoginData = null;
 
         try {
 
-            User socialUser = socialLoginResultData.getUser();
+            User socialUser = socialLoginBeforeTokenIssueData.getUser();
 
             if (socialUser == null) {
-                throw new NotFoundException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+                throw new NotFoundException(provider + EMPTY_USER_INFO);
             }
 
-            if (socialLoginResultData.isFirst()) {
+            if (socialLoginBeforeTokenIssueData.isFirst()) {
 
                 // 레디스에 유저 보낸 하트 정보 등록
                 migrationService.migrateUserSentHeart(socialUser.getId());
@@ -416,7 +480,7 @@ public class OAuthService {
                     .nickname(socialUser.getNickname())
                     .statusMessage(socialUser.getStatusMessage())
                     .accessToken(accessToken.getToken())
-                    .isFirst(socialLoginResultData.isFirst())
+                    .isFirst(socialLoginBeforeTokenIssueData.isFirst())
                     .build();
 
             log.info("social 로그인 성공 후 반환 값 : {}", socialLoginData);
@@ -426,7 +490,7 @@ public class OAuthService {
             CookieUtil.addCookie(httpServletResponse, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
         } catch (IllegalArgumentException e) {
             log.error("로그인 실패 : {}", e.getMessage());
-            throw new IllegalArgumentException(provider + "로부터 user 정보를 가져오지 못했습니다.");
+            throw new IllegalArgumentException(provider + EMPTY_USER_INFO);
         } catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
         }
