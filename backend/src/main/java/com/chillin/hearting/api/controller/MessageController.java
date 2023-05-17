@@ -62,7 +62,7 @@ public class MessageController {
 
         // receiver 하트 획득 조건 체크
         log.info("receiver 하트 획득 조건 체크");
-        heartService.updateReceivedHeartCount(sendMessageReq.getReceiverId(), sendMessageReq.getHeartId());
+        redisService.updateReceivedHeartCount(sendMessageReq.getReceiverId(), sendMessageReq.getHeartId());
         heartService.hasAcquirableHeart(sendMessageReq.getReceiverId());
 
         // sender 하트 획득 조건 체크 + 알림 필요한지 체크
