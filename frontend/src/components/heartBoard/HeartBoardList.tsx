@@ -18,7 +18,6 @@ function HeartBoardList({ ...props }) {
   useEffect(() => {
     // 최근 24시간 내의 하트 리스트를 받습니다.
     // 받은 리스트는 recentMessageList에 저장합니다.
-    // console.log(props.receivedList);
     setRecentMessageList(props.receivedList);
   }, [props.receivedList]);
 

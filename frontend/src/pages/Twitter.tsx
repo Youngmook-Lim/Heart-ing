@@ -23,7 +23,10 @@ function Twitter() {
   useEffect(() => {
     async function twitterLogin() {
       if (!token || !verifier) return;
-      const data = await twitterLoginApi({oauthToken: token, oauthVerifier: verifier});
+      const data = await twitterLoginApi({
+        oauthToken: token,
+        oauthVerifier: verifier,
+      });
       if (data.data) {
         const userInfo = {
           userId: data.data.userId,
@@ -39,15 +42,20 @@ function Twitter() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        // console.log("카카오로그인 실패ㅜ;");
+        navigate("/notfound");
       }
     }
     twitterLogin();
-  }, [token, verifier, navigate, setIsLogin, setUserNickname, setUserStatusMessage]);
+  }, [
+    token,
+    verifier,
+    navigate,
+    setIsLogin,
+    setUserNickname,
+    setUserStatusMessage,
+  ]);
 
-  return (
-    <div></div>
-  )
+  return <div></div>;
 }
 
-export default Twitter
+export default Twitter;
