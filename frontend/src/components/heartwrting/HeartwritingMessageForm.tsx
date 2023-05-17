@@ -21,7 +21,6 @@ function HeartwritingMessageForm({ ...props }) {
   };
 
   const onContentHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // console.log(e.currentTarget.value);
     if (e.currentTarget.value.length > 100) {
       const currentContent = e.currentTarget.value.substr(0, 100);
       props.setContent(currentContent);

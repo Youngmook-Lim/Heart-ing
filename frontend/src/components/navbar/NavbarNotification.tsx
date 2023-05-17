@@ -15,29 +15,17 @@ function NavbarNotification({ ...props }) {
 
   const onClickHandler = (e: IGetNotificationListTypes) => {
     props.setNotiIsOpen(false);
-    props.readNotification(e.notificationId)
-    if (e.type === 'R') {
+    props.readNotification(e.notificationId);
+    if (e.type === "R") {
       navigate(`/heartboard/user?id=${getUserInfo().userId}`);
     } else {
-      if (e.type === 'E') {
-        navigate('/sentheart')
+      if (e.type === "E") {
+        navigate("/sentheart");
       } else {
-        navigate('/heartguide')
+        navigate("/heartguide");
       }
     }
   };
-
-  // useEffect(() => {
-  //   const handleClick = (e: MouseEvent) => {
-  //     console.log('커런트',notiRef.current)
-  //     if (notiRef.current && !notiRef.current.contains(e.target as Node)) {
-  //       props.onNotiHandler();
-  //       console.log('바깥 눌렀다')
-  //     }
-  //   };
-  //   window.addEventListener('mousedown', handleClick);
-  //   return () => window.removeEventListener('mousedown', handleClick);
-  // }, [notiRef]);
 
   return (
     <div className="border-hrtColorOutline mx-auto w-72 h-32 absolute right-12 z-50">
@@ -61,9 +49,12 @@ function NavbarNotification({ ...props }) {
               <div>
                 {props.notiData.falseList.map(
                   (message: IGetNotificationListTypes) => (
-                    <div onClick={() =>{onClickHandler(message)}}>
-                      <NavbarNotificationItem
-                        messageInfo={message} />
+                    <div
+                      onClick={() => {
+                        onClickHandler(message);
+                      }}
+                    >
+                      <NavbarNotificationItem messageInfo={message} />
                     </div>
                   )
                 )}
@@ -76,16 +67,21 @@ function NavbarNotification({ ...props }) {
             <p className="text-xs">• 지난 알림</p>
             {Object.keys(props.notiData.trueList).length ? (
               <div>
-                {props.notiData.trueList.map((message: IGetNotificationListTypes) => (
-                  <div onClick={() =>{onClickHandler(message)}}>
-                    <NavbarNotificationItem
-                      messageInfo={message} />
-                  </div>
-                ))}
+                {props.notiData.trueList.map(
+                  (message: IGetNotificationListTypes) => (
+                    <div
+                      onClick={() => {
+                        onClickHandler(message);
+                      }}
+                    >
+                      <NavbarNotificationItem messageInfo={message} />
+                    </div>
+                  )
+                )}
               </div>
             ) : (
               <p className="text-sm ml-2 mb-1">24시간 내의 알림이 없습니다</p>
-            )} 
+            )}
           </div>
         </div>
       </div>

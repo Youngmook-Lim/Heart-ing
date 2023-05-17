@@ -10,7 +10,6 @@ function HeartBoxList({ ...props }) {
   const [inboxMessageList, setInboxMessageList] = useState(props.inboxList);
 
   useEffect(() => {
-    // console.log(props.inboxList);
     setInboxMessageList(props.inboxList);
   }, [props.inboxList]);
 
