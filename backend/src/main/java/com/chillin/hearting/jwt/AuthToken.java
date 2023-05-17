@@ -66,8 +66,8 @@ public class AuthToken {
 
     public Claims getTokenClaims() {
         try {
-            if (token == null || token.isEmpty()) {
-                log.debug("Empty or null JWT token 아마도 비로그인 유저일 가능성이 높습니다.");
+            if (token.equals("null")) {
+                log.debug("비로그인 유저입니다.");
                 return null;
             }
             return Jwts.parserBuilder()
@@ -95,8 +95,8 @@ public class AuthToken {
     public Claims getExpiredTokenClaims() {
         log.info("getExpiredTokenClaims 메서드로 들어옴.");
         try {
-            if (token == null || token.isEmpty()) {
-                log.debug("Empty or null JWT token 아마도 비로그인 유저일 가능성이 높습니다.");
+            if (token.equals("null")) {
+                log.debug("비로그인 유저입니다.");
                 return null;
             }
             return Jwts.parserBuilder()
