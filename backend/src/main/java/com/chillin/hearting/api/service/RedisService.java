@@ -1,0 +1,126 @@
+package com.chillin.hearting.api.service;
+
+import com.chillin.hearting.db.domain.Heart;
+import com.chillin.hearting.db.domain.Notification;
+import com.chillin.hearting.db.domain.User;
+import com.chillin.hearting.db.repository.HeartRepository;
+import com.chillin.hearting.db.repository.NotificationRepository;
+import com.chillin.hearting.db.repository.UserRepository;
+import com.chillin.hearting.exception.HeartNotFoundException;
+import com.chillin.hearting.exception.UserNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class RedisService {
+
+    private final HeartRepository heartRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
+    private final MigrationService migrationService;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    private static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
+    private static final String KEY_HEART_LIST_PREFIX = "heartList:";
+    private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
+    private static final String HEART_TYPE_SPECIAL = "SPECIAL";
+
+    /**
+     * REDIS에서 type에 맞는 모든 Heart Info를 찾아 반환한다.
+     *
+     * @param type
+     * @return
+     */
+    public List<Heart> getAllHeartInfo(String type) {
+        log.info("Redis로부터 {}타입의 HeartInfo를 조회합니다.", type);
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+        List<Heart> result = new ArrayList<>();
+
+        List<Object> heartIdList = listOperations.range(KEY_HEART_LIST_PREFIX + type.toLowerCase(), 0, -1);
+        if (heartIdList != null) {
+            for (Object heartId : heartIdList) {
+                heartId = ((Integer) heartId).longValue();
+                Map<String, Object> entries = hashOperations.entries(KEY_HEART_INFO_PREFIX + heartId);
+                Heart heart = Heart.builder()
+                        .id(((Integer) entries.get("id")).longValue())
+                        .name((String) entries.get("name"))
+                        .type((String) entries.get("type"))
+                        .imageUrl((String) entries.get("imageUrl"))
+                        .shortDescription((String) entries.get("shortDescription"))
+                        .longDescription((String) entries.get("longDescription"))
+                        .acqCondition((String) entries.get("acqCondition"))
+                        .build();
+                result.add(heart);
+            }
+        } else {
+            log.error("잘못한 하트 타입이 들어왔습니다.");
+        }
+        return result;
+    }
+
+    public List<Object> getSpecialHeartList() {
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
+        return listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
+    }
+
+    public boolean hasNotification(String key) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        return (valueOperations.get(key) != null) ? true : false;
+    }
+
+    /**
+     * 획득 가능한 하트가 있을 시, 알림 테이블에 저장한다.
+     *
+     * @param userId
+     * @param hId
+     */
+    @Transactional
+    public void saveHeartNotification(String userId, Long hId) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String heartName = (String) hashOperations.get(KEY_HEART_INFO_PREFIX + hId, "name");
+        User findUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Heart findHeart = heartRepository.findById(hId).orElseThrow(HeartNotFoundException::new);
+        notificationRepository.save(Notification.builder()
+                .user(findUser)
+                .content(heartName + "하트를 획득할 수 있습니다!")
+                .heart(findHeart)
+                .type("H")
+                .build());
+    }
+
+    public void setNotification(String key) {
+        redisTemplate.opsForValue().set(key, "true", 24L, TimeUnit.HOURS);
+    }
+
+    /**
+     * 유저가 보낸 메시지를 바탕으로 보낸 하트 개수를 업데이트합니다.
+     *
+     * @param userId
+     * @param heartId
+     */
+    public void updateSentHeartCount(String userId, Long heartId) {
+        log.info("Redis에 userSentHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String key = KEY_SEND_HEARTS_PREFIX + userId;
+        // update sent heart count
+        if (redisTemplate.hasKey(key)) {
+            hashOperations.put(key, heartId.toString(), ((Integer) hashOperations.get(key, heartId.toString())).longValue() + 1);
+        } else {
+            migrationService.migrateUserSentHeart(userId);
+        }
+    }
+}
