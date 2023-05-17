@@ -208,7 +208,7 @@ public class UserService {
         return tokenProvider.createAuthToken(
                 userId,
                 ROLE,
-                new Date(now.getTime() + refreshTokenExpiry)
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
     }
 
@@ -242,13 +242,11 @@ public class UserService {
         AuthToken accessToken = authTokenProvider.createAuthToken(
                 loginReq.getId(),
                 "ROLE_ADMIN",
-                new Date(now.getTime() + refreshTokenExpiry)
+                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
         );
 
 
-        AuthToken refreshToken = authTokenProvider.createAuthToken(
-                new Date(now.getTime() + refreshTokenExpiry)
-        );
+        AuthToken refreshToken = makeRefreshToken();
 
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         String key = USER_TOKEN + loginuser.getId();

@@ -42,7 +42,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         AuthToken token = tokenProvider.convertAuthToken(headerToken);
 
         try {
-            if (token.validate()) {
+            if (token.getToken() != null && token.validate()) {
                 log.debug("헤더로 넘어온 토큰이 null이 아니네!!!!");
 
                 Authentication authentication = tokenProvider.getAuthentication(token);
