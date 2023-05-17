@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +32,13 @@ public class RedisService {
     private final MigrationService migrationService;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
-    private static final String KEY_HEART_LIST_PREFIX = "heartList:";
-    private static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
-    private static final String HEART_TYPE_SPECIAL = "SPECIAL";
+    public static final String KEY_HEART_INFO_PREFIX = "heartInfo:";
+    public static final String KEY_HEART_LIST_PREFIX = "heartList:";
+    public static final String KEY_SEND_HEARTS_PREFIX = "userSentHeart:";
+    public static final String KEY_RECEIVED_HEARTS_PREFIX = "userReceivedHeart:";
+    public static final String HEART_TYPE_SPECIAL = "SPECIAL";
+    public static final String HEART_TYPE_DEFAULT = "DEFAULT";
+
 
     /**
      * REDIS에서 type에 맞는 모든 Heart Info를 찾아 반환한다.
@@ -72,14 +74,32 @@ public class RedisService {
         return result;
     }
 
+    /**
+     * Redis에서 Special Heart 리스트를 반환합니다.
+     *
+     * @return
+     */
     public List<Object> getSpecialHeartList() {
-        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
-        return listOperations.range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
+        return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
     }
 
+    /**
+     * Redis에서 Default Heart 리스트를 반환합니다.
+     *
+     * @return
+     */
+    public List<Object> getDefaultHeartList() {
+        return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
+    }
+
+    /**
+     * Redis에 저장된 알림이 있는지 체크합니다.
+     *
+     * @param key
+     * @return
+     */
     public boolean hasNotification(String key) {
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        return (valueOperations.get(key) != null) ? true : false;
+        return (redisTemplate.opsForValue().get(key) != null) ? true : false;
     }
 
     /**
@@ -123,4 +143,34 @@ public class RedisService {
             migrationService.migrateUserSentHeart(userId);
         }
     }
+
+    /**
+     * 유저가 받은 메시지를 바탕으로 받은 하트 개수를 업데이트합니다.
+     *
+     * @param userId
+     * @param heartId
+     */
+    public void updateReceivedHeartCount(String userId, Long heartId) {
+        log.info("Redis에 userReceivedHeart를 업데이트합니다. userId:{} heartId:{}", userId, heartId);
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        String key = KEY_RECEIVED_HEARTS_PREFIX + userId;
+        // update Received heart count
+        if (redisTemplate.hasKey(key)) {
+            hashOperations.put(key, heartId.toString(), ((Integer) hashOperations.get(key, heartId.toString())).longValue() + 1);
+        } else {
+            migrationService.migrateUserReceivedHeart(userId);
+        }
+    }
+
+    /**
+     * Redis Hash에서 value를 조회합니다.
+     *
+     * @param key
+     * @param field
+     * @return
+     */
+    public Object get(String key, String field) {
+        return redisTemplate.opsForHash().get(key, field);
+    }
+
 }
