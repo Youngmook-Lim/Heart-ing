@@ -29,6 +29,9 @@ class HeartServiceTest {
     @InjectMocks
     private HeartService heartService;
 
+    @InjectMocks
+    private RedisService redisService;
+
     @Mock
     private HeartRepository heartRepository;
 
@@ -68,7 +71,7 @@ class HeartServiceTest {
         fakeUser = null;
 
         // moking
-        when(heartRepository.findAll()).thenReturn(findHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(findHearts);
 
         // when
         HeartListData allHearts = (HeartListData) heartService.findAllHearts(fakeUser);
@@ -95,10 +98,10 @@ class HeartServiceTest {
         when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
 
         // when
-        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
+        HeartListData allHearts = (HeartListData) heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartData heartData : allHearts) {
+        for (HeartData heartData : allHearts.getHeartList()) {
             assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getHeartId() == notMyHeart.getId()) ? true : false);
         }
     }
@@ -115,10 +118,11 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
+//        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
         when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
 
         // when
-        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
+        List<HeartData> heartDataList = heartService.findUserMessageHearts(fakeUser);
 
         // then
         for (HeartData heartData : heartDataList) {
