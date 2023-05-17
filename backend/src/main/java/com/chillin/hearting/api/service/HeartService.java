@@ -186,7 +186,7 @@ public class HeartService {
             Long hId = ((Integer) specialHeartId).longValue();
             if (!mySpecialHeartIds.contains(hId) && isAcquiredSpecialHeart(userId, hId, false)) {
                 String key = "user:" + userId + ":notifiedHeartId:" + hId;
-                if (redisService.hasNotification(key)) {
+                if (!redisService.hasNotification(key)) {
                     redisService.saveHeartNotification(userId, hId);
                     redisService.setNotification(key);
                     isAcq = true;
