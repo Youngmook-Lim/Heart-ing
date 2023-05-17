@@ -11,7 +11,6 @@ function HeartBoxListItem({ ...props }) {
   const setSelectedMessgeIdAtom = useSetRecoilState(selectedMessageIdAtom);
 
   const readMessage = (messageId: number) => {
-    // console.log(messageId + " 메시지를 읽습니다");
     // messageId의 메시지를 열람합니다
     setReadMessageAtom(true);
     setSelectedMessgeIdAtom(messageId);

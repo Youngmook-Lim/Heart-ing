@@ -13,12 +13,7 @@ function NavbarSide({ ...props }) {
   const [xPosition, setXPosition] = useState(-props.width);
   const [isSetting, setIsSetting] = useState(false);
 
-  // const onToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   setIsOpen(!isOpen)
-  // }
-
   const onToggleHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // console.log(xPosition)
     if (xPosition < 0) {
       setXPosition(0);
       setIsOpen(true);
@@ -30,9 +25,7 @@ function NavbarSide({ ...props }) {
   };
 
   const onSidebarHandler = async (e: MouseEvent): Promise<void> => {
-    // console.log('내자식', children)
     let sideArea = refSidebar.current;
-    // console.log('isOpen은', isOpen, sideArea, sideChildren)
     if (isOpen && !sideArea) {
       await setXPosition(-props.width);
       await setIsOpen(false);
