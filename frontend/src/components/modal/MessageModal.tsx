@@ -99,8 +99,6 @@ function MessageModal({ ...props }) {
       } else {
       if (data && (data as AxiosError).response?.status === 400){
         alert("해당 메세지는 이미 신고 되었습니다.")
-      } else if (data && (data as AxiosError).response?.status === 401){
-        alert("신고의 권한이 없습니다.")
       } else {
         alert("신고하기가 실패했습니다. 나중에 다시 시도해주세요.")
       }
