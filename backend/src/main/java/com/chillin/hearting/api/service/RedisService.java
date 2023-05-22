@@ -10,6 +10,7 @@ import com.chillin.hearting.exception.HeartNotFoundException;
 import com.chillin.hearting.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -79,6 +81,7 @@ public class RedisService {
      *
      * @return
      */
+//    @Cacheable(value = "cacheList", key = "heartList:special", cacheManager = "redisCacheManager")
     public List<Object> getSpecialHeartList() {
         return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
     }
@@ -88,8 +91,14 @@ public class RedisService {
      *
      * @return
      */
-    public List<Object> getDefaultHeartList() {
-        return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1);
+    @Cacheable(value = "defaultList", cacheManager = "redisCacheManager")
+    public List<String> getDefaultHeartList() {
+        return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_DEFAULT.toLowerCase(), 0, -1).stream().map(o -> o.toString()).collect(Collectors.toList());
+    }
+
+    @Cacheable(value = "allList", cacheManager = "redisCacheManager")
+    public List<Object> getAllHeartList() {
+        return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + "all", 0, -1);
     }
 
     /**
@@ -169,8 +178,34 @@ public class RedisService {
      * @param field
      * @return
      */
+
+    @Cacheable(value = "user", key = "#key+ ':' + #field", cacheManager = "redisCacheManager")
     public Object get(String key, String field) {
         return redisTemplate.opsForHash().get(key, field);
     }
 
+    @Cacheable(value = "info", key = "'heartInfo:' + #key", cacheManager = "redisCacheManager")
+    public Heart getHeartInfo(String key) {
+        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
+        Map<String, Object> entries = hashOperations.entries(KEY_HEART_INFO_PREFIX + key);
+        Heart heart = Heart.builder()
+                .id(((Integer) entries.get("id")).longValue())
+                .name((String) entries.get("name"))
+                .type((String) entries.get("type"))
+                .imageUrl((String) entries.get("imageUrl"))
+                .shortDescription((String) entries.get("shortDescription"))
+                .longDescription((String) entries.get("longDescription"))
+                .acqCondition((String) entries.get("acqCondition"))
+                .build();
+        return heart;
+    }
+
+    @Cacheable(value = "allHearts", cacheManager = "redisCacheManager")
+    public List<Heart> getAllHearts() {
+        List<Heart> allHearts = new ArrayList<>();
+        for (Object heartId : getAllHeartList()) {
+            allHearts.add(getHeartInfo(heartId.toString()));
+        }
+        return allHearts;
+    }
 }
