@@ -416,7 +416,7 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 - [아키텍쳐](docs/hearting_architecture.png)
 - [API 문서](docs/hearting_api_docs.pdf)
 - [Git Convention](docs/hearting_git_convention.pdf)
-- [포팅매뉴얼](exec/hearting_%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.pdf.pdf)
+- [포팅매뉴얼](exec/hearting_%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.pdf)
 
 ## 프로젝트 발표자료
 
