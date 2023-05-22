@@ -29,7 +29,7 @@ class HeartServiceTest {
     @InjectMocks
     private HeartService heartService;
 
-    @InjectMocks
+    @Mock
     private RedisService redisService;
 
     @Mock
@@ -94,7 +94,7 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-        when(heartRepository.findAll()).thenReturn(findHearts);
+        when(redisService.getAllHeartInfo("ALL")).thenReturn(findHearts);
         when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
 
         // when
@@ -118,8 +118,7 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-//        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
-        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(defaultHearts);
 
         // when
         List<HeartData> heartDataList = heartService.findUserMessageHearts(fakeUser);
@@ -144,11 +143,11 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
-        when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
+        when(userHeartRepository.findAllByUserIdOrderByHeartId(any())).thenReturn(userHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(defaultHearts);
 
         // when
-        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
+        List<HeartData> heartDataList = heartService.findUserMessageHearts(fakeUser);
 
         // then
         assertThat(heartDataList).hasSize(3);
