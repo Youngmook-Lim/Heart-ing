@@ -401,10 +401,19 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 
   - 손민혁
   - 임영묵
+    - Spring Boot 서버 REST API 개발 (받은메시지 및 메시지 공통기능 API 개발)
+    - TDD(Test Driven Development) 기반 테스트 코드 작성
+    - Node.js 웹소켓 서버 개발
   - 황정주
 
 - Infra
   - 임영묵
+    - 전체 아키텍쳐 설계
+    - Jenkins CI/CD Pipeline를 통한 빌드/배포 자동화 시스템 구축
+    - Kubernetes 클러스터 구축
+    - Node.js 서버 인스턴스 간 상태 공유를 위한 Redis 클러스터 구축
+    - AWS EC2 환경설정 (Nginx, Docker, MySQL, 방화벽 설정 등)
+    - DockerHub를 활용한 서버 이미지 버전 관리
 
 ## 프로젝트 산출물
 
