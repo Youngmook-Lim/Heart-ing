@@ -391,6 +391,15 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 
 ## 팀원
 
+### **Chillin'** 팀 소개
+
+|                                          권오연                                           |                                          손민혁                                           |                                          서현경                                           |                                          이가은                                           |                                          임영묵                                           |                                          황정주                                           |
+| :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+|                                      [Ohyeon Kwon]()                                      |                        [Minhyeok Son](https://github.com/sonmh79)                         |                                    [Hyeonkyeong Seo]()                                    |                          [Gaeun Lee](https://github.com/haegomm)                          |                     [Youngmook Lim](https://github.com/Youngmook-Lim)                     |                                     [Jeongju Hwang]()                                     |
+| <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/78152114?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/95625643?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> |
+
+### 팀원 역할
+
 - FrontEnd
 
   - 권오연
