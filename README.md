@@ -268,7 +268,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### Frontend (React)
 
-```yaml
+```
 Hearting
 ├── assets
 │   └── images
@@ -305,7 +305,7 @@ Hearting
 
 ### Backend (Spring Boot)
 
-```yaml
+```
 Hearting
 ├── api
 │   ├── controller
@@ -327,7 +327,7 @@ Hearting
 
 ### Backend (NodeJS)
 
-```yaml
+```
 Hearting
 ├── Dockerfile
 ├── app.js
