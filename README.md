@@ -401,36 +401,37 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 
 ### **Chillin'** 팀 소개
 
-|                                                                                [권오연]()                                                                                 |                           [손민혁](https://github.com/sonmh79)                            |                                                                                [서현경]()                                                                                 |                           [이가은](https://github.com/haegomm)                            |                        [임영묵](https://github.com/Youngmook-Lim)                         |                                                                                [황정주]()                                                                                 |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE59arVLPSSWWT_b1Le3VEZjf4vsjKfAALRjaCaYp2XdfOTy073stKji9ntnUkak4Mc8U&usqp=CAU" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/78152114?v=4" width="100" height="100"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE59arVLPSSWWT_b1Le3VEZjf4vsjKfAALRjaCaYp2XdfOTy073stKji9ntnUkak4Mc8U&usqp=CAU" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/95625643?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE59arVLPSSWWT_b1Le3VEZjf4vsjKfAALRjaCaYp2XdfOTy073stKji9ntnUkak4Mc8U&usqp=CAU" width="100" height="100"> |
-|                                                                                 Frontend                                                                                  |                                          Backend                                          |                                                                                  FE / GE                                                                                  |                                         Frontend                                          |                                        BE / Infra                                         |                                                                                  Backend                                                                                  |
+|                                                                                [권오연]()                                                                                 |                        [손민혁(팀장)](https://github.com/sonmh79)                         |                           [서현경](https://github.com/nanalyee)                           |                           [이가은](https://github.com/haegomm)                            |                        [임영묵](https://github.com/Youngmook-Lim)                         |                            [황정주](https://github.com/wjdwn03)                            |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: |
+| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE59arVLPSSWWT_b1Le3VEZjf4vsjKfAALRjaCaYp2XdfOTy073stKji9ntnUkak4Mc8U&usqp=CAU" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/78152114?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/90018240?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/95625643?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/94703258?v=4" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/109848753?v=4" width="100" height="100"> |
+|                                                                                 Frontend                                                                                  |                                          Backend                                          |                                          FE / GE                                          |                                         Frontend                                          |                                        BE / Infra                                         |                                          Backend                                           |
 
 ### 팀원 역할
 
-- FrontEnd
+**FrontEnd**
 
-  - 권오연
-  - 서현경
-  - 이가은
+- 권오연
+- 서현경
+- 이가은
 
-- BackEnd
+**BackEnd**
 
-  - 손민혁
-  - 임영묵
-    - Spring Boot 서버 REST API 개발 (받은메시지 및 메시지 공통기능 API 개발)
-    - TDD(Test Driven Development) 기반 테스트 코드 작성
-    - Node.js 웹소켓 서버 개발
-  - 황정주
+- 손민혁
+- 임영묵
+  - Spring Boot 서버 REST API 개발 (받은메시지 및 메시지 공통기능 API 개발)
+  - TDD(Test Driven Development) 기반 테스트 코드 작성
+  - Node.js 웹소켓 서버 개발
+- 황정주
 
-- Infra
-  - 임영묵
-    - 전체 아키텍쳐 설계
-    - Jenkins CI/CD Pipeline를 통한 빌드/배포 자동화 시스템 구축
-    - Kubernetes 클러스터 구축
-    - Node.js 서버 인스턴스 간 상태 공유를 위한 Redis 클러스터 구축
-    - AWS EC2 환경설정 (Nginx, Docker, MySQL, 방화벽 설정 등)
-    - DockerHub를 활용한 서버 이미지 버전 관리
+**Infra**
+
+- 임영묵
+  - 전체 아키텍쳐 설계
+  - Jenkins CI/CD Pipeline를 통한 빌드/배포 자동화 시스템 구축
+  - Kubernetes 클러스터 구축
+  - Node.js 서버 인스턴스 간 상태 공유를 위한 Redis 클러스터 구축
+  - AWS EC2 환경설정 (Nginx, Docker, MySQL, 방화벽 설정 등)
+  - DockerHub를 활용한 서버 이미지 버전 관리
 
 ## 프로젝트 산출물
 
@@ -450,3 +451,13 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 - [최종발표 Presentation](docs/hearting_%EC%B5%9C%EC%A2%85%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.pdf)
 
 ## 회고
+
+### 임영묵
+
+약 1년간의 SSAFY 과정의 종지부를 찍는 마지막 자율 프로젝트에서는, 실제 유저의 피드백을 반영하여 수차례 서비스를 개선해 나아가는 애자일한 개발 프로세스를 경험해 보는 목표를 잡았습니다. 따라서 6주의 프로젝트 기간 동안 3주 간 빠르게 주요기능 개발을 완료하여 1차 배포를 하였고, 유저 설문조사 및 Google Analytics, HotJar 등의 분석 데이터를 기반으로 총 2차례의 개선된 버전 배포를 진행하였습니다.
+
+개발자의 진정한 가치는 사용자 한명 한명의 경험과 의견에 귀를 기울여 계속하여 사용자에게 가치와 즐거움을 선사하는 것이라고 생각합니다. 유저들과 꾸준한 소통과 데이터를 기반하여 애자일한 개발 프로세스를 겪어보며, 우리가 상상한 유저 경험과 실제 유저의 경험은 상이한 부분이 많다는 것을 경험했습니다. 따라서, 가치있는 개발자가 되기 위해서는 뛰어난 개발 능력 뿐만 아니라 결국 사용자들이 실제로 원하고 필요한 서비스가 무엇인지 파악하고 이를 센스있게 제공할 수 있는 능력이라는 것을 배웠습니다.
+
+백엔드 개발과 인프라 부분을 담당하며 Node.js 서버 개발, Redis 클러스터 구축, Kubernetes 클러스터를 통한 운영 서버 구축 등 새로운 기술을 학습하고 활용하여 다양한 문제를 해결해 볼 수 있었습니다. 실제 트래픽을 수용할 수 있는 시스템을 설계하고 개발하다 보니 이러한 기술들을 단순히 “써 보고 싶다”라는 이유보다는 문제점을 해결하거나 특정 목표를 달성하기 위해 도입했습니다. 이렇게 사용한 기술과 그 기술을 사용한 이유를 명확히 연관지을 수 있어서 특정 기술은 왜 쓰는건지, 에 대한 정당성을 확실히 잡을 수 있었습니다.
+
+하팅!이 배포 2주 만에 누적 사용자 2.5천명, 메시지 3천건, 가입자 500명 등의 성공적인 결과와 수상을 할 수 있었던 것은 팀원 한 명 빠짐없이 끊임없이 토론하고, 협력하고 서로를 믿어주었기 때문이라고 생각합니다. 지난 번 프로젝트에서 맞춰 본 좋은 호흡을 그대로 이어와 그때의 성공경험을 기반으로 더 큰 성공을 거둘 수 있었던 것 같습니다. 열심히 달려주셔서 너무 감사하다는 마음을 전하고 싶습니다. Chillin’ 팀 화이팅! 화이팅! 하팅!!!
