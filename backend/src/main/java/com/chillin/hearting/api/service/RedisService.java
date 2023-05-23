@@ -81,7 +81,7 @@ public class RedisService {
      *
      * @return
      */
-//    @Cacheable(value = "cacheList", key = "heartList:special", cacheManager = "redisCacheManager")
+    @Cacheable(value = "specialList", cacheManager = "redisCacheManager")
     public List<Object> getSpecialHeartList() {
         return redisTemplate.opsForList().range(KEY_HEART_LIST_PREFIX + HEART_TYPE_SPECIAL.toLowerCase(), 0, -1);
     }
@@ -179,7 +179,7 @@ public class RedisService {
      * @return
      */
 
-    @Cacheable(value = "user", key = "#key+ ':' + #field", cacheManager = "redisCacheManager")
+//    @Cacheable(value = "user", key = "#key+ ':' + #field", cacheManager = "redisCacheManager")
     public Object get(String key, String field) {
         return redisTemplate.opsForHash().get(key, field);
     }
