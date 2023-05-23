@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.controller;
 
 import com.chillin.hearting.api.data.HeartData;
+import com.chillin.hearting.api.data.HeartListData;
 import com.chillin.hearting.api.service.HeartService;
 import com.chillin.hearting.db.domain.Heart;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,9 +66,12 @@ public class HeartControllerTest {
         List<HeartData> heartDataList = new ArrayList<>();
         heartDataList.add(HeartData.of(createDefaultHeart(1L), false));
         heartDataList.add(HeartData.of(createSpecialHeart(7L), true));
+        HeartListData data = HeartListData.builder()
+                .heartList(heartDataList)
+                .build();
 
         // mocking
-        when(heartService.findAllHearts(any())).thenReturn(heartDataList);
+        when(heartService.findAllHearts(any())).thenReturn(data);
 
         // when
         final ResultActions resultActions = mockMvc.perform(
@@ -109,7 +113,7 @@ public class HeartControllerTest {
         heartDataList.add(HeartData.of(createSpecialHeart(6L), false));
 
         // mocking
-        when(heartService.findUserHearts(any())).thenReturn(heartDataList);
+        when(heartService.findUserMessageHearts(any())).thenReturn(heartDataList);
 
         // when
         final ResultActions resultActions = mockMvc.perform(

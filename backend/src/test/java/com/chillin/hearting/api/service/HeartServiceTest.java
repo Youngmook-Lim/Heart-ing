@@ -1,6 +1,7 @@
 package com.chillin.hearting.api.service;
 
 import com.chillin.hearting.api.data.HeartData;
+import com.chillin.hearting.api.data.HeartListData;
 import com.chillin.hearting.db.domain.Heart;
 import com.chillin.hearting.db.domain.User;
 import com.chillin.hearting.db.domain.UserHeart;
@@ -27,6 +28,9 @@ class HeartServiceTest {
 
     @InjectMocks
     private HeartService heartService;
+
+    @Mock
+    private RedisService redisService;
 
     @Mock
     private HeartRepository heartRepository;
@@ -67,13 +71,13 @@ class HeartServiceTest {
         fakeUser = null;
 
         // moking
-        when(heartRepository.findAll()).thenReturn(findHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(findHearts);
 
         // when
-        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
+        HeartListData allHearts = (HeartListData) heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartData heartData : allHearts) {
+        for (HeartData heartData : allHearts.getHeartList()) {
             if (heartData.getType().equals(DEFAULT_TYPE)) {
                 assertThat(heartData.getIsLocked()).isEqualTo(false);
             } else if (heartData.getType().equals(SPECIAL_TYPE)) {
@@ -90,14 +94,14 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-        when(heartRepository.findAll()).thenReturn(findHearts);
+        when(redisService.getAllHeartInfo("ALL")).thenReturn(findHearts);
         when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
 
         // when
-        List<HeartData> allHearts = heartService.findAllHearts(fakeUser);
+        HeartListData allHearts = (HeartListData) heartService.findAllHearts(fakeUser);
 
         // then
-        for (HeartData heartData : allHearts) {
+        for (HeartData heartData : allHearts.getHeartList()) {
             assertThat(heartData.getIsLocked()).isEqualTo((heartData.getType() != "DEFAULT" && heartData.getHeartId() == notMyHeart.getId()) ? true : false);
         }
     }
@@ -114,10 +118,10 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(defaultHearts);
 
         // when
-        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
+        List<HeartData> heartDataList = heartService.findUserMessageHearts(fakeUser);
 
         // then
         for (HeartData heartData : heartDataList) {
@@ -139,11 +143,11 @@ class HeartServiceTest {
         userHearts.add(UserHeart.builder().user(fakeUser).heart(specialHeart).build());
 
         // mocking
-        when(heartRepository.findAllByType(any())).thenReturn(defaultHearts);
-        when(userHeartRepository.findAllByUserId(any())).thenReturn(userHearts);
+        when(userHeartRepository.findAllByUserIdOrderByHeartId(any())).thenReturn(userHearts);
+        when(redisService.getAllHeartInfo(any())).thenReturn(defaultHearts);
 
         // when
-        List<HeartData> heartDataList = heartService.findUserHearts(fakeUser);
+        List<HeartData> heartDataList = heartService.findUserMessageHearts(fakeUser);
 
         // then
         assertThat(heartDataList).hasSize(3);
