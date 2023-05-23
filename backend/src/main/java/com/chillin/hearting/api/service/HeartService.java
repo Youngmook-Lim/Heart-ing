@@ -68,12 +68,12 @@ public class HeartService {
         if (user != null) {
             myHeartSet = findUserHeartIds(user.getId());
             log.info("들어온 유저 아이디 : {} 이미 획득한 스페셜 하트 개수 : {}", user.getId(), myHeartSet.size());
+            /////// MYSQL 사용
+//            allHeartSentCount = heartRepository.findAllHeartSentCount(user.getId());
+//            allHeartReceivedCount = heartRepository.findAllHeartReceivedCount(user.getId());
+            //////
         }
 
-//        /////// MYSQL 사용
-//        allHeartSentCount = heartRepository.findAllHeartSentCount(user.getId());
-//        allHeartReceivedCount = heartRepository.findAllHeartReceivedCount(user.getId());
-        //////
 
         // 모든 하트를 반환하되, 기본 하트이거나 내가 획득한 하트는 잠금이 해제됩니다. 아직 잠긴 하트 중 내가 획득할 수 있는 하트인지 체크합니다.
         List<HeartData> resHearts = new ArrayList<>();
@@ -477,7 +477,7 @@ public class HeartService {
                     currentValue = allHeartSentCount.get(heart.getId().intValue() - 1).getCurrentValue().intValue();
                     if (currentValue < HEART_NOIR_MAX_VALUE) {
                         isAcquirable = false;
-                        log.info("무지개 하트를 획득 불가 - {}번 하트 조건 미충족", heart.getId());
+                        log.info("질투의 누아르 하트를 획득 불가 - {}번 하트 조건 미충족", heart.getId());
                     }
                     if (isSave) {
                         saveHeartCondition(heart.getId(), currentValue, HEART_NOIR_MAX_VALUE);
