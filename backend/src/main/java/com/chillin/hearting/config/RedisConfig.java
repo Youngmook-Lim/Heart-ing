@@ -73,8 +73,6 @@ public class RedisConfig {
         // entryTtl 설정
         cacheConfigurationMap.put("user",
                 redisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(180)));
-        cacheConfigurationMap.put("entry",
-                redisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(180)));
 
         return RedisCacheManager
                 .RedisCacheManagerBuilder
