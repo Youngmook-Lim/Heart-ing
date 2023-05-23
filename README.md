@@ -1,6 +1,7 @@
 # 하팅!
 
-## 배너필요!!
+![메인배너1](etc/assets/banner-1.png)
+![메인배너2](etc/assets/banner-2.png)
 
 ## 프로젝트 개요
 
