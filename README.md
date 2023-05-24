@@ -262,7 +262,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 
 ### 아토믹 디자인
 
-<img src="etc/assets/atomic.png" width="600px">
+<img src="etc/assets/atomic.png" height="600px">
 
 - 아토믹 디자인 도입하여 일관성과 확장성을 가진 컴포넌트를 구축합니다.
 - Page단에서만의 API 통신으로 컴포넌트 간 의존성 낮춥니다.
@@ -275,7 +275,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
   ![확장가능성1](etc/assets/expansion-1.png)
 
 - 아래 그림에서 보이는 것과 같이 번역을 시도한 기록도 확인할 수 있었습니다.
-  <img src="etc/assets/expansion-2.png" height="600px">
+  <img src="etc/assets/expansion-2.png" height="400px">
 
 - 유저풀 확장
   - 이러한 결과를 바탕으로 글로벌 시장에 대한 가능성을 확인해 보기 위해, 영어 페이지를 구축하여 글로벌 유저에게 서비스를 제공해 보고자 합니다.
@@ -297,6 +297,26 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
   - 접근성을 높이고, 장기적으로 사용하기 편한 환경을 조성하기 위해, 하팅을 애플리케이션으로 전환하고자 합니다. 이를 통해 적극적인 유저들을 장기 유저로 자리할 수 있도록 유도하고자 합니다.
 
 ## 홍보
+
+### 공식 SNS 계정 운영
+
+인스타그램, 트위터, Mattermost 등 SNS에서 공식 계정을 운영하며 서비스를 홍보하는 동시에 유저와의 소통 창구를 마련
+
+![SNS](etc/assets/sns.png)
+
+### Meta Spark 효과 (Spark AR)
+
+![Insta1](etc/assets/insta-1.png)
+
+하팅의 홍보를 위해 MZ세대를 겨냥하는 인스타그램/페이스북 효과(필터)를 제작했습니다. Meta의 증강현실 AR효과 개발 도구 Spark AR을 활용했습니다. 얼굴을 인식해 트래킹하고, 얼굴에 피부 보정 효과를 넣었습니다. 입을 여닫으면 하팅의 애정하트 파티클이 on/off 됩니다.
+
+<img src="etc/assets/insta-2.png" width="50%">
+
+### 하트테스트 (하트 성격 유형 검사)
+
+유행하는 MBTI 성격 유형 검사를 응용해, 하트 유형 검사 페이지를 제작했습니다.
+
+하트에 대한 흥미를 높이고, 결과 공유를 통해 전파될 수 있도록 구성했습니다.
 
 ## 개발환경
 
