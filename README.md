@@ -30,14 +30,6 @@ SSAFY 8기 2학기 자율 프로젝트
 
 마지막으로 애자일한 개발의 일환으로 실제 사용자의 의견과 피드백을 반영하여 계속적으로 서비스를 개선해 나아가는 목표를 위해, Google Forms를 통한 사용자 설문조사 및 직접 유저들에게 받은 의견 수렴을 통해 서비스 버전을 관리하며 지속 업데이트를 진행하였습니다.
 
-## 서비스명 & 로고
-
-![로고](etc/assets/logo.png)
-
-**본격 두근두근 마음전달 서비스 하팅!**
-
-소중한 관계에서 표현하는 다양한 감정들로 마음이 녹아내린다는 의미를 담은 로고입니다.
-
 ## 성과
 
 <p float="left">
@@ -53,6 +45,16 @@ SSAFY 8기 2학기 자율 프로젝트
 - 발생한 이벤트 수: **45,000**번+
 - 평균 상호작용 수: **20.6**회
 - 평균 메시지 수: **6**회
+
+[성과 더보기](etc/assets/hearting_more.pdf)
+
+## 서비스명 & 로고
+
+![로고](etc/assets/logo.png)
+
+**본격 두근두근 마음전달 서비스 하팅!**
+
+소중한 관계에서 표현하는 다양한 감정들로 마음이 녹아내린다는 의미를 담은 로고입니다.
 
 ## 주요기능
 
@@ -88,7 +90,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 하팅! 서비스 화면
 
-<img src="etc/assets/screen1.png" width="500px">
+<img src="etc/assets/screen1.png" height="400px">
 
 ### 홈 화면
 
@@ -97,19 +99,19 @@ SSAFY 8기 2학기 자율 프로젝트
 
 **로그인 상태**
 
-<img src="etc/assets/home_login.gif" width="200px" >
+<img src="etc/assets/home_login.gif" height="400px" >
 
 - `나의 하트판 가기` 버튼을 누르면 `나의 하트판(하트 수신함)`으로 이동합니다.
 
 **로그아웃 상태**
 
-<img src="etc/assets/home_Logout.gif" width="200px" >
+<img src="etc/assets/home_Logout.gif" height="400px" >
 
 - 카카오, 트위터, 구글 소셜 로그인을 지원합니다.
 
 ### 나의 하트 수신함 (받은 하트)
 
-<img src="etc/assets/heartboard.gif" width="200px" >
+<img src="etc/assets/heartboard.gif" height="400px" >
 
 - 새로운 메시지는 빨간 점으로 표시됩니다.
 - 나의 `하트 수신함` 버튼을 눌러 링크, 페이스북, 트위터, 카카오톡으로 공유 가능합니다.
@@ -121,7 +123,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 수신함
 
-<img src="etc/assets/heartboard_other.gif" width="200px" >
+<img src="etc/assets/heartboard_other.gif" height="400px" >
 
 - 다른 사용자의 하트 수신함에서 `하트 보내기` 버튼을 메시지 작성 페이지로 이동합니다.
 - 로그인 되어있지 않고, 자신의 수신함 아니면 메시지를 읽을 수 없습니다.
@@ -129,7 +131,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 메시지 작성
 
-<img src="etc/assets/write.gif" width="200px" >
+<img src="etc/assets/write.gif" height="400px" >
 
 - 획득한 하트 중에서 하나를 선택합니다.
 - 제목은 필수로 작성하고, 내용은 선택적으로 작성합니다.
@@ -137,7 +139,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 영구 보관함
 
-<img src="etc/assets/heartbox.gif" width="200px" >
+<img src="etc/assets/heartbox.gif" height="400px" >
 
 - `하트`가 사라지기 전에 저장한 경우 영구 보관함에 보관할 수 있습니다.
 - 각 버튼을 클릭하면 해당 메시지를 모달과 함께 확인할 수 있습니다.
@@ -146,7 +148,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 도감
 
-<img src="etc/assets/heartguide.gif" width="200px" >
+<img src="etc/assets/heartguide.gif" height="400px" >
 
 - 메시지 작성이 가능한 다양한 `하트`들을 확인할 수 있습니다.
 - 획득하지 못한 `하트`는 자물쇠로 잠겨있습니다.
@@ -155,7 +157,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 실시간 알림
 
-<img src="etc/assets/alarm.gif" width="200px" >
+<img src="etc/assets/alarm.gif" height="400px" >
 
 - 메시지, 반응 수신 및 새로운 스페셜 하트 획득 시 실시간으로 받을 수 있습니다.
 - 읽은 알림과 안읽은 알림은 구분됩니다.
@@ -164,13 +166,13 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 사용설명서
 
-<img src="etc/assets/manual.gif" width="200px" >
+<img src="etc/assets/manual.gif" height="400px" >
 
 - 하팅의 기능을 간단한 설명과 사진으로 설명합니다.
 
 ### 하트 테스트
 
-<img src="etc/assets/hearttest.gif" width="200px" >
+<img src="etc/assets/hearttest.gif" height="400px" >
 
 - 자신의 심볼 하트를 확인할 수 있습니다.
 - 링크, 페이스북, 트위터, 카카오톡으로 결과 페이지를 공유할 수 있습니다.
@@ -178,7 +180,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 신고하기
 
-<img src="etc/assets/report.gif" width="200px" >
+<img src="etc/assets/report.gif" height="400px" >
 
 - 메시지 우측 상단에 위치한 `신고하기` 버튼을 눌러 진행합니다.
 - 메시지별로 한 번만 신고할 수 있고, 누적 신고 당한 횟수가 3회인 유저는 3일간 계정 일시 정지가 됩니다.
