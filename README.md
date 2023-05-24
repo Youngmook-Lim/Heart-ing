@@ -36,8 +36,8 @@ SSAFY 8기 2학기 자율 프로젝트
 ## 성과
 
 <p float="left">
-  <img src="etc/assets/accomplishment-1.png" height="200" />
-  <img src="etc/assets/accomplishment-2.png" height="200" />
+  <img src="etc/assets/accomplishment-1.png" width="50%" />
+  <img src="etc/assets/accomplishment-2.png" width="50%" />
 </p>
 
 - 운영 기간: 약 **2주**(23.05.04 ~ 05.18)
@@ -93,7 +93,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 하팅! 서비스 화면
 
-<img src="etc/assets/screen1.png" height="500px">
+<img src="etc/assets/screen1.png" height="600px">
 
 ### 홈 화면
 
@@ -102,19 +102,19 @@ SSAFY 8기 2학기 자율 프로젝트
 
 **로그인 상태**
 
-<img src="etc/assets/home_login.gif" height="500px" >
+<img src="etc/assets/home_login.gif" height="600px" >
 
 - `나의 하트판 가기` 버튼을 누르면 `나의 하트판(하트 수신함)`으로 이동합니다.
 
 **로그아웃 상태**
 
-<img src="etc/assets/home_Logout.gif" height="500px" >
+<img src="etc/assets/home_Logout.gif" height="600px" >
 
 - 카카오, 트위터, 구글 소셜 로그인을 지원합니다.
 
 ### 나의 하트 수신함 (받은 하트)
 
-<img src="etc/assets/heartboard.gif" height="500px" >
+<img src="etc/assets/heartboard.gif" height="600px" >
 
 - 새로운 메시지는 빨간 점으로 표시됩니다.
 - 나의 `하트 수신함` 버튼을 눌러 링크, 페이스북, 트위터, 카카오톡으로 공유 가능합니다.
@@ -126,7 +126,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 수신함
 
-<img src="etc/assets/heartboard_other.gif" height="500px" >
+<img src="etc/assets/heartboard_other.gif" height="600px" >
 
 - 다른 사용자의 하트 수신함에서 `하트 보내기` 버튼을 메시지 작성 페이지로 이동합니다.
 - 로그인 되어있지 않고, 자신의 수신함 아니면 메시지를 읽을 수 없습니다.
@@ -134,7 +134,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 메시지 작성
 
-<img src="etc/assets/write.gif" height="500px" >
+<img src="etc/assets/write.gif" height="600px" >
 
 - 획득한 하트 중에서 하나를 선택합니다.
 - 제목은 필수로 작성하고, 내용은 선택적으로 작성합니다.
@@ -142,7 +142,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 영구 보관함
 
-<img src="etc/assets/heartbox.gif" height="500px" >
+<img src="etc/assets/heartbox.gif" height="600px" >
 
 - `하트`가 사라지기 전에 저장한 경우 영구 보관함에 보관할 수 있습니다.
 - 각 버튼을 클릭하면 해당 메시지를 모달과 함께 확인할 수 있습니다.
@@ -151,7 +151,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 도감
 
-<img src="etc/assets/heartguide.gif" height="500px" >
+<img src="etc/assets/heartguide.gif" height="600px" >
 
 - 메시지 작성이 가능한 다양한 `하트`들을 확인할 수 있습니다.
 - 획득하지 못한 `하트`는 자물쇠로 잠겨있습니다.
@@ -160,7 +160,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 실시간 알림
 
-<img src="etc/assets/alarm.gif" height="500px" >
+<img src="etc/assets/alarm.gif" height="600px" >
 
 - 메시지, 반응 수신 및 새로운 스페셜 하트 획득 시 실시간으로 받을 수 있습니다.
 - 읽은 알림과 안읽은 알림은 구분됩니다.
@@ -169,13 +169,13 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 사용설명서
 
-<img src="etc/assets/manual.gif" height="500px" >
+<img src="etc/assets/manual.gif" height="600px" >
 
 - 하팅의 기능을 간단한 설명과 사진으로 설명합니다.
 
 ### 하트 테스트
 
-<img src="etc/assets/hearttest.gif" height="500px" >
+<img src="etc/assets/hearttest.gif" height="600px" >
 
 - 자신의 심볼 하트를 확인할 수 있습니다.
 - 링크, 페이스북, 트위터, 카카오톡으로 결과 페이지를 공유할 수 있습니다.
@@ -183,7 +183,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 신고하기
 
-<img src="etc/assets/report.gif" height="500px" >
+<img src="etc/assets/report.gif" height="600px" >
 
 - 메시지 우측 상단에 위치한 `신고하기` 버튼을 눌러 진행합니다.
 - 메시지별로 한 번만 신고할 수 있고, 누적 신고 당한 횟수가 3회인 유저는 3일간 계정 일시 정지가 됩니다.
@@ -271,13 +271,12 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 
 **다양한 언어 지원**
 
-- 약 2주간의 운영 기간 동안의 GA 분석 결과 다음 그림과 같이 해외 각국에서 하팅에 접속한 기록을 확인할 수 있었습니다.
-
+- 약 2주간의 운영 기간 동안 Google Analytics를 분석해 본 결과 다음 그림과 같이 해외 각국에서 하팅에 접속한 기록을 확인할 수 있었습니다.
   ![확장가능성1](etc/assets/expansion-1.png)
 
-- 아래 그림에서 보이는 것처럼 같이 번역을 시도한 기록도 확인할 수 있었습니다.
-  <img src="etc/assets/expansion-2.png" width="500px">
-  ![확장가능성2](etc/assets/expansion-2.png)
+- 아래 그림에서 보이는 것과 같이 번역을 시도한 기록도 확인할 수 있었습니다.
+  <img src="etc/assets/expansion-2.png" width="600px">
+  <!-- ![확장가능성2](etc/assets/expansion-2.png) -->
 
 - 유저풀 확장
   - 이러한 결과를 바탕으로 글로벌 시장에 대한 가능성을 확인해 보기 위해, 영어 페이지를 구축하여 글로벌 유저에게 서비스를 제공해 보고자 합니다.
@@ -297,6 +296,8 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 
 - 장기 유저 유도
   - 접근성을 높이고, 장기적으로 사용하기 편한 환경을 조성하기 위해, 하팅을 애플리케이션으로 전환하고자 합니다. 이를 통해 적극적인 유저들을 장기 유저로 자리할 수 있도록 유도하고자 합니다.
+
+## 홍보
 
 ## 개발환경
 
@@ -503,7 +504,7 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
 - 권오연
   - 서비스 기획
   - 서비스 컨셉 및 로고 디자인
-  - UX/UI
+  - UI/UX
   - 컴포넌트 구조 설계
   - 웹소켓 클라이언트(알람) 구현
   - 소셜로그인(카카오, 구글, 트위터)
@@ -513,9 +514,9 @@ Git을 통한 협업 방식은 [우아한 형제들 Git Flow](https://techblog.w
   - 하트 수신함 (받은 하트), 메시지 상세 모달(내용, 타이머), 영구보관함, 보낸하트, 홈페이지 개발
   - 반응형 레이아웃, 애니메이션, Tailwind CSS 테마, 플러그인 개발 및 관리
   - 웹사이트 분석 및 관리 (GA4, GTM, Hotjar)
-  - UX/UI, 하트 디자인(aseprite)
+  - UI/UX, 하트 디자인(aseprite)
 - 이가은
-  - 하트 도감, 반응하기, 신고하기, 팝업 , 사용 설명서 구현
+  - 하트 도감, 반응하기, 신고하기, 팝업, 사용 설명서 구현
   - UI/UX
 
 **BackEnd**
