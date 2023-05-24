@@ -317,6 +317,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 유행하는 MBTI 성격 유형 검사를 응용해, 하트 유형 검사 페이지를 제작했습니다.
 
 하트에 대한 흥미를 높이고, 결과 공유를 통해 전파될 수 있도록 구성했습니다.
+![HeartTest](etc/assets/hearttest.png)
 
 ## 개발환경
 
