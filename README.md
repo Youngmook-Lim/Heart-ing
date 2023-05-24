@@ -262,7 +262,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 
 ### 아토믹 디자인
 
-![아토믹디자인](etc/assets/atomic.png)
+<img src="etc/assets/atomic.png" width="600px">
 
 - 아토믹 디자인 도입하여 일관성과 확장성을 가진 컴포넌트를 구축합니다.
 - Page단에서만의 API 통신으로 컴포넌트 간 의존성 낮춥니다.
