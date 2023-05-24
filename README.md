@@ -73,7 +73,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 서비스명 & 로고
 
-![로고](etc/assets/logo.png)
+<img src="etc/assets/logo.png" width="300px">
 
 **본격 두근두근 마음전달 프로젝트, 하팅!**
 
