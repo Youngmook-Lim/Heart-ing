@@ -24,7 +24,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 서비스명 & 로고
 
-![로고](etc/assets/hearting_logo.png)
+![로고](etc/assets/logo.png)
 
 ## 주요기능
 
