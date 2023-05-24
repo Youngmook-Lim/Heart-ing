@@ -275,7 +275,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
   ![확장가능성1](etc/assets/expansion-1.png)
 
 - 아래 그림에서 보이는 것과 같이 번역을 시도한 기록도 확인할 수 있었습니다.
-  <img src="etc/assets/expansion-2.png" width="600px">
+  <img src="etc/assets/expansion-2.png" height="600px">
 
 - 유저풀 확장
   - 이러한 결과를 바탕으로 글로벌 시장에 대한 가능성을 확인해 보기 위해, 영어 페이지를 구축하여 글로벌 유저에게 서비스를 제공해 보고자 합니다.
