@@ -301,7 +301,6 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 ### 공식 SNS 계정 운영
 
 인스타그램, 트위터, Mattermost 등 SNS에서 공식 계정을 운영하며 서비스를 홍보하는 동시에 유저와의 소통 창구를 마련
-
 ![SNS](etc/assets/sns.png)
 
 ### Meta Spark 효과 (Spark AR)
@@ -317,6 +316,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
 유행하는 MBTI 성격 유형 검사를 응용해, 하트 유형 검사 페이지를 제작했습니다.
 
 하트에 대한 흥미를 높이고, 결과 공유를 통해 전파될 수 있도록 구성했습니다.
+
 ![HeartTest](etc/assets/hearttest.png)
 
 ## 개발환경
@@ -341,7 +341,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
     - Lombok 1.18.26
   - Gradle 7.6
 - Node JS 18.13.0 (LTS)
-- Socket IO 4.6.1\
+- Socket IO 4.6.1
 
 ### Server
 
