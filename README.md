@@ -35,13 +35,12 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 성과
 
-<!--
 <p float="left">
-  <img src="etc/assets/accomplishment-1.png" height="150" />
-  <img src="etc/assets/accomplishment-2.png" height="150" />
-</p> -->
+  <img src="etc/assets/accomplishment-1.png" height="200" />
+  <img src="etc/assets/accomplishment-2.png" height="200" />
+</p>
 
-![성과1](etc/assets/accomplishment-1.png) ![성과2](etc/assets/accomplishment-2.png)
+<!-- ![성과1](etc/assets/accomplishment-1.png) ![성과2](etc/assets/accomplishment-2.png) -->
 
 - 운영 기간: 약 **2주**(23.05.04 ~ 05.18)
 - 누적 메시지 수: **3,000**개+
@@ -96,7 +95,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ## 하팅! 서비스 화면
 
-<img src="etc/assets/screen1.png" height="400px">
+<img src="etc/assets/screen1.png" height="500px">
 
 ### 홈 화면
 
@@ -105,19 +104,19 @@ SSAFY 8기 2학기 자율 프로젝트
 
 **로그인 상태**
 
-<img src="etc/assets/home_login.gif" height="400px" >
+<img src="etc/assets/home_login.gif" height="500px" >
 
 - `나의 하트판 가기` 버튼을 누르면 `나의 하트판(하트 수신함)`으로 이동합니다.
 
 **로그아웃 상태**
 
-<img src="etc/assets/home_Logout.gif" height="400px" >
+<img src="etc/assets/home_Logout.gif" height="500px" >
 
 - 카카오, 트위터, 구글 소셜 로그인을 지원합니다.
 
 ### 나의 하트 수신함 (받은 하트)
 
-<img src="etc/assets/heartboard.gif" height="400px" >
+<img src="etc/assets/heartboard.gif" height="500px" >
 
 - 새로운 메시지는 빨간 점으로 표시됩니다.
 - 나의 `하트 수신함` 버튼을 눌러 링크, 페이스북, 트위터, 카카오톡으로 공유 가능합니다.
@@ -129,7 +128,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 수신함
 
-<img src="etc/assets/heartboard_other.gif" height="400px" >
+<img src="etc/assets/heartboard_other.gif" height="500px" >
 
 - 다른 사용자의 하트 수신함에서 `하트 보내기` 버튼을 메시지 작성 페이지로 이동합니다.
 - 로그인 되어있지 않고, 자신의 수신함 아니면 메시지를 읽을 수 없습니다.
@@ -137,7 +136,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 메시지 작성
 
-<img src="etc/assets/write.gif" height="400px" >
+<img src="etc/assets/write.gif" height="500px" >
 
 - 획득한 하트 중에서 하나를 선택합니다.
 - 제목은 필수로 작성하고, 내용은 선택적으로 작성합니다.
@@ -145,7 +144,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 영구 보관함
 
-<img src="etc/assets/heartbox.gif" height="400px" >
+<img src="etc/assets/heartbox.gif" height="500px" >
 
 - `하트`가 사라지기 전에 저장한 경우 영구 보관함에 보관할 수 있습니다.
 - 각 버튼을 클릭하면 해당 메시지를 모달과 함께 확인할 수 있습니다.
@@ -154,7 +153,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 하트 도감
 
-<img src="etc/assets/heartguide.gif" height="400px" >
+<img src="etc/assets/heartguide.gif" height="500px" >
 
 - 메시지 작성이 가능한 다양한 `하트`들을 확인할 수 있습니다.
 - 획득하지 못한 `하트`는 자물쇠로 잠겨있습니다.
@@ -163,7 +162,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 실시간 알림
 
-<img src="etc/assets/alarm.gif" height="400px" >
+<img src="etc/assets/alarm.gif" height="500px" >
 
 - 메시지, 반응 수신 및 새로운 스페셜 하트 획득 시 실시간으로 받을 수 있습니다.
 - 읽은 알림과 안읽은 알림은 구분됩니다.
@@ -172,13 +171,13 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 사용설명서
 
-<img src="etc/assets/manual.gif" height="400px" >
+<img src="etc/assets/manual.gif" height="500px" >
 
 - 하팅의 기능을 간단한 설명과 사진으로 설명합니다.
 
 ### 하트 테스트
 
-<img src="etc/assets/hearttest.gif" height="400px" >
+<img src="etc/assets/hearttest.gif" height="500px" >
 
 - 자신의 심볼 하트를 확인할 수 있습니다.
 - 링크, 페이스북, 트위터, 카카오톡으로 결과 페이지를 공유할 수 있습니다.
@@ -186,7 +185,7 @@ SSAFY 8기 2학기 자율 프로젝트
 
 ### 신고하기
 
-<img src="etc/assets/report.gif" height="400px" >
+<img src="etc/assets/report.gif" height="500px" >
 
 - 메시지 우측 상단에 위치한 `신고하기` 버튼을 눌러 진행합니다.
 - 메시지별로 한 번만 신고할 수 있고, 누적 신고 당한 횟수가 3회인 유저는 3일간 계정 일시 정지가 됩니다.
@@ -279,7 +278,7 @@ Google Tag Manager를 사용해 트리거-변수를 묶은 태그 단위로 필�
   ![확장가능성1](etc/assets/expansion-1.png)
 
 - 아래 그림에서 보이는 것처럼 같이 번역을 시도한 기록도 확인할 수 있었습니다.
-
+  <img src="etc/assets/expansion-2.png" width="500px">
   ![확장가능성2](etc/assets/expansion-2.png)
 
 - 유저풀 확장
