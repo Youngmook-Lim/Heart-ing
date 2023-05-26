@@ -19,19 +19,19 @@ import NonLoggedPopup from "../components/popUp/NonLoggedPopup";
 import SharingModal from "../components/modal/SharingModal";
 import { Socket } from "socket.io-client";
 
-function HeartBoard({socket}:{socket:Socket|null}) {
+function HeartBoard({ socket }: { socket: Socket | null }) {
   const navigate = useNavigate();
 
   const [userProfile, setUserProfile] = useState({});
   const [receivedList, setReceivedList] = useState({});
   // const setIsMyBoard = useSetRecoilState(isMyBoardAtom);
   const [totalCount, setTotalCount] = useState(0);
-  
+
   const [isMyBoard, setIsMyBoard] = useRecoilState(isMyBoardAtom);
   const [readMessage, setReadMessage] = useRecoilState(readMessageAtom); // 메시지 읽는 모달 on/off
-  const [isPopupShow, setIsPopupShow] = useRecoilState(isPopupShowAtom)
+  const [isPopupShow, setIsPopupShow] = useRecoilState(isPopupShowAtom);
   const isFirstTime = useRecoilValue(isFirstTimeAtom);
-  const isSharing = useRecoilValue(sharingAtom)
+  const isSharing = useRecoilValue(sharingAtom);
 
   const isLogin = useRecoilValue(isLoginAtom); // 로그인 유무 확인
 
@@ -46,7 +46,6 @@ function HeartBoard({socket}:{socket:Socket|null}) {
         setUserProfile(data.data);
         setTotalCount(data.data.messageTotal);
       } else {
-        // console.log("에러났당");
         navigate("/notfound");
       }
     },
@@ -56,7 +55,6 @@ function HeartBoard({socket}:{socket:Socket|null}) {
   // userId로 최근 메시지 리스트 가져오기
   const getRecivedMessages = useCallback(async (userId: string | null) => {
     if (!userId) return;
-    // console.log(userId);
     const data = await getReceived(userId);
     if (data.status === "success") {
       setReceivedList(data.data.messageList);
@@ -67,22 +65,22 @@ function HeartBoard({socket}:{socket:Socket|null}) {
   const myId = getUserInfo().userId;
 
   const checkPopupClose = (): boolean => {
-    const popupNoShow = localStorage.getItem("popupNoShow")
-    
+    const popupNoShow = localStorage.getItem("popupNoShow");
+
     if (popupNoShow !== "true") {
-        return true
+      return true;
     } else {
-        return false
+      return false;
     }
-  }
+  };
 
   useEffect(() => {
     // 로그인 했고, 닉네임이 보드 주인과 같으면 isMyBoard=true
     if (isLogin) {
       setIsMyBoard(userId === myId ? true : false);
     } else {
-      if(isFirstTime){
-        checkPopupClose() ? setIsPopupShow(true) : setIsPopupShow(false)
+      if (isFirstTime) {
+        checkPopupClose() ? setIsPopupShow(true) : setIsPopupShow(false);
       }
     }
     getUserProfile(userId);
@@ -115,7 +113,7 @@ function HeartBoard({socket}:{socket:Socket|null}) {
 
   return (
     <div className="container fullHeight mx-auto p-6 pb-8 h-[calc((var(--vh, 1vh) * 100)-8rem)]">
-      { isPopupShow ? <NonLoggedPopup /> : null }
+      {isPopupShow ? <NonLoggedPopup /> : null}
       <div
         className="heartBoard border-hrtColorPink relative"
         style={outsideHeightStyle}
@@ -123,7 +121,9 @@ function HeartBoard({socket}:{socket:Socket|null}) {
         <div className="sticky top-0 w-auto heartBoard-header bg-hrtColorPink border-hrtColorPink flex justify-between my-2 z-10 cursor-default">
           <div>하트 수신함</div>
           <div className="">
-            <div className="text-xs text-right h-6 -my-1 -mt-2 cursor-default">누적 수신</div>
+            <div className="text-xs text-right h-6 -my-1 -mt-2 cursor-default">
+              누적 수신
+            </div>
             <div className="flex -mt-1.5">
               <svg
                 fill="currentColor"
@@ -166,7 +166,7 @@ function HeartBoard({socket}:{socket:Socket|null}) {
         ) : null}
       </div>
       {isSharing ? <SharingModal /> : null}
-      {readMessage ? <MessageModal mode={"recent"}  socket={socket}/> : null}
+      {readMessage ? <MessageModal mode={"recent"} socket={socket} /> : null}
     </div>
   );
 }

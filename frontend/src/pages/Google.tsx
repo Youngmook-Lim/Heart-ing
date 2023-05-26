@@ -24,8 +24,6 @@ function Google() {
       if (!code) return;
       const data = await login("google", code);
       if (data !== null) {
-        // console.log("구글 됏당");
-        // console.log("닉네임 머임?", data.data);
         const userInfo = {
           userId: data.data.userId,
           accessToken: data.data.accessToken,
@@ -40,7 +38,7 @@ function Google() {
           navigate(`/heartboard/user?id=${data.data.userId}`);
         }
       } else {
-        // console.log("ㄱ글로그인 실패ㅜ;");
+        navigate("/notfound");
       }
     }
     googleLogin();

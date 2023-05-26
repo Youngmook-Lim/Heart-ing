@@ -35,8 +35,6 @@ connectBtn.addEventListener("click", () => {
       return;
     }
 
-    // socket = io("http://localhost:8000");
-    // socket = io("http://heart-ing.com:8000");
     socket = io("https://heart-ing.com", { path: "/ws" });
 
     socket.on("connect", () => {
@@ -75,20 +73,6 @@ sendMessageBtn.addEventListener("click", () => {
   }
 
   if (socket && socket.connected) {
-    // const data = {
-    //   messageId: 123,
-    //   title: "이것은 샘플 메시지 제목",
-    //   heartId: 5,
-    //   heartName: "민초하트",
-    //   heartUrl: "www.hearturl.com",
-    //   emojiId: 7,
-    //   emojiName: "ㅋㅋ",
-    //   emojiUrl: "www.emojiurl.com",
-    //   createdDate: "2023-04-27",
-    //   expiredDate: "2023-04-28",
-    //   isRead: false,
-    // };
-
     const data = dataInput.value;
 
     socket.emit("send-message", userId, data);

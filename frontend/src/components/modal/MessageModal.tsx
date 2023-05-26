@@ -1,5 +1,5 @@
 import React from "react";
-import { AxiosError } from 'axios';
+import { AxiosError } from "axios";
 import { useState, useEffect } from "react";
 
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
@@ -35,9 +35,13 @@ import HeartResponseEmojiList from "../heartResponse/HeartResponseEmojiList";
 function MessageModal({ ...props }) {
   const setReadMessageAtom = useSetRecoilState(readMessageAtom);
   const selectedMessageId = useRecoilValue(selectedMessageIdAtom);
-  const [ isOpenEmojiList, setIsOpenEmojiList ]  = useRecoilState(isOpenEmojiListAtom);
-  const setIsSelectedEmojiUrl  = useSetRecoilState(isSelectedEmojiUrlAtom)
-  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom)
+  const [isOpenEmojiList, setIsOpenEmojiList] =
+    useRecoilState(isOpenEmojiListAtom);
+  const setIsSelectedEmojiUrl = useSetRecoilState(isSelectedEmojiUrlAtom);
+  const setIsSelectedEmojiId = useSetRecoilState(isSelectedEmojiIdAtom);
+
+  const [isOpenReporting, setIsOpenReporting] =
+    useRecoilState(isOpenReportingAtom);
 
   const setIsOpenReporting = useSetRecoilState(isOpenReportingAtom)
   
@@ -80,15 +84,15 @@ function MessageModal({ ...props }) {
 
   async function onDeleteHandler() {
     const status = await deleteTemporaryMessageApi(selectedMessageId);
-      if (status === "success") {
-        alert("메세지를 삭제했습니다");
-        setReadMessageAtom(false);
+    if (status === "success") {
+      alert("메세지를 삭제했습니다");
+      setReadMessageAtom(false);
     }
-  } 
+  }
 
   //신고하기 api
   async function reportMessage(content: string) {
-    const body: string = content
+    const body: string = content;
 
     const data = await reportMessageApi(selectedMessageId, body)
     if (data.status === 'success') {
@@ -100,15 +104,15 @@ function MessageModal({ ...props }) {
       if (data && (data as AxiosError).response?.status === 400){
         alert("해당 메세지는 이미 신고 되었습니다.")
       } else {
-        alert("신고하기가 실패했습니다. 나중에 다시 시도해주세요.")
+        alert("신고하기가 실패했습니다. 나중에 다시 시도해주세요.");
       }
-      setIsOpenReporting(false)
+      setIsOpenReporting(false);
     }
   }
 
-    const onOpenReporting = () => {
-      setIsOpenReporting(true)
-    }
+  const onOpenReporting = () => {
+    setIsOpenReporting(true);
+  };
 
   useEffect(() => {
     // 여기서 selectedMessageId의 메시지 정보를 가져옵니다
@@ -139,7 +143,6 @@ function MessageModal({ ...props }) {
   if (messageData) {
     const expiredDate = new Date(messageData.expiredDate);
     const isExpired = kr_curr > expiredDate; // 현재 시간보다 만료 시간이 더 과거이면 만료됨
-    console.log(messageData.heartId);
 
     let color = "bg-[#43316b] shadow-[0_0_0_0.25rem_#43316b]";
     let borderColor = "shadow-[0_0_0_0.25rem_#43316b]";
@@ -186,7 +189,14 @@ function MessageModal({ ...props }) {
               expiredDate={messageData.expiredDate}
               mode={props.mode}
             />
-            { props.mode === "sent" ? null : <div className="text-2xs text-right text-hrtColorNewGray cursor-pointer" onClick={onOpenReporting}>신고하기</div> }
+            {props.mode === "sent" ? null : (
+              <div
+                className="text-2xs text-right text-hrtColorNewGray cursor-pointer"
+                onClick={onOpenReporting}
+              >
+                신고하기
+              </div>
+            )}
             <MessageModalTextbox
               mode={props.mode}
               title={messageData.title}

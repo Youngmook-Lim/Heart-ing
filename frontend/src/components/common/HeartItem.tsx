@@ -15,7 +15,6 @@ function HeartItem({ ...props }) {
   const [isAnimation, setIsAnimation] = useState(false);
 
   const readMessage = (messageId: number) => {
-    // console.log(messageId + " 메시지를 읽습니다");
     // messageId의 메시지를 열람합니다
     setReadMessageAtom(true);
     setSelectedMessgeIdAtom(messageId);

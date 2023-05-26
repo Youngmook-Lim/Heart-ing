@@ -8,8 +8,8 @@ const app = express();
 // Enable CORS
 app.use(
   cors({
-    // origin: "heart-ing.com",
-    origin: "*",
+    origin: "heart-ing.com",
+    // origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true,
@@ -22,29 +22,21 @@ const server = http.createServer(app);
 
 // socket.io 인스턴스 초기화
 const { Server } = require("socket.io");
-// const io = new Server(server);
 const io = new Server(server, {
   path: "/ws",
   cors: {
-    // origin: "heart-ing.com",
-    origin: "*",
+    origin: "heart-ing.com",
+    // origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["X-Requested-With", "content-type"],
     credentials: true,
   },
 });
 
-//////////////////////////////
-//////////////////////////////
 // REDIS 부분
-// const redisAdapter = require("socket.io-redis");
 const { createClient } = require("redis");
 const { createAdapter } = require("@socket.io/redis-adapter");
 
-// const pubClient = createClient({
-//   host: "hearting-redis-cluster",
-//   port: 6380,
-// });
 const pubClient = createClient({
   url: "redis://hearting-redis-cluster:6380",
 });
@@ -61,21 +53,6 @@ pubClient.on("error", (err) => {
 subClient.on("error", (err) => {
   console.error("Error with the Redis subClient:", err);
 });
-
-// io.adapter(createAdapter(pubClient, subClient));
-
-// console.log(pubClient);
-// console.log(subClient);
-
-// io.adapter(
-//   redisAdapter({
-//     host: "hearting-redis-cluster",
-//     port: 6380,
-//   })
-// );
-
-//////////////////////////////
-//////////////////////////////
 
 // 샘플 FE 코드 위치 설정
 app.use("/wssample", express.static(`${__dirname}/public`));

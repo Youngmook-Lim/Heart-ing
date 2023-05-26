@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hearting-websocket
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: hearting-websocket
